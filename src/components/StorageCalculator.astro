@@ -1,10 +1,21 @@
 ---
 /*
  * Calculadora interactiva de espacio de almacenaje.
- * Lógica 100% cliente (cero servidor). Usa los selectores nativos del browser.
+ * Lógica 100% cliente (cero servidor).
  *
- * Tarifas referenciales — pendientes de confirmación final con el cliente.
- * Fuente de verdad actual: sprints/SPRINT-04-storage-fleet.md
+ * Tarifas MENSUALES confirmadas por el cliente (2026-04-24):
+ *   - Solo cajas:                         S/  60 /mes
+ *   - Cuarto pequeño:                     S/ 100 /mes
+ *   - Departamento 1 ambiente:            S/ 250 /mes
+ *   - Departamento 2-3 ambientes:         S/ 350 /mes
+ *   - Casa completa:                      S/ 440 /mes
+ *
+ * Tarifas diarias y anuales derivadas:
+ *   - Día = mensual / 30 (redondeado)     → tarifa diaria sin descuento
+ *   - Año = mensual × 10                  → 12 meses con ~2 meses de descuento
+ *
+ * Si el cliente confirma tarifas distintas para día/año, ajustar DAY_DIVISOR y
+ * YEAR_MULTIPLIER sin tocar el resto del componente.
  */
 import { SITE } from '@lib/site';
 ---
@@ -15,8 +26,8 @@ import { SITE } from '@lib/site';
 >
   <h3 class="font-heading mb-4 text-2xl font-bold md:text-3xl">Calcula tu espacio</h3>
   <p class="mb-6 text-sm text-gray-700">
-    Estima cuántos metros cúbicos necesitas y la tarifa referencial según el tiempo. La cotización
-    final la confirmamos por WhatsApp.
+    Selecciona qué quieres almacenar y por cuánto tiempo. La cotización final la confirmamos por
+    WhatsApp.
   </p>
 
   <div class="grid gap-4 md:grid-cols-2">
@@ -26,12 +37,11 @@ import { SITE } from '@lib/site';
         id="storage-type"
         class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
       >
-        <option value="5">Solo cajas (≈ 5 m³)</option>
-        <option value="10">Cuarto pequeño (≈ 10 m³)</option>
-        <option value="20" selected>Cuarto completo (≈ 20 m³)</option>
-        <option value="25">Departamento 1 ambiente (≈ 25 m³)</option>
-        <option value="40">Departamento 2-3 ambientes (≈ 40 m³)</option>
-        <option value="80">Casa completa (≈ 80 m³)</option>
+        <option value="cajas">Solo cajas (≈ 5 m³)</option>
+        <option value="cuarto">Cuarto pequeño (≈ 10 m³)</option>
+        <option value="depto1" selected>Departamento 1 ambiente (≈ 25 m³)</option>
+        <option value="depto23">Departamento 2-3 ambientes (≈ 40 m³)</option>
+        <option value="casa">Casa completa (≈ 80 m³)</option>
       </select>
     </label>
 
@@ -42,21 +52,16 @@ import { SITE } from '@lib/site';
         class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
       >
         <option value="days">Por días (corto plazo)</option>
-        <option value="months" selected>Por meses</option>
-        <option value="years">Por años (descuento por largo plazo)</option>
+        <option value="months" selected>Por mes</option>
+        <option value="years">Por año (con descuento)</option>
       </select>
     </label>
   </div>
 
   <div class="mt-6 rounded-xl bg-white p-5">
     <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">Estimación</p>
-    <p id="storage-result" class="text-primary mt-1 text-xl font-bold md:text-2xl">
-      Selecciona volumen y tiempo
-    </p>
-    <p class="mt-2 text-xs text-gray-600">
-      Las tarifas son referenciales. La cotización final depende del volumen real tras inventario y
-      de la duración del almacenamiento.
-    </p>
+    <p id="storage-result" class="text-primary mt-1 text-2xl font-bold md:text-3xl">—</p>
+    <p id="storage-result-meta" class="mt-2 text-sm text-gray-600">—</p>
   </div>
 
   <a
@@ -77,10 +82,26 @@ import { SITE } from '@lib/site';
 </div>
 
 <script>
-  // Tarifas referenciales (pendientes de confirmación con cliente).
-  const RATE_DAY = 5; // S/ por m³ / día
-  const RATE_MONTH = 30; // S/ por m³ / mes
-  const RATE_YEAR = 300; // S/ por m³ / año (con descuento por largo plazo)
+  // Tarifas mensuales confirmadas (S/ por mes).
+  const MONTH_PRICE: Record<string, number> = {
+    cajas: 60,
+    cuarto: 100,
+    depto1: 250,
+    depto23: 350,
+    casa: 440,
+  };
+
+  const LABELS: Record<string, string> = {
+    cajas: 'solo cajas',
+    cuarto: 'cuarto pequeño',
+    depto1: 'departamento de 1 ambiente',
+    depto23: 'departamento de 2-3 ambientes',
+    casa: 'casa completa',
+  };
+
+  // Derivadas desde la tarifa mensual.
+  const DAY_DIVISOR = 30; // tarifa diaria = mensual / 30
+  const YEAR_MULTIPLIER = 10; // 12 meses con ~2 meses de descuento por contrato anual
 
   const root = document.querySelector<HTMLElement>('[data-whatsapp-number]');
   if (root) {
@@ -88,44 +109,40 @@ import { SITE } from '@lib/site';
     const typeSelect = document.getElementById('storage-type') as HTMLSelectElement | null;
     const timeSelect = document.getElementById('storage-time') as HTMLSelectElement | null;
     const resultEl = document.getElementById('storage-result');
+    const metaEl = document.getElementById('storage-result-meta');
     const cta = document.getElementById('storage-cta') as HTMLAnchorElement | null;
 
-    if (typeSelect && timeSelect && resultEl && cta) {
-      const typeLabels: Record<string, string> = {
-        '5': 'solo cajas',
-        '10': 'cuarto pequeño',
-        '20': 'cuarto completo',
-        '25': 'departamento 1 ambiente',
-        '40': 'departamento 2-3 ambientes',
-        '80': 'casa completa',
-      };
-
+    if (typeSelect && timeSelect && resultEl && metaEl && cta) {
       function update() {
-        if (!typeSelect || !timeSelect || !resultEl || !cta) return;
-        const m3 = Number(typeSelect.value);
+        if (!typeSelect || !timeSelect || !resultEl || !metaEl || !cta) return;
+
+        const typeId = typeSelect.value;
         const time = timeSelect.value;
-        const typeLabel = typeLabels[typeSelect.value] ?? 'espacio seleccionado';
+        const monthly = MONTH_PRICE[typeId] ?? 0;
+        const typeLabel = LABELS[typeId] ?? 'espacio seleccionado';
+
         let price = 0;
-        let label = '';
-        let periodLabel = '';
+        let unit = '';
+        let meta = '';
 
         if (time === 'days') {
-          price = m3 * RATE_DAY;
-          periodLabel = 'por día';
-          label = `${m3} m³ × S/ ${RATE_DAY} = S/ ${price} ${periodLabel}`;
+          price = Math.round(monthly / DAY_DIVISOR);
+          unit = 'por día';
+          meta = `Tarifa diaria estimada. Equivale a S/ ${monthly} al mes.`;
         } else if (time === 'months') {
-          price = m3 * RATE_MONTH;
-          periodLabel = 'por mes';
-          label = `${m3} m³ ≈ S/ ${price} ${periodLabel}`;
+          price = monthly;
+          unit = 'por mes';
+          meta = 'Tarifa mensual fija para este tipo de carga.';
         } else {
-          price = m3 * RATE_YEAR;
-          periodLabel = 'por año (con descuento)';
-          label = `${m3} m³ ≈ S/ ${price} ${periodLabel}`;
+          price = monthly * YEAR_MULTIPLIER;
+          unit = 'por año';
+          meta = `Tarifa anual con descuento (equivale a ~${YEAR_MULTIPLIER} meses pagados).`;
         }
 
-        resultEl.textContent = label;
+        resultEl.textContent = `S/ ${price} ${unit}`;
+        metaEl.textContent = meta;
 
-        const message = `Hola, necesito almacenaje de aproximadamente ${m3} m³ (${typeLabel}) ${periodLabel}. Tarifa referencial vista: ${label}. ¿Me pueden cotizar exacto?`;
+        const message = `Hola, calculé en su web almacenaje para ${typeLabel} ${unit}: S/ ${price}. ¿Me confirman disponibilidad y detalles?`;
         cta.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
       }
 
