@@ -2,6 +2,7 @@
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
+import mdx from '@astrojs/mdx';
 
 // https://astro.build/config
 //
@@ -27,6 +28,7 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
   integrations: [
+    mdx(),
     sitemap({
       i18n: {
         defaultLocale: 'es',
@@ -37,4 +39,10 @@ export default defineConfig({
       },
     }),
   ],
+  markdown: {
+    shikiConfig: {
+      theme: 'github-light',
+      wrap: true,
+    },
+  },
 });

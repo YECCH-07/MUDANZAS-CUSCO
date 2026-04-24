@@ -1,0 +1,286 @@
+---
+/*
+ * Layout para un artículo del blog (renderiza el contenido MDX dentro).
+ * Incluye: hero, meta info, TOC si es artículo largo, contenido, CTA al final,
+ * artículos relacionados, breadcrumbs, Schema.org BlogPosting.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+import SocialLinks from '@components/SocialLinks.astro';
+import { SITE } from '@lib/site';
+import { CATEGORIES, formatPubDate } from '@lib/blog';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  entry: CollectionEntry<'blog'>;
+  related: CollectionEntry<'blog'>[];
+}
+
+const { entry, related } = Astro.props;
+const { data } = entry;
+const category = CATEGORIES[data.category];
+const pageUrl = `${SITE.url}/blog/${entry.id.replace(/\.(md|mdx)$/, '')}/`;
+
+const articleSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BlogPosting',
+  headline: data.title,
+  description: data.description,
+  image: data.heroImage.startsWith('http') ? data.heroImage : `${SITE.url}${data.heroImage}`,
+  datePublished: data.pubDate.toISOString(),
+  ...(data.updatedDate && { dateModified: data.updatedDate.toISOString() }),
+  author: { '@type': 'Person', name: data.author },
+  publisher: { '@id': `${SITE.url}/#localbusiness` },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': pageUrl },
+  articleSection: category.label,
+  inLanguage: 'es',
+};
+---
+
+<BaseLayout
+  title={`${data.title} | Blog Expresos Ñan`}
+  description={data.description}
+  ogImage={data.heroImage}
+  ogType="article"
+  whatsappMessage={`Hola, leí el artículo "${data.title}" y quiero cotización.`}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(articleSchema)} is:inline />
+  </Fragment>
+
+  {/* Hero del artículo */}
+  <header class="relative bg-gradient-to-b from-gray-50 to-white pt-8 pb-10 md:pt-12 md:pb-16">
+    <Container size="narrow">
+      <Breadcrumbs
+        items={[
+          { label: 'Inicio', href: '/' },
+          { label: 'Blog', href: '/blog/' },
+          { label: category.label, href: `/blog/categoria/${data.category}/` },
+          { label: data.title },
+        ]}
+        class="mb-6"
+      />
+
+      <div class="mb-5 flex flex-wrap items-center gap-3 text-sm">
+        <a
+          href={`/blog/categoria/${data.category}/`}
+          class="bg-primary/10 text-primary-dark hover:bg-primary rounded-full px-3 py-1 text-xs font-bold tracking-wider uppercase transition-colors hover:text-white"
+        >
+          {category.label}
+        </a>
+        <time datetime={data.pubDate.toISOString()} class="text-gray-600">
+          {formatPubDate(data.pubDate)}
+        </time>
+        {data.readingTime && <span class="text-gray-600">· {data.readingTime} min lectura</span>}
+      </div>
+
+      <h1 class="font-heading text-dark text-3xl leading-tight font-bold md:text-4xl lg:text-5xl">
+        {data.title}
+      </h1>
+      <p class="mt-4 max-w-2xl text-base leading-relaxed text-gray-700 md:text-lg">
+        {data.description}
+      </p>
+      <p class="mt-4 text-sm text-gray-600">
+        Por <span class="text-dark font-bold">{data.author}</span>
+      </p>
+    </Container>
+  </header>
+
+  {/* Hero image */}
+  <Container size="narrow" class="mb-8">
+    <img
+      src={data.heroImage}
+      alt={data.heroImageAlt}
+      width="1200"
+      height="630"
+      loading="eager"
+      decoding="async"
+      class="w-full rounded-2xl shadow-lg"
+    />
+  </Container>
+
+  {/* Contenido MDX */}
+  <Section background="white" spacing="sm">
+    <Container size="narrow">
+      <article class="prose-blog max-w-none">
+        <slot />
+      </article>
+
+      {/* Tags */}
+      {
+        data.tags.length > 0 && (
+          <div class="mt-10 flex flex-wrap items-center gap-2 border-t border-gray-200 pt-6">
+            <span class="text-xs font-bold tracking-wider text-gray-500 uppercase">Etiquetas:</span>
+            {data.tags.map((t) => (
+              <a
+                href={`/blog/etiqueta/${t}/`}
+                class="hover:border-primary hover:text-primary rounded-full border border-gray-200 bg-white px-3 py-1 text-xs text-gray-700 transition-colors"
+              >
+                #{t}
+              </a>
+            ))}
+          </div>
+        )
+      }
+
+      {/* Compartir */}
+      <div class="mt-6 flex flex-wrap items-center gap-4 border-t border-gray-200 pt-6">
+        <span class="text-xs font-bold tracking-wider text-gray-500 uppercase">Compartir:</span>
+        <SocialLinks variant="light" size="sm" />
+      </div>
+    </Container>
+  </Section>
+
+  {/* Artículos relacionados */}
+  {
+    related.length > 0 && (
+      <Section background="gray" spacing="lg">
+        <Container>
+          <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Más artículos</p>
+          <h2 class="font-heading mb-8 text-2xl font-bold md:text-3xl">
+            Relacionados en {category.label}
+          </h2>
+          <div class="grid gap-6 md:grid-cols-3">
+            {related.map((r) => (
+              <a
+                href={`/blog/${r.id.replace(/\.(md|mdx)$/, '')}/`}
+                class="hover:border-primary group block overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all hover:shadow-lg motion-safe:hover:-translate-y-1"
+              >
+                <div class="aspect-[16/9] overflow-hidden bg-gray-100">
+                  <img
+                    src={r.data.heroImage}
+                    alt={r.data.heroImageAlt}
+                    loading="lazy"
+                    decoding="async"
+                    width="480"
+                    height="270"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <div class="p-5">
+                  <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+                    {formatPubDate(r.data.pubDate)}
+                  </p>
+                  <h3 class="font-heading group-hover:text-primary text-base font-bold">
+                    {r.data.title}
+                  </h3>
+                </div>
+              </a>
+            ))}
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  <CTASection
+    title="¿Listo para tu mudanza?"
+    subtitle="Te cotizamos en minutos por WhatsApp."
+    whatsappMessage={`Hola, leí el artículo "${data.title}" y quiero cotización.`}
+  />
+</BaseLayout>
+
+<style is:global>
+  .prose-blog {
+    font-family: var(--font-sans);
+    color: var(--color-dark);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+  .prose-blog > * + * {
+    margin-top: 1.25rem;
+  }
+  .prose-blog h2 {
+    font-family: var(--font-heading);
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    line-height: 1.2;
+    scroll-margin-top: 80px;
+  }
+  .prose-blog h3 {
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    font-weight: 700;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    line-height: 1.25;
+    scroll-margin-top: 80px;
+  }
+  .prose-blog p {
+    margin-top: 1em;
+    margin-bottom: 1em;
+  }
+  .prose-blog strong {
+    color: var(--color-dark);
+    font-weight: 700;
+  }
+  .prose-blog a {
+    color: var(--color-primary);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .prose-blog a:hover {
+    color: var(--color-primary-dark);
+  }
+  .prose-blog ul,
+  .prose-blog ol {
+    margin: 1.25rem 0;
+    padding-left: 1.5rem;
+  }
+  .prose-blog ul {
+    list-style: disc;
+  }
+  .prose-blog ol {
+    list-style: decimal;
+  }
+  .prose-blog li {
+    margin: 0.35rem 0;
+  }
+  .prose-blog blockquote {
+    border-left: 4px solid var(--color-primary);
+    background: #f9fafb;
+    padding: 1rem 1.25rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: #4b5563;
+    border-radius: 0 0.5rem 0.5rem 0;
+  }
+  .prose-blog code {
+    background: #f3f4f6;
+    padding: 0.1em 0.4em;
+    border-radius: 0.25rem;
+    font-size: 0.9em;
+  }
+  .prose-blog table {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+  .prose-blog thead {
+    background: #f9fafb;
+  }
+  .prose-blog th,
+  .prose-blog td {
+    border: 1px solid #e5e7eb;
+    padding: 0.6rem 0.9rem;
+    text-align: left;
+  }
+  .prose-blog th {
+    font-weight: 700;
+  }
+  .prose-blog img {
+    border-radius: 0.75rem;
+    margin: 1.5rem 0;
+  }
+  .prose-blog hr {
+    margin: 2rem 0;
+    border: 0;
+    border-top: 1px solid #e5e7eb;
+  }
+</style>

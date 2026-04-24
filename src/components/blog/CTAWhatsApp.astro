@@ -1,0 +1,30 @@
+---
+/*
+ * Bloque CTA inline para artículos del blog. Se invoca desde MDX:
+ *   import CTAWhatsApp from '@components/blog/CTAWhatsApp.astro';
+ *   <CTAWhatsApp message="Hola, leí su artículo sobre X, quiero cotización..." />
+ */
+import WhatsAppButton from '@components/WhatsAppButton.astro';
+
+interface Props {
+  title?: string;
+  message?: string;
+  subtitle?: string;
+}
+
+const {
+  title = '¿Necesitas cotización para tu mudanza?',
+  message = 'Hola, leí un artículo del blog y quiero cotización.',
+  subtitle = 'Te respondemos por WhatsApp en minutos con el precio cerrado.',
+} = Astro.props;
+---
+
+<aside
+  class="from-primary/5 to-primary/10 border-primary/20 my-8 flex flex-col gap-4 rounded-2xl border bg-gradient-to-br p-6 md:flex-row md:items-center md:justify-between md:p-8"
+>
+  <div>
+    <p class="font-heading text-dark text-lg font-bold md:text-xl">{title}</p>
+    <p class="mt-1 text-sm text-gray-700">{subtitle}</p>
+  </div>
+  <WhatsAppButton variant="inline" size="md" message={message} class="shrink-0" />
+</aside>

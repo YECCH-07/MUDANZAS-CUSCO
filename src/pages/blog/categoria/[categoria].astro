@@ -1,0 +1,118 @@
+---
+/*
+ * Listado por categoría. URL: /blog/categoria/[slug]/
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORIES, formatPubDate, type BlogCategory } from '@lib/blog';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const all = await getCollection('blog', ({ data }) => !data.draft);
+  return (Object.keys(CATEGORIES) as BlogCategory[]).map((cat) => ({
+    params: { categoria: cat },
+    props: {
+      categoria: cat,
+      posts: all
+        .filter((p) => p.data.category === cat)
+        .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()),
+    },
+  }));
+}
+
+interface Props {
+  categoria: BlogCategory;
+  posts: CollectionEntry<'blog'>[];
+}
+
+const { categoria, posts } = Astro.props as Props;
+const cat = CATEGORIES[categoria];
+const postUrl = (id: string) => `/blog/${id.replace(/\.(md|mdx)$/, '')}/`;
+---
+
+<BaseLayout
+  title={`${cat.label} | Blog Expresos Ñan`}
+  description={`${cat.description} Artículos sobre ${cat.label.toLowerCase()} en Cusco.`}
+  ogImage="/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png"
+>
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs
+        items={[
+          { label: 'Inicio', href: '/' },
+          { label: 'Blog', href: '/blog/' },
+          { label: cat.label },
+        ]}
+      />
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container>
+      <SectionHeader eyebrow="Categoría" title={cat.label} subtitle={cat.description} />
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="lg">
+    <Container>
+      {
+        posts.length === 0 ? (
+          <p class="text-center text-gray-600">
+            Todavía no hay artículos en esta categoría. Pronto publicamos más.
+          </p>
+        ) : (
+          <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {posts.map((post) => (
+              <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all hover:shadow-lg motion-safe:hover:-translate-y-1">
+                <a href={postUrl(post.id)} class="block aspect-[16/9] overflow-hidden bg-gray-100">
+                  <img
+                    src={post.data.heroImage}
+                    alt={post.data.heroImageAlt}
+                    loading="lazy"
+                    decoding="async"
+                    width="480"
+                    height="270"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </a>
+                <div class="flex flex-1 flex-col p-6">
+                  <time
+                    datetime={post.data.pubDate.toISOString()}
+                    class="mb-2 text-xs text-gray-500"
+                  >
+                    {formatPubDate(post.data.pubDate)}
+                  </time>
+                  <h2 class="font-heading mb-2 text-lg leading-tight font-bold">
+                    <a href={postUrl(post.id)} class="hover:text-primary">
+                      {post.data.title}
+                    </a>
+                  </h2>
+                  <p class="mb-4 line-clamp-3 flex-1 text-sm text-gray-700">
+                    {post.data.description}
+                  </p>
+                  <a
+                    href={postUrl(post.id)}
+                    class="text-primary hover:text-primary-dark mt-auto inline-flex items-center gap-1 text-sm font-bold"
+                  >
+                    Leer artículo →
+                  </a>
+                </div>
+              </article>
+            ))}
+          </div>
+        )
+      }
+    </Container>
+  </Section>
+
+  <CTASection
+    title="¿Tienes una consulta específica?"
+    subtitle="Te respondemos en minutos por WhatsApp."
+    whatsappMessage={`Hola, estoy leyendo artículos sobre ${cat.label} y tengo una consulta.`}
+  />
+</BaseLayout>

@@ -1,0 +1,46 @@
+---
+/*
+ * Callout reutilizable en artículos MDX. Variantes: tip, info, warning.
+ */
+interface Props {
+  type?: 'tip' | 'info' | 'warning';
+  title?: string;
+}
+
+const { type = 'tip', title } = Astro.props;
+
+const styles = {
+  tip: {
+    wrap: 'border-green-200 bg-green-50 text-green-900',
+    label: 'bg-green-200 text-green-900',
+    defaultTitle: 'Tip',
+  },
+  info: {
+    wrap: 'border-blue-200 bg-blue-50 text-blue-900',
+    label: 'bg-blue-200 text-blue-900',
+    defaultTitle: 'Nota',
+  },
+  warning: {
+    wrap: 'border-amber-200 bg-amber-50 text-amber-900',
+    label: 'bg-amber-200 text-amber-900',
+    defaultTitle: 'Importante',
+  },
+};
+
+const s = styles[type];
+const label = title ?? s.defaultTitle;
+---
+
+<aside class:list={['my-6 rounded-xl border-l-4 p-4 md:p-5', s.wrap]} role="note">
+  <p
+    class:list={[
+      'mb-2 inline-block rounded-full px-2.5 py-0.5 text-xs font-bold tracking-wider uppercase',
+      s.label,
+    ]}
+  >
+    {label}
+  </p>
+  <div class="prose-blog text-sm leading-relaxed md:text-base">
+    <slot />
+  </div>
+</aside>

@@ -175,4 +175,34 @@ const routes = defineCollection({
   }),
 });
 
-export const collections = { testimonials, districts, routes };
+/**
+ * Blog SEO (SPRINT-07).
+ * Artículos en MDX bajo src/content/blog/. El slug del archivo es la URL final
+ * (/blog/[slug]/). Categorías y tags se usan para páginas index y filtros.
+ */
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/blog' }),
+  schema: z.object({
+    title: z.string().min(20).max(90),
+    description: z.string().min(120).max(180),
+    pubDate: z.coerce.date(),
+    updatedDate: z.coerce.date().optional(),
+    author: z.string().default('Yeison Qhapaq'),
+    category: z.enum([
+      'consejos-de-mudanza',
+      'embalaje',
+      'mudanzas-de-oficina',
+      'rutas-cusco-apurimac',
+      'almacenaje',
+      'precios-y-cotizaciones',
+    ]),
+    tags: z.array(z.string()).default([]),
+    heroImage: z.string(),
+    heroImageAlt: z.string(),
+    /** Minutos de lectura calculados manualmente (palabras / 200 aprox.). */
+    readingTime: z.number().int().positive().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { testimonials, districts, routes, blog };

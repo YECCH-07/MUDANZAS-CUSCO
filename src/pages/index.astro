@@ -16,6 +16,12 @@ import {
   VALLE_SAGRADO_3_4H,
   INTERPROVINCIAL,
 } from '@lib/coverage';
+import { getCollection } from 'astro:content';
+import { CATEGORIES, formatPubDate } from '@lib/blog';
+
+const recentPosts = (await getCollection('blog', ({ data }) => !data.draft))
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 3);
 
 const services = [
   {
@@ -423,7 +429,69 @@ const advantages = [
     </Container>
   </Section>
 
-  {/* 7. CTA final */}
+  {/* 7. Blog reciente */}
+  {
+    recentPosts.length > 0 && (
+      <Section background="gray" spacing="lg" id="blog">
+        <Container>
+          <SectionHeader
+            eyebrow="Blog"
+            title="Guías recientes que te pueden servir"
+            subtitle="Consejos, tarifas reales y rutas — escrito por nuestro equipo basado en las mudanzas que hacemos cada semana."
+          />
+          <div class="grid gap-6 md:grid-cols-3">
+            {recentPosts.map((post) => (
+              <article class="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all hover:shadow-lg motion-safe:hover:-translate-y-1">
+                <a
+                  href={`/blog/${post.id.replace(/\.(md|mdx)$/, '')}/`}
+                  class="block aspect-[16/9] overflow-hidden bg-gray-100"
+                >
+                  <img
+                    src={post.data.heroImage}
+                    alt={post.data.heroImageAlt}
+                    loading="lazy"
+                    decoding="async"
+                    width="480"
+                    height="270"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </a>
+                <div class="flex flex-1 flex-col p-5">
+                  <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+                    {CATEGORIES[post.data.category].label}
+                  </p>
+                  <h3 class="font-heading mb-2 text-base leading-tight font-bold">
+                    <a
+                      href={`/blog/${post.id.replace(/\.(md|mdx)$/, '')}/`}
+                      class="hover:text-primary"
+                    >
+                      {post.data.title}
+                    </a>
+                  </h3>
+                  <p class="mb-3 line-clamp-2 flex-1 text-sm text-gray-700">
+                    {post.data.description}
+                  </p>
+                  <div class="mt-auto flex items-center justify-between text-xs text-gray-500">
+                    <time datetime={post.data.pubDate.toISOString()}>
+                      {formatPubDate(post.data.pubDate)}
+                    </time>
+                    {post.data.readingTime && <span>{post.data.readingTime} min</span>}
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+          <div class="mt-10 text-center">
+            <Button href="/blog/" variant="outline" size="md">
+              Ver todo el blog
+            </Button>
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  {/* 8. CTA final */}
   <CTASection
     title="¿Listo para tu próxima mudanza?"
     subtitle="Te cotizamos en minutos por WhatsApp. Sin compromiso, sin llenar formularios, sin esperas."
