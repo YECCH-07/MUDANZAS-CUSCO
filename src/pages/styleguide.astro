@@ -1,0 +1,146 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Button from '@components/Button.astro';
+import WhatsAppButton from '@components/WhatsAppButton.astro';
+---
+
+<BaseLayout
+  title="Styleguide interno | cuscomudanzas.com"
+  description="Referencia visual de componentes (uso interno, no indexable)."
+  noindex={true}
+  showFloatingWhatsApp={false}
+>
+  <Section spacing="md">
+    <Container>
+      <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+        Interna — no indexable
+      </p>
+      <h1 class="font-heading text-4xl font-bold md:text-5xl">Sistema de diseño</h1>
+      <p class="mt-2 max-w-2xl text-base text-gray-700">
+        Esta página muestra todos los componentes base del sitio. Se usa durante desarrollo para
+        validar visualmente los estilos. No se indexa ni se enlaza desde la navegación pública.
+      </p>
+    </Container>
+  </Section>
+
+  {/* Paleta */}
+  <Section background="gray" spacing="md">
+    <Container>
+      <h2 class="font-heading mb-6 text-2xl font-bold">Paleta corporativa</h2>
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+        <div>
+          <div class="bg-primary h-24 rounded-lg"></div>
+          <p class="mt-2 text-sm font-bold">Primary</p>
+          <p class="text-xs text-gray-600">#fb2056</p>
+        </div>
+        <div>
+          <div class="bg-primary-dark h-24 rounded-lg"></div>
+          <p class="mt-2 text-sm font-bold">Primary dark</p>
+          <p class="text-xs text-gray-600">#da1c4b</p>
+        </div>
+        <div>
+          <div class="bg-whatsapp h-24 rounded-lg"></div>
+          <p class="mt-2 text-sm font-bold">WhatsApp</p>
+          <p class="text-xs text-gray-600">#25d366</p>
+        </div>
+        <div>
+          <div class="h-24 rounded-lg bg-[var(--color-dark)]"></div>
+          <p class="mt-2 text-sm font-bold">Dark</p>
+          <p class="text-xs text-gray-600">#1a1a1a</p>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Tipografía */}
+  <Section spacing="md">
+    <Container>
+      <h2 class="font-heading mb-6 text-2xl font-bold">Tipografía</h2>
+      <div class="space-y-4">
+        <p class="font-heading text-5xl font-bold">H1 Montserrat Bold 48px</p>
+        <p class="font-heading text-4xl font-bold">H2 Montserrat Bold 36px</p>
+        <p class="font-heading text-3xl font-bold">H3 Montserrat Bold 30px</p>
+        <p class="font-heading text-2xl font-bold">H4 Montserrat Bold 24px</p>
+        <p class="text-base">
+          Cuerpo Noto Sans Regular 16px — Ofrecemos servicios de mudanza locales e
+          inter-provinciales en Cusco con vehículos propios de 1, 2 y 4 toneladas.
+        </p>
+        <p class="text-sm text-gray-600">Small 14px — Información secundaria.</p>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Botones */}
+  <Section background="gray" spacing="md">
+    <Container>
+      <h2 class="font-heading mb-6 text-2xl font-bold">Botones</h2>
+
+      <h3 class="font-heading mb-3 text-lg font-bold">Variantes (tamaño md)</h3>
+      <div class="mb-8 flex flex-wrap gap-3">
+        <Button variant="primary">Primary</Button>
+        <Button variant="secondary">Secondary</Button>
+        <Button variant="outline">Outline</Button>
+        <Button variant="ghost">Ghost</Button>
+        <Button variant="whatsapp">WhatsApp</Button>
+      </div>
+
+      <h3 class="font-heading mb-3 text-lg font-bold">Tamaños (variante primary)</h3>
+      <div class="mb-8 flex flex-wrap items-center gap-3">
+        <Button size="sm">Small</Button>
+        <Button size="md">Medium</Button>
+        <Button size="lg">Large</Button>
+      </div>
+
+      <h3 class="font-heading mb-3 text-lg font-bold">Como link externo</h3>
+      <div class="flex flex-wrap gap-3">
+        <Button href="https://example.com" external>Link externo</Button>
+        <Button href="/about/" variant="outline">Link interno</Button>
+      </div>
+    </Container>
+  </Section>
+
+  {/* WhatsApp */}
+  <Section spacing="md">
+    <Container>
+      <h2 class="font-heading mb-6 text-2xl font-bold">WhatsApp Button</h2>
+
+      <h3 class="font-heading mb-3 text-lg font-bold">Inline (con mensaje por defecto)</h3>
+      <div class="mb-8 flex flex-wrap items-center gap-3">
+        <WhatsAppButton variant="inline" size="sm" />
+        <WhatsAppButton variant="inline" size="md" />
+        <WhatsAppButton variant="inline" size="lg" />
+      </div>
+
+      <h3 class="font-heading mb-3 text-lg font-bold">Inline (mensaje contextual)</h3>
+      <WhatsAppButton
+        variant="inline"
+        size="md"
+        message="Hola, vi la styleguide y necesito cotización para mudanza Wanchaq → San Sebastián."
+        label="Cotizar mudanza local"
+      />
+
+      <h3 class="font-heading mt-8 mb-3 text-lg font-bold">Floating (esquina inferior derecha)</h3>
+      <p class="text-sm text-gray-600">
+        Está visible sobre esta página. Observa el botón verde con animación de pulso.
+      </p>
+      <WhatsAppButton variant="floating" />
+    </Container>
+  </Section>
+
+  {/* Section variants */}
+  <Section background="primary" spacing="md">
+    <Container>
+      <h2 class="font-heading mb-2 text-2xl font-bold">Section primary</h2>
+      <p>Fondo rojo corporativo, texto blanco. Útil para banners CTA principales.</p>
+    </Container>
+  </Section>
+
+  <Section background="dark" spacing="md">
+    <Container>
+      <h2 class="font-heading mb-2 text-2xl font-bold">Section dark</h2>
+      <p>Fondo oscuro, texto blanco. Útil para secciones de credibilidad o testimonios.</p>
+    </Container>
+  </Section>
+</BaseLayout>

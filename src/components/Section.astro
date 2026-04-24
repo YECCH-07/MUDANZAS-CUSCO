@@ -1,0 +1,39 @@
+---
+interface Props {
+  background?: 'white' | 'gray' | 'primary' | 'dark';
+  spacing?: 'sm' | 'md' | 'lg' | 'xl';
+  class?: string;
+  id?: string;
+  'aria-labelledby'?: string;
+}
+
+const {
+  background = 'white',
+  spacing = 'lg',
+  class: className = '',
+  id,
+  'aria-labelledby': ariaLabelledBy,
+} = Astro.props;
+
+const backgrounds = {
+  white: 'bg-white text-dark',
+  gray: 'bg-gray-50 text-dark',
+  primary: 'bg-primary text-white',
+  dark: 'bg-[var(--color-dark)] text-white',
+};
+
+const spacings = {
+  sm: 'py-8 md:py-12',
+  md: 'py-12 md:py-16',
+  lg: 'py-16 md:py-24',
+  xl: 'py-24 md:py-32',
+};
+---
+
+<section
+  id={id}
+  aria-labelledby={ariaLabelledBy}
+  class:list={[backgrounds[background], spacings[spacing], className]}
+>
+  <slot />
+</section>

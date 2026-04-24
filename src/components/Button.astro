@@ -1,0 +1,69 @@
+---
+interface Props {
+  href?: string;
+  type?: 'button' | 'submit' | 'reset';
+  variant?: 'primary' | 'secondary' | 'outline' | 'ghost' | 'whatsapp';
+  size?: 'sm' | 'md' | 'lg';
+  external?: boolean;
+  class?: string;
+  'aria-label'?: string;
+  'data-track'?: string;
+  disabled?: boolean;
+}
+
+const {
+  href,
+  type = 'button',
+  variant = 'primary',
+  size = 'md',
+  external = false,
+  class: className = '',
+  'aria-label': ariaLabel,
+  'data-track': dataTrack,
+  disabled = false,
+} = Astro.props;
+
+const base =
+  'inline-flex items-center justify-center gap-2 font-bold rounded-full transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
+
+const variants = {
+  primary: 'bg-primary text-white hover:bg-primary-dark',
+  secondary: 'bg-[var(--color-dark)] text-white hover:bg-black',
+  outline: 'bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white',
+  ghost: 'bg-transparent text-primary hover:bg-primary/10',
+  whatsapp: 'bg-whatsapp text-white hover:bg-whatsapp-dark',
+};
+
+const sizes = {
+  sm: 'px-4 py-2 text-sm',
+  md: 'px-6 py-3 text-base',
+  lg: 'px-8 py-4 text-lg',
+};
+
+const classes = [base, variants[variant], sizes[size], className];
+const externalProps = external ? { target: '_blank', rel: 'noopener noreferrer' } : {};
+---
+
+{
+  href ? (
+    <a
+      href={href}
+      class:list={classes}
+      aria-label={ariaLabel}
+      data-track={dataTrack}
+      {...externalProps}
+    >
+      <slot />
+    </a>
+  ) : (
+    <button
+      type={type}
+      class:list={classes}
+      aria-label={ariaLabel}
+      data-track={dataTrack}
+      disabled={disabled}
+    >
+      <slot />
+    </button>
+  )
+}

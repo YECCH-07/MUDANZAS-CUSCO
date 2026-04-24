@@ -1,9 +1,18 @@
-@import "tailwindcss";
+/*
+ * Fuentes auto-hospedadas vía @fontsource.
+ * Los archivos vienen de node_modules y Vite los copia al bundle;
+ * cero llamadas a Google Fonts en runtime (mejor privacidad y performance).
+ */
+@import '@fontsource/montserrat/700.css';
+@import '@fontsource/noto-sans/400.css';
+@import '@fontsource/noto-sans/700.css';
+
+@import 'tailwindcss';
 
 /*
  * Sistema de diseño cuscomudanzas.com
- * Paleta corporativa + tokens + fuentes auto-hospedadas (cargadas en fonts.css).
- * Tailwind v4: cualquier token aquí declarado se convierte en utilidad (bg-primary, text-primary-dark, font-heading, etc.).
+ * Paleta corporativa + tokens de Tailwind 4.
+ * Cualquier token aquí declarado se convierte en utilidad (bg-primary, font-heading, etc.).
  */
 
 @theme {
@@ -19,11 +28,11 @@
   --color-whatsapp: #25d366;
   --color-whatsapp-dark: #1ea952;
 
-  /* Tipografía (definida en public/fonts/ + src/styles/fonts.css) */
-  --font-heading: "Montserrat", system-ui, sans-serif;
-  --font-sans: "Noto Sans", system-ui, sans-serif;
+  /* Tipografía */
+  --font-heading: 'Montserrat', system-ui, sans-serif;
+  --font-sans: 'Noto Sans', system-ui, sans-serif;
 
-  /* Ancho de contenedor principal */
+  /* Contenedor principal */
   --container-wide: 1240px;
 
   /* Radios */
@@ -50,14 +59,44 @@ h6 {
   font-family: var(--font-heading);
 }
 
-/* Skip-link accesible (se usa en BaseLayout) */
-.skip-link:focus {
+/* Skip link accesible (keyboard users) */
+.skip-link {
   position: absolute;
-  top: 0.5rem;
+  top: -40px;
   left: 0.5rem;
   z-index: 100;
   background: var(--color-primary);
   color: #ffffff;
   padding: 0.5rem 1rem;
   border-radius: 4px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  top: 0.5rem;
+}
+
+/* Pulse del botón flotante de WhatsApp */
+@keyframes whatsapp-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.7);
+  }
+  50% {
+    box-shadow: 0 0 0 14px rgba(37, 211, 102, 0);
+  }
+}
+
+.wa-pulse {
+  animation: whatsapp-pulse 2.5s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wa-pulse {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
+  }
 }

@@ -1,0 +1,127 @@
+---
+import '@/styles/global.css';
+import Header from '@components/Header.astro';
+import Footer from '@components/Footer.astro';
+import WhatsAppButton from '@components/WhatsAppButton.astro';
+import { SITE } from '@lib/site';
+import { getLangFromUrl } from '@/i18n/config';
+import { getAlternateUrl } from '@lib/alternate-urls';
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article' | 'profile';
+  noindex?: boolean;
+  whatsappMessage?: string;
+  showFloatingWhatsApp?: boolean;
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage = '/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png',
+  ogType = 'website',
+  noindex = false,
+  whatsappMessage,
+  showFloatingWhatsApp = true,
+  bodyClass = '',
+} = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const path = Astro.url.pathname;
+const canonicalUrl = canonical ?? new URL(path, SITE.url).toString();
+const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${SITE.url}${ogImage}`;
+const ogLocale = lang === 'es' ? 'es_PE' : 'en_US';
+const ogLocaleAlt = lang === 'es' ? 'en_US' : 'es_PE';
+
+// hreflang: si hay equivalente en otro idioma, emitimos ambos + x-default (español)
+const alternateEs = lang === 'es' ? path : getAlternateUrl(path, 'es');
+const alternateEn = lang === 'en' ? path : getAlternateUrl(path, 'en');
+---
+
+<!doctype html>
+<html lang={lang} class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/png" href={SITE.logo.icon} />
+    <link rel="apple-touch-icon" href={SITE.logo.icon} />
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <link rel="canonical" href={canonicalUrl} />
+
+    {
+      alternateEs && (
+        <link rel="alternate" hreflang="es" href={new URL(alternateEs, SITE.url).toString()} />
+      )
+    }
+    {
+      alternateEn && (
+        <link rel="alternate" hreflang="en" href={new URL(alternateEn, SITE.url).toString()} />
+      )
+    }
+    {
+      alternateEs && (
+        <link
+          rel="alternate"
+          hreflang="x-default"
+          href={new URL(alternateEs, SITE.url).toString()}
+        />
+      )
+    }
+
+    {/* Open Graph */}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE.name} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={ogLocaleAlt} />
+
+    {/* Twitter Cards */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+
+    {/* Theme color (browser chrome móvil) */}
+    <meta name="theme-color" content="#fb2056" />
+
+    <slot name="head" />
+  </head>
+  <body class:list={['text-dark flex min-h-screen flex-col font-sans antialiased', bodyClass]}>
+    <a href="#main" class="skip-link">
+      {lang === 'es' ? 'Saltar al contenido' : 'Skip to content'}
+    </a>
+
+    <Header />
+
+    <main id="main" class="flex-1">
+      <slot />
+    </main>
+
+    <Footer />
+
+    {
+      showFloatingWhatsApp && (
+        <WhatsAppButton
+          variant="floating"
+          {...(whatsappMessage !== undefined ? { message: whatsappMessage } : {})}
+        />
+      )
+    }
+  </body>
+</html>

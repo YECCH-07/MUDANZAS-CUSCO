@@ -1,0 +1,181 @@
+---
+import Container from '@components/Container.astro';
+import WhatsAppButton from '@components/WhatsAppButton.astro';
+import LanguageSwitcher from '@components/LanguageSwitcher.astro';
+import { SITE, NAV } from '@lib/site';
+import { getLangFromUrl } from '@/i18n/config';
+
+const lang = getLangFromUrl(Astro.url);
+const items = NAV[lang];
+---
+
+<header
+  class="sticky top-0 z-30 w-full border-b border-gray-100 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80"
+>
+  <Container as="nav" size="wide" class="flex items-center justify-between gap-4 py-3">
+    <a
+      href={lang === 'es' ? '/' : '/en/'}
+      class="focus-visible:outline-primary flex shrink-0 items-center focus-visible:outline-2 focus-visible:outline-offset-2"
+      aria-label={SITE.name}
+    >
+      <img
+        src={SITE.logo.primary}
+        alt={`${SITE.name} — Mudanzas Cusco`}
+        width="180"
+        height="48"
+        class="h-10 w-auto md:h-12"
+      />
+    </a>
+
+    {/* Nav desktop (lg+) */}
+    <ul class="hidden items-center gap-1 lg:flex">
+      {
+        items.map((item) => (
+          <li class="relative">
+            {'children' in item && item.children ? (
+              <details class="group">
+                <summary class="text-dark hover:text-primary focus-visible:outline-primary flex cursor-pointer list-none items-center gap-1 rounded-md px-3 py-2 text-sm font-bold transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 [&::-webkit-details-marker]:hidden">
+                  {item.label}
+                  <svg
+                    class="h-4 w-4 transition-transform group-open:rotate-180"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </summary>
+                <ul class="absolute top-full left-0 z-20 mt-1 w-64 rounded-lg border border-gray-100 bg-white py-2 shadow-lg">
+                  <li>
+                    <a
+                      href={item.href}
+                      class="text-primary block px-4 py-2 text-sm font-bold hover:bg-gray-50"
+                    >
+                      {`→ ${item.label}`}
+                    </a>
+                  </li>
+                  {item.children.map((child) => (
+                    <li>
+                      <a
+                        href={child.href}
+                        class="text-dark hover:text-primary block px-4 py-2 text-sm hover:bg-gray-50"
+                      >
+                        {child.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </details>
+            ) : (
+              <a
+                href={item.href}
+                class="text-dark hover:text-primary focus-visible:outline-primary block rounded-md px-3 py-2 text-sm font-bold transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2"
+              >
+                {item.label}
+              </a>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="flex items-center gap-2">
+      <LanguageSwitcher />
+      <div class="hidden md:block">
+        <WhatsAppButton variant="inline" size="sm" />
+      </div>
+
+      {/* Menú hamburguesa (móvil y tablet) */}
+      <details class="group relative lg:hidden">
+        <summary
+          class="text-dark focus-visible:outline-primary flex cursor-pointer list-none items-center justify-center rounded-md p-2 transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 [&::-webkit-details-marker]:hidden"
+          aria-label="Abrir menú"
+        >
+          <svg
+            class="h-6 w-6 group-open:hidden"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+          <svg
+            class="hidden h-6 w-6 group-open:block"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            aria-hidden="true"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </summary>
+        <div
+          class="fixed inset-x-0 top-[var(--header-h,64px)] z-20 max-h-[calc(100vh-var(--header-h,64px))] overflow-y-auto bg-white shadow-xl"
+          style="--header-h: 64px;"
+        >
+          <ul class="px-4 py-4">
+            {
+              items.map((item) => (
+                <li class="border-b border-gray-100 last:border-0">
+                  {'children' in item && item.children ? (
+                    <details class="group/sub">
+                      <summary class="text-dark flex cursor-pointer list-none items-center justify-between py-3 text-base font-bold [&::-webkit-details-marker]:hidden">
+                        {item.label}
+                        <svg
+                          class="h-5 w-5 transition-transform group-open/sub:rotate-180"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <path
+                            fill-rule="evenodd"
+                            d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                            clip-rule="evenodd"
+                          />
+                        </svg>
+                      </summary>
+                      <ul class="pb-2 pl-4">
+                        <li>
+                          <a href={item.href} class="text-primary block py-2 text-sm font-bold">
+                            {`→ ${item.label}`}
+                          </a>
+                        </li>
+                        {item.children.map((child) => (
+                          <li>
+                            <a
+                              href={child.href}
+                              class="text-dark hover:text-primary block py-2 text-sm"
+                            >
+                              {child.label}
+                            </a>
+                          </li>
+                        ))}
+                      </ul>
+                    </details>
+                  ) : (
+                    <a
+                      href={item.href}
+                      class="text-dark hover:text-primary block py-3 text-base font-bold"
+                    >
+                      {item.label}
+                    </a>
+                  )}
+                </li>
+              ))
+            }
+          </ul>
+          <div class="px-4 pb-4">
+            <WhatsAppButton variant="inline" size="md" class="w-full" />
+          </div>
+        </div>
+      </details>
+    </div>
+  </Container>
+</header>

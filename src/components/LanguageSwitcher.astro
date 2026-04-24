@@ -1,0 +1,20 @@
+---
+import { getLangFromUrl, type Lang } from '@/i18n/config';
+import { getAlternateUrl } from '@lib/alternate-urls';
+
+const currentLang = getLangFromUrl(Astro.url);
+const currentPath = Astro.url.pathname;
+const targetLang: Lang = currentLang === 'es' ? 'en' : 'es';
+const targetPath = getAlternateUrl(currentPath, targetLang) ?? (targetLang === 'en' ? '/en/' : '/');
+const label = targetLang === 'en' ? 'English' : 'Español';
+---
+
+<a
+  href={targetPath}
+  hreflang={targetLang}
+  class="text-dark hover:border-primary hover:text-primary focus-visible:outline-primary inline-flex items-center gap-1 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-sm font-bold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+  aria-label={`Switch language to ${label}`}
+>
+  <span aria-hidden="true">{targetLang === 'en' ? 'EN' : 'ES'}</span>
+  <span class="sr-only">{label}</span>
+</a>

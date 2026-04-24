@@ -1,39 +1,39 @@
 ---
-import '@/styles/global.css';
-import { getLangFromUrl } from '@/i18n/config';
-import { useTranslations } from '@/i18n/ui';
-
-const lang = getLangFromUrl(Astro.url);
-const t = useTranslations(lang);
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Button from '@components/Button.astro';
+import WhatsAppButton from '@components/WhatsAppButton.astro';
 ---
 
-<!doctype html>
-<html lang={lang}>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" href="/favicon.ico" />
-    <title>Cuscomudanzas — En construcción</title>
-    <meta
-      name="description"
-      content="Sitio en construcción. Pronto estará disponible la nueva versión de cuscomudanzas.com con todos nuestros servicios de mudanza en Cusco."
-    />
-    <meta name="robots" content="noindex, nofollow" />
-  </head>
-  <body class="flex min-h-screen flex-col items-center justify-center bg-white text-dark">
-    <main class="mx-auto max-w-2xl px-6 py-20 text-center">
-      <h1 class="font-heading text-4xl font-bold text-primary md:text-5xl">
-        Expresos Ñan — Cusco
-      </h1>
-      <p class="mt-4 text-lg text-gray-700">
-        Sitio en construcción. Esta página temporal confirma que el pipeline (Astro 6 + Tailwind 4 +
-        TypeScript + i18n) está funcionando.
+<BaseLayout
+  title="Servicio De Mudanza En Cusco | Expresos Ñan"
+  description="Ofrecemos un servicio de mudanza completo que incluye embalaje, transporte, carga y descarga de tus pertenencias. Cobertura local y provincial. Cotiza por WhatsApp."
+  noindex={true}
+>
+  <Section spacing="xl">
+    <Container class="text-center">
+      <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+        Sitio en construcción
       </p>
-      <p class="mt-2 text-sm text-gray-500">
-        Locale detectado: <strong>{lang}</strong> — "{t('cta.whatsapp')}"
+      <h1 class="font-heading text-5xl font-bold md:text-6xl">Mudanzas Profesionales en Cusco</h1>
+      <p class="mt-4 text-lg text-gray-700 md:text-xl">
+        Transporte seguro y confiable. Cobertura local y a las provincias del sur.
       </p>
-    </main>
-  </body>
-</html>
+      <div class="mt-8 flex flex-wrap justify-center gap-3">
+        <WhatsAppButton variant="inline" size="lg" />
+        <Button href="/styleguide/" variant="outline" size="lg">Ver styleguide interno</Button>
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="md">
+    <Container class="text-center">
+      <h2 class="font-heading text-2xl font-bold">Estamos migrando el sitio</h2>
+      <p class="mt-2 text-gray-700">
+        Toda la funcionalidad volverá pronto, mejor que antes. Mientras tanto contáctanos por
+        WhatsApp.
+      </p>
+    </Container>
+  </Section>
+</BaseLayout>
