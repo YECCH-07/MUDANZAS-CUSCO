@@ -1,0 +1,276 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+import ServiceCard from '@components/ServiceCard.astro';
+import WhatsAppButton from '@components/WhatsAppButton.astro';
+import SchemaService from '@components/schema/SchemaService.astro';
+import SchemaFAQ from '@components/schema/SchemaFAQ.astro';
+import { SITE } from '@lib/site';
+import type { ServiceData } from '@lib/services';
+
+interface Props {
+  service: ServiceData;
+}
+
+const { service } = Astro.props;
+const serviceUrl = `${SITE.url}/${service.slug}/`;
+---
+
+<BaseLayout
+  title={service.metaTitle}
+  description={service.metaDescription}
+  ogImage={service.ogImage}
+  whatsappMessage={service.ctaMessage}
+>
+  <Fragment slot="head">
+    <SchemaService
+      name={service.hero.title}
+      description={service.metaDescription}
+      serviceType={service.schemaServiceType}
+      url={serviceUrl}
+      image={`${SITE.url}${service.ogImage}`}
+      areaServed={service.areaServed}
+    />
+    <SchemaFAQ faqs={service.faqs} />
+  </Fragment>
+
+  <Hero
+    eyebrow={service.hero.eyebrow}
+    title={service.hero.title}
+    subtitle={service.hero.subtitle}
+    image={service.hero.image}
+    imageAlt={service.hero.imageAlt}
+    whatsappMessage={service.hero.whatsappMessage}
+    secondaryCta={{ label: 'Ver servicios', href: '/servicio-de-caraga-flete-y-mudanza-cusco/' }}
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs
+        items={[
+          { label: 'Inicio', href: '/' },
+          { label: 'Servicios', href: '/servicio-de-caraga-flete-y-mudanza-cusco/' },
+          { label: service.breadcrumb },
+        ]}
+      />
+    </Container>
+  </Section>
+
+  {/* Descripción principal */}
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <div class="prose-content space-y-5 text-base leading-relaxed text-gray-700 md:text-lg">
+        {service.description.map((para) => <p set:html={para} />)}
+      </div>
+
+      {
+        service.sections?.map((section) => (
+          <div class="mt-10">
+            <h2 class="font-heading mb-4 text-2xl font-bold md:text-3xl">{section.title}</h2>
+            <div class="prose-content space-y-4 text-base leading-relaxed text-gray-700">
+              {section.paragraphs.map((para) => (
+                <p set:html={para} />
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </Container>
+  </Section>
+
+  {/* Qué incluye / no incluye */}
+  <Section background="gray" spacing="md">
+    <Container size="narrow">
+      <h2 class="font-heading mb-8 text-2xl font-bold md:text-3xl">Qué incluye el servicio</h2>
+      <div class={service.excludes ? 'grid gap-8 md:grid-cols-2' : ''}>
+        <div class="rounded-2xl bg-white p-6 shadow-sm">
+          <h3 class="font-heading mb-4 text-lg font-bold text-green-700">Incluye</h3>
+          <ul class="space-y-3 text-sm text-gray-700">
+            {
+              service.includes.map((item) => (
+                <li class="flex gap-3">
+                  <svg
+                    class="mt-0.5 h-5 w-5 shrink-0 text-green-600"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <span>{item}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+        {
+          service.excludes && (
+            <div class="rounded-2xl bg-white p-6 shadow-sm">
+              <h3 class="font-heading mb-4 text-lg font-bold text-gray-500">No incluye</h3>
+              <ul class="space-y-3 text-sm text-gray-700">
+                {service.excludes.map((item) => (
+                  <li class="flex gap-3">
+                    <svg
+                      class="mt-0.5 h-5 w-5 shrink-0 text-gray-400"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {/* Tabla de precios */}
+  {
+    service.priceTable && (
+      <Section background="white" spacing="md">
+        <Container size="narrow">
+          <h2 class="font-heading mb-2 text-2xl font-bold md:text-3xl">Precios referenciales</h2>
+          {service.priceTable.note && (
+            <p class="mb-6 text-sm text-gray-600">{service.priceTable.note}</p>
+          )}
+          <div class="overflow-x-auto rounded-2xl border border-gray-200">
+            <table class="w-full text-left">
+              <thead class="bg-gray-50 text-sm font-bold">
+                <tr>
+                  <th class="px-4 py-3">Servicio</th>
+                  <th class="px-4 py-3">Precio referencial</th>
+                  <th class="hidden px-4 py-3 md:table-cell">Observaciones</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                {service.priceTable.rows.map((row) => (
+                  <tr class="text-sm">
+                    <td class="px-4 py-3 font-bold">{row.label}</td>
+                    <td class="text-primary px-4 py-3 font-bold">{row.price}</td>
+                    <td class="hidden px-4 py-3 text-gray-600 md:table-cell">{row.notes}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <p class="mt-4 text-xs text-gray-500">
+            Los precios son referenciales. La cotización final depende del volumen real, distancia y
+            complejidad de acceso. Solicita tu cotización exacta por WhatsApp.
+          </p>
+        </Container>
+      </Section>
+    )
+  }
+
+  {/* Galería */}
+  {
+    service.gallery && service.gallery.length > 0 && (
+      <Section background="gray" spacing="md">
+        <Container>
+          <h2 class="font-heading mb-6 text-2xl font-bold md:text-3xl">Galería</h2>
+          <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+            {service.gallery.map((img) => (
+              <img
+                src={img.src}
+                alt={img.alt}
+                width="480"
+                height="480"
+                loading="lazy"
+                decoding="async"
+                class="aspect-square w-full rounded-lg object-cover"
+              />
+            ))}
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  {/* FAQs */}
+  <Section background="white" spacing="lg">
+    <Container size="narrow">
+      <h2 class="font-heading mb-8 text-2xl font-bold md:text-3xl">Preguntas frecuentes</h2>
+      <div class="space-y-3">
+        {
+          service.faqs.map((faq) => (
+            <details class="group rounded-xl border border-gray-200 bg-white">
+              <summary class="hover:text-primary flex cursor-pointer list-none items-center justify-between p-5 font-bold [&::-webkit-details-marker]:hidden">
+                <span>{faq.q}</span>
+                <svg
+                  class="h-5 w-5 shrink-0 transition-transform group-open:rotate-180"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </summary>
+              <div class="border-t border-gray-100 px-5 py-4 text-sm leading-relaxed text-gray-700">
+                <p set:html={faq.a} />
+              </div>
+            </details>
+          ))
+        }
+      </div>
+      <p class="mt-8 text-sm text-gray-600">
+        ¿Tu pregunta no está aquí?
+        <WhatsAppButton variant="inline" size="sm" class="ml-2" label="Preguntar por WhatsApp" />
+      </p>
+    </Container>
+  </Section>
+
+  {/* Servicios relacionados */}
+  {
+    service.related.length > 0 && (
+      <Section background="gray" spacing="lg">
+        <Container>
+          <div class="mb-8">
+            <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+              Servicios relacionados
+            </p>
+            <h2 class="font-heading text-2xl font-bold md:text-3xl">También te puede interesar</h2>
+          </div>
+          <div class="grid gap-6 md:grid-cols-3">
+            {service.related.map((r) => (
+              <ServiceCard
+                title={r.title}
+                description={r.description}
+                href={r.href}
+                image={r.image}
+                imageAlt={r.title}
+              />
+            ))}
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  {/* CTA final */}
+  <CTASection
+    title={service.ctaTitle}
+    whatsappMessage={service.ctaMessage}
+    {...service.ctaSubtitle !== undefined ? { subtitle: service.ctaSubtitle } : {}}
+  />
+</BaseLayout>

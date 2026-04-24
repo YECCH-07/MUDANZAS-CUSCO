@@ -1,0 +1,142 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import ServiceCard from '@components/ServiceCard.astro';
+import CTASection from '@components/CTASection.astro';
+
+const services = [
+  {
+    title: 'Mudanzas locales',
+    description:
+      'Traslados dentro del área metropolitana de Cusco: casas, departamentos y oficinas. Embalaje, carga y armado de muebles.',
+    href: '/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/',
+    image: '/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg',
+  },
+  {
+    title: 'Mudanzas inter-provincia',
+    description:
+      '9 rutas activas a Apurímac, Canchis y Chumbivilcas. Sicuani, Abancay, Challhuahuacho y más.',
+    href: '/mudanza-provincia/',
+    image: '/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg',
+  },
+  {
+    title: 'Mudanzas de oficina',
+    description:
+      'Servicio empresarial con desarme, embalaje y traslado en fines de semana. Factura con RUC.',
+    href: '/mudanzas-de-o/',
+    image: '/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg',
+  },
+  {
+    title: 'Almacenaje y custodia',
+    description:
+      'Depósito vigilado para tus pertenencias por días, meses o años. Con inventario fotográfico.',
+    href: '/almacenaje-y-custodia-cusco/',
+    image: '/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png',
+  },
+  {
+    title: 'Servicio de embalaje',
+    description:
+      'Embalaje profesional de vajilla, electrónicos, arte y muebles. Materiales incluidos.',
+    href: '/servicio-de-embalaje-cusco/',
+    image: '/wp-content/uploads/2024/05/EMBALAJE-CUSCO.png',
+  },
+  {
+    title: 'Flete y carga',
+    description:
+      'Transporte de mercadería, electrodomésticos y muebles individuales. Local e inter-provincial.',
+    href: '/servicio-de-flete-cusco/',
+    image: '/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png',
+  },
+  {
+    title: 'Armado y desarmado de muebles',
+    description:
+      'Camas, roperos, escritorios, racks de TV. Servicio independiente o dentro de la mudanza.',
+    href: '/armado-y-desarmado-de-muebles-cusco/',
+    image: '/wp-content/uploads/2024/05/ARMADO-Y-DESARMADO-DE-MUEBLES-CUSCO-MUDANZAS.jpg',
+  },
+  {
+    title: 'Mudanzas para estudiantes',
+    description:
+      'Servicio económico y express para estudiantes UNSAAC y otras universidades. Flexibilidad horaria.',
+    href: '/mudanzas-estudiantes-cusco/',
+    image: '/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg',
+  },
+  {
+    title: 'Flete comercial recurrente',
+    description: 'Rutas fijas semanales o mensuales para comerciantes. Descuentos por frecuencia.',
+    href: '/flete-comercial-cusco/',
+    image: '/wp-content/uploads/2024/05/SERVICIO-DE-DESARMADO-Y-ARMADO-DE-MUEBLES-CUSCO.jpg',
+  },
+  {
+    title: 'Nuestra flota',
+    description:
+      'Unidades propias de 1, 2 y 4 toneladas para cada tipo de mudanza. Mantenimiento al día.',
+    href: '/flota-de-camiones-cusco/',
+    image: '/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg',
+  },
+];
+---
+
+<BaseLayout
+  title="Servicios de Mudanza, Flete y Carga en Cusco | Expresos Ñan"
+  description="Mudanzas locales y provinciales, flete, embalaje, almacenaje y mudanzas de oficina en Cusco. Flota propia de 1, 2 y 4 toneladas. Cotiza por WhatsApp al 925 671 052."
+  ogImage="/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png"
+>
+  <Hero
+    eyebrow="Nuestros servicios"
+    title="Todo lo que necesitas para una mudanza completa"
+    subtitle="Desde mudanzas familiares hasta traslados empresariales e inter-provinciales. Flete, almacenaje, embalaje y armado de muebles — un solo proveedor para todo el proceso."
+    image="/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg"
+    imageAlt="Servicio de embalaje y mudanzas en Cusco — Expresos Ñan"
+    whatsappMessage="Hola, vi su página de servicios y quiero cotizar una mudanza. Necesito información sobre [servicio específico]."
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: 'Servicios' }]} />
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <div class="space-y-4 text-base leading-relaxed text-gray-700 md:text-lg">
+        <p>
+          En <strong>Expresos Ñan</strong> ofrecemos un servicio integral de mudanzas, flete y carga en
+          Cusco. Cubrimos todas las necesidades del proceso: desde el embalaje profesional en el origen
+          hasta el armado de muebles en destino, pasando por el transporte con unidades propias de 1,
+          2 y 4 toneladas.
+        </p>
+        <p>
+          Nuestros servicios están pensados para diferentes perfiles: familias que cambian de
+          vivienda, empresas que mudan oficinas con mínimo impacto en su operación, estudiantes
+          UNSAAC que buscan opciones económicas, comerciantes con rutas recurrentes a Sicuani o
+          Abancay, y clientes que necesitan almacenar pertenencias temporalmente. Cada caso tiene su
+          propia página con detalles específicos, precios referenciales y preguntas frecuentes.
+        </p>
+        <p>
+          Todas las cotizaciones se realizan por <strong>WhatsApp</strong> en minutos, sin compromiso.
+          Te pedimos la información mínima necesaria (origen, destino, volumen aproximado) y te damos
+          el precio final, sin sorpresas.
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="lg">
+    <Container>
+      <h2 class="font-heading mb-8 text-2xl font-bold md:text-3xl">Catálogo completo</h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((s) => <ServiceCard {...s} />)}
+      </div>
+    </Container>
+  </Section>
+
+  <CTASection
+    title="¿No sabes qué servicio necesitas?"
+    subtitle="Cuéntanos tu caso por WhatsApp y te recomendamos el servicio y unidad ideal para tu mudanza."
+    whatsappMessage="Hola, necesito una mudanza pero no sé qué servicio es el correcto. ¿Me pueden ayudar?"
+  />
+</BaseLayout>

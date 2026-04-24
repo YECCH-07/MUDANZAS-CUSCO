@@ -1,0 +1,32 @@
+---
+/*
+ * Schema.org Service con provider referencing al MovingCompany global.
+ * Se monta en cada página de servicio (ServiceLayout).
+ */
+import { SITE } from '@lib/site';
+
+interface Props {
+  name: string;
+  description: string;
+  serviceType: string;
+  url: string;
+  image?: string;
+  areaServed: string[];
+}
+
+const { name, description, serviceType, url, image, areaServed } = Astro.props;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name,
+  description,
+  serviceType,
+  url,
+  provider: { '@id': `${SITE.url}/#localbusiness` },
+  areaServed: areaServed.map((area) => ({ '@type': 'Place', name: area })),
+  ...(image ? { image } : {}),
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />

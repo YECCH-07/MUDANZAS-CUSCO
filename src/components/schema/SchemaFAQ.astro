@@ -1,0 +1,31 @@
+---
+/*
+ * Schema.org FAQPage. Se monta en cualquier página que tenga FAQs visibles.
+ */
+
+interface FAQ {
+  q: string;
+  a: string;
+}
+
+interface Props {
+  faqs: FAQ[];
+}
+
+const { faqs } = Astro.props;
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faqs.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: {
+      '@type': 'Answer',
+      text: item.a,
+    },
+  })),
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />
