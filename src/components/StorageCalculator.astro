@@ -1,0 +1,137 @@
+---
+/*
+ * Calculadora interactiva de espacio de almacenaje.
+ * Lógica 100% cliente (cero servidor). Usa los selectores nativos del browser.
+ *
+ * Tarifas referenciales — pendientes de confirmación final con el cliente.
+ * Fuente de verdad actual: sprints/SPRINT-04-storage-fleet.md
+ */
+import { SITE } from '@lib/site';
+---
+
+<div
+  class="rounded-2xl border border-gray-200 bg-gray-50 p-6 md:p-8"
+  data-whatsapp-number={SITE.whatsapp}
+>
+  <h3 class="font-heading mb-4 text-2xl font-bold md:text-3xl">Calcula tu espacio</h3>
+  <p class="mb-6 text-sm text-gray-700">
+    Estima cuántos metros cúbicos necesitas y la tarifa referencial según el tiempo. La cotización
+    final la confirmamos por WhatsApp.
+  </p>
+
+  <div class="grid gap-4 md:grid-cols-2">
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">¿Qué quieres almacenar?</span>
+      <select
+        id="storage-type"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+      >
+        <option value="5">Solo cajas (≈ 5 m³)</option>
+        <option value="10">Cuarto pequeño (≈ 10 m³)</option>
+        <option value="20" selected>Cuarto completo (≈ 20 m³)</option>
+        <option value="25">Departamento 1 ambiente (≈ 25 m³)</option>
+        <option value="40">Departamento 2-3 ambientes (≈ 40 m³)</option>
+        <option value="80">Casa completa (≈ 80 m³)</option>
+      </select>
+    </label>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">¿Por cuánto tiempo?</span>
+      <select
+        id="storage-time"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+      >
+        <option value="days">Por días (corto plazo)</option>
+        <option value="months" selected>Por meses</option>
+        <option value="years">Por años (descuento por largo plazo)</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="mt-6 rounded-xl bg-white p-5">
+    <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">Estimación</p>
+    <p id="storage-result" class="text-primary mt-1 text-xl font-bold md:text-2xl">
+      Selecciona volumen y tiempo
+    </p>
+    <p class="mt-2 text-xs text-gray-600">
+      Las tarifas son referenciales. La cotización final depende del volumen real tras inventario y
+      de la duración del almacenamiento.
+    </p>
+  </div>
+
+  <a
+    id="storage-cta"
+    href={`https://wa.me/${SITE.whatsapp}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="bg-whatsapp hover:bg-whatsapp-dark mt-4 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-bold text-white transition-colors"
+    data-track="storage_calc_whatsapp_click"
+  >
+    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path
+        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"
+      ></path>
+    </svg>
+    Cotizar este espacio por WhatsApp
+  </a>
+</div>
+
+<script>
+  // Tarifas referenciales (pendientes de confirmación con cliente).
+  const RATE_DAY = 5; // S/ por m³ / día
+  const RATE_MONTH = 30; // S/ por m³ / mes
+  const RATE_YEAR = 300; // S/ por m³ / año (con descuento por largo plazo)
+
+  const root = document.querySelector<HTMLElement>('[data-whatsapp-number]');
+  if (root) {
+    const phone = root.dataset.whatsappNumber ?? '51925671052';
+    const typeSelect = document.getElementById('storage-type') as HTMLSelectElement | null;
+    const timeSelect = document.getElementById('storage-time') as HTMLSelectElement | null;
+    const resultEl = document.getElementById('storage-result');
+    const cta = document.getElementById('storage-cta') as HTMLAnchorElement | null;
+
+    if (typeSelect && timeSelect && resultEl && cta) {
+      const typeLabels: Record<string, string> = {
+        '5': 'solo cajas',
+        '10': 'cuarto pequeño',
+        '20': 'cuarto completo',
+        '25': 'departamento 1 ambiente',
+        '40': 'departamento 2-3 ambientes',
+        '80': 'casa completa',
+      };
+
+      function update() {
+        if (!typeSelect || !timeSelect || !resultEl || !cta) return;
+        const m3 = Number(typeSelect.value);
+        const time = timeSelect.value;
+        const typeLabel = typeLabels[typeSelect.value] ?? 'espacio seleccionado';
+        let price = 0;
+        let label = '';
+        let periodLabel = '';
+
+        if (time === 'days') {
+          price = m3 * RATE_DAY;
+          periodLabel = 'por día';
+          label = `${m3} m³ × S/ ${RATE_DAY} = S/ ${price} ${periodLabel}`;
+        } else if (time === 'months') {
+          price = m3 * RATE_MONTH;
+          periodLabel = 'por mes';
+          label = `${m3} m³ ≈ S/ ${price} ${periodLabel}`;
+        } else {
+          price = m3 * RATE_YEAR;
+          periodLabel = 'por año (con descuento)';
+          label = `${m3} m³ ≈ S/ ${price} ${periodLabel}`;
+        }
+
+        resultEl.textContent = label;
+
+        const message = `Hola, necesito almacenaje de aproximadamente ${m3} m³ (${typeLabel}) ${periodLabel}. Tarifa referencial vista: ${label}. ¿Me pueden cotizar exacto?`;
+        cta.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      }
+
+      typeSelect.addEventListener('change', update);
+      timeSelect.addEventListener('change', update);
+      update();
+    }
+  }
+</script>

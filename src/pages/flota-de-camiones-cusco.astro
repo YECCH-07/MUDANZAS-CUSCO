@@ -1,0 +1,396 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+import ServiceCard from '@components/ServiceCard.astro';
+import FleetRecommender from '@components/FleetRecommender.astro';
+import SchemaFAQ from '@components/schema/SchemaFAQ.astro';
+
+const unidades = [
+  {
+    tag: '1 tonelada',
+    title: 'Unidad de 1 tonelada',
+    capacity: '1,000 kg',
+    dimensions: 'Aprox. 3.0 m × 1.8 m × 1.8 m (caja)',
+    volumen: '≈ 10 m³',
+    casos: [
+      'Mudanzas de cuarto o mini-departamento',
+      'Fletes ligeros dentro de Cusco',
+      'Entregas urgentes de electrodomésticos',
+    ],
+    recommended: 'Cuartos, oficinas pequeñas, fletes express',
+    image: '/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg',
+    imageAlt: 'Unidad de 1 tonelada de Expreso Ñan para mudanzas pequeñas',
+  },
+  {
+    tag: '2 toneladas',
+    title: 'Unidad de 2 toneladas',
+    capacity: '2,000 kg',
+    dimensions: 'Aprox. 4.0 m × 2.0 m × 2.0 m (caja)',
+    volumen: '≈ 16-18 m³',
+    casos: [
+      'Departamentos de 1-2 ambientes',
+      'Oficinas pequeñas',
+      'Fletes medianos a Sicuani o Abancay',
+    ],
+    recommended: 'Departamentos, fletes a Sicuani/Abancay',
+    image: '/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg',
+    imageAlt: 'Unidad de 2 toneladas Expreso Ñan',
+  },
+  {
+    tag: '4 toneladas',
+    title: 'Unidad de 4 toneladas',
+    capacity: '4,000 kg',
+    dimensions: 'Aprox. 5.5 m × 2.2 m × 2.4 m (caja)',
+    volumen: '≈ 28-30 m³',
+    casos: [
+      'Casas familiares completas (3+ ambientes)',
+      'Oficinas medianas',
+      'Mudanzas inter-provinciales con carga grande',
+      'Ruta Cusco ↔ Challhuahuacho (Las Bambas)',
+    ],
+    recommended: 'Casas familiares, mudanzas a Apurímac (Las Bambas)',
+    image: '/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg',
+    imageAlt: 'Unidad de 4 toneladas Expreso Ñan',
+  },
+];
+
+const choferes = [
+  {
+    title: 'Licencias profesionales',
+    description:
+      'Todos nuestros choferes tienen licencia A-IIIb o A-IIIc, según el tonelaje de la unidad que conducen.',
+  },
+  {
+    title: 'Conocimiento de rutas',
+    description:
+      'Rutas locales de Cusco metropolitano y provinciales a Apurímac, Canchis y Chumbivilcas. Saben dónde hay accesos complicados, pasos de altura y curvas peligrosas.',
+  },
+  {
+    title: 'Manejo de carga frágil',
+    description:
+      'Capacitados en maniobras suaves, frenado progresivo y conducción defensiva. Reducen al mínimo la vibración que afecta a la carga.',
+  },
+  {
+    title: 'Atención al cliente',
+    description:
+      'Uniforme identificable, trato respetuoso y comunicación clara. Son la cara de la empresa en origen y destino.',
+  },
+];
+
+const mantenimiento = [
+  'Mantenimiento preventivo regular (aceite, filtros, frenos)',
+  'Revisión técnica vehicular (RTV) al día',
+  'SOAT vigente en todas las unidades',
+  'Neumáticos con cocada adecuada para rutas de altura',
+  'Revisión de luces y señalización antes de cada ruta provincial',
+];
+
+const faqs = [
+  {
+    q: '¿Puedo pedir una unidad específica?',
+    a: 'Sí. Cuando cotizamos por WhatsApp definimos qué unidad va según el volumen que nos indicas. Si tú prefieres una unidad más grande por tranquilidad (por ejemplo 4 t en vez de 2 t), lo podemos hacer con un costo adicional por el uso de la unidad mayor.',
+  },
+  {
+    q: '¿Todas las unidades entran a zonas angostas de Cusco?',
+    a: 'La unidad de 1 tonelada entra a casi todas las calles, incluyendo parte de la zona histórica. La de 2 t entra a la mayoría. La de 4 t es más limitada en zonas muy angostas — cuando hay acceso complicado coordinamos unidad más pequeña o carga por tramos.',
+  },
+  {
+    q: '¿Las unidades son propias o subcontratan?',
+    a: 'Son todas propias. No subcontratamos transporte. Esto nos permite garantizar disponibilidad, condiciones mecánicas y continuidad del mismo chofer durante toda tu mudanza o flete.',
+  },
+  {
+    q: '¿Tienen unidad refrigerada?',
+    a: 'No actualmente. Si necesitas transportar carga con cadena de frío, podemos recomendarte contactos especializados en Cusco, pero nosotros no ofrecemos ese servicio.',
+  },
+  {
+    q: '¿Las unidades van aseguradas?',
+    a: 'SOAT vigente siempre. Para coberturas de carga específicas (seguro de mercadería) podemos coordinar con aseguradoras locales si el cliente lo solicita. La tarifa estándar incluye nuestra responsabilidad contractual, no seguro de terceros.',
+  },
+];
+---
+
+<BaseLayout
+  title="Nuestra Flota: Camiones de 1, 2 y 4 Toneladas en Cusco | Expresos Ñan"
+  description="Conoce la flota propia de Expresos Ñan: unidades de 1, 2 y 4 toneladas para mudanzas locales e inter-provinciales en Cusco. Choferes con licencia profesional. Cotiza al 925 671 052."
+  ogImage="/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg"
+  whatsappMessage="Hola, quiero saber qué unidad necesito para mi mudanza. Tengo: [detalle]."
+>
+  <Fragment slot="head">
+    <SchemaFAQ faqs={faqs} />
+  </Fragment>
+
+  <Hero
+    eyebrow="Nuestra flota"
+    title="Camiones de 1, 2 y 4 Toneladas en Cusco"
+    subtitle="Unidades propias y choferes profesionales para mudanzas locales e inter-provinciales. Sin subcontrataciones."
+    image="/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg"
+    imageAlt="Flota Expreso Ñan — camión de mudanzas en Cusco"
+    whatsappMessage="Hola, quiero saber qué unidad es la correcta para mi mudanza. Tengo: [descripción]."
+    secondaryCta={{
+      label: 'Ver todos los servicios',
+      href: '/servicio-de-caraga-flete-y-mudanza-cusco/',
+    }}
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs
+        items={[
+          { label: 'Inicio', href: '/' },
+          { label: 'Servicios', href: '/servicio-de-caraga-flete-y-mudanza-cusco/' },
+          { label: 'Nuestra flota' },
+        ]}
+      />
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <div class="space-y-4 text-base leading-relaxed text-gray-700 md:text-lg">
+        <p>
+          Contar con <strong>flota propia</strong> es una de las cosas que más valoramos de Expresos Ñan.
+          No dependemos de terceros para conseguir camiones, no hay sorpresas de última hora cuando el
+          transporte contratado cancela, y podemos garantizarte que la unidad que vamos a usar está mecánicamente
+          en condiciones para el día de tu mudanza.
+        </p>
+        <p>
+          Operamos tres tamaños de unidad — <strong>1, 2 y 4 toneladas</strong> — para cubrir desde mudanzas
+          de cuarto de estudiante hasta traslados de casas completas y rutas inter-provinciales exigentes
+          como Cusco ↔ Challhuahuacho (proyecto Las Bambas).
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  {/* 3 tarjetas de unidades */}
+  <Section background="gray" spacing="lg" aria-labelledby="unidades-heading">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Unidades</p>
+        <h2 id="unidades-heading" class="font-heading text-2xl font-bold md:text-3xl">
+          Tres tamaños para cada tipo de mudanza
+        </h2>
+      </div>
+      <div class="grid gap-6 lg:grid-cols-3">
+        {
+          unidades.map((u) => (
+            <article class="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm">
+              <div class="aspect-[4/3] overflow-hidden bg-gray-100">
+                <img
+                  src={u.image}
+                  alt={u.imageAlt}
+                  width="480"
+                  height="360"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover"
+                />
+              </div>
+              <div class="flex flex-1 flex-col p-6">
+                <span class="bg-primary/10 text-primary mb-3 inline-block self-start rounded-full px-3 py-1 text-xs font-bold tracking-wider uppercase">
+                  {u.tag}
+                </span>
+                <h3 class="font-heading mb-3 text-xl font-bold">{u.title}</h3>
+                <dl class="mb-4 grid grid-cols-1 gap-2 text-sm">
+                  <div class="flex justify-between border-b border-gray-100 pb-1">
+                    <dt class="text-gray-600">Capacidad</dt>
+                    <dd class="font-bold">{u.capacity}</dd>
+                  </div>
+                  <div class="flex justify-between border-b border-gray-100 pb-1">
+                    <dt class="text-gray-600">Volumen aprox.</dt>
+                    <dd class="font-bold">{u.volumen}</dd>
+                  </div>
+                  <div class="border-b border-gray-100 pb-1">
+                    <dt class="text-gray-600">Dimensiones</dt>
+                    <dd class="text-xs">{u.dimensions}</dd>
+                  </div>
+                </dl>
+                <p class="mb-2 text-xs font-bold tracking-wider text-gray-500 uppercase">
+                  Ideal para
+                </p>
+                <ul class="mb-4 flex-1 space-y-1 text-sm text-gray-700">
+                  {u.casos.map((c) => (
+                    <li class="flex gap-2">
+                      <span class="text-primary">•</span>
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+                <p class="bg-primary/5 text-primary-dark mt-auto rounded-lg p-3 text-xs font-bold">
+                  Recomendada: {u.recommended}
+                </p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {/* Recomendador */}
+  <Section background="white" spacing="md" id="recomendador">
+    <Container size="narrow">
+      <div class="mb-6">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Quiz</p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">No sabes qué unidad necesitas</h2>
+      </div>
+      <FleetRecommender />
+    </Container>
+  </Section>
+
+  {/* Choferes */}
+  <Section background="gray" spacing="lg">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Equipo</p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">
+          Nuestros choferes: la otra mitad de la flota
+        </h2>
+        <p class="mt-2 text-gray-700">
+          Un camión en buen estado no sirve de mucho si el chofer no sabe manejarlo con la carga
+          correcta. Por eso nuestro equipo está capacitado y seleccionado.
+        </p>
+      </div>
+      <div class="grid gap-5 md:grid-cols-2">
+        {
+          choferes.map((c) => (
+            <article class="rounded-2xl bg-white p-6 shadow-sm">
+              <h3 class="font-heading mb-2 text-lg font-bold">{c.title}</h3>
+              <p class="text-sm text-gray-700">{c.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {/* Mantenimiento */}
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <div class="mb-6">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Mantenimiento</p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">Flota siempre lista</h2>
+      </div>
+      <ul class="space-y-3">
+        {
+          mantenimiento.map((item) => (
+            <li class="flex items-start gap-3 rounded-lg border border-gray-100 bg-gray-50 p-4">
+              <svg
+                class="mt-0.5 h-5 w-5 shrink-0 text-green-600"
+                viewBox="0 0 20 20"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                  clip-rule="evenodd"
+                />
+              </svg>
+              <span class="text-sm text-gray-700">{item}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </Section>
+
+  {/* Banner expansión */}
+  <Section background="primary" spacing="md">
+    <Container>
+      <div class="flex flex-col items-start gap-4 md:flex-row md:items-center md:justify-between">
+        <div>
+          <p class="mb-1 text-xs font-bold tracking-wider uppercase opacity-90">Próximamente</p>
+          <h2 class="font-heading text-2xl font-bold md:text-3xl">
+            Sumamos unidades para nuevas rutas
+          </h2>
+          <p class="mt-2 max-w-2xl text-sm opacity-95 md:text-base">
+            Estamos ampliando la flota para abrir las rutas <strong>Cusco ↔ Arequipa</strong>,
+            <strong>Cusco → Juliaca</strong> y <strong>Cusco → Puno</strong>. Déjanos tus datos en
+            la landing de cada ruta y te avisaremos cuando estén operativas.
+          </p>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  {/* FAQs */}
+  <Section background="white" spacing="lg">
+    <Container size="narrow">
+      <h2 class="font-heading mb-8 text-2xl font-bold md:text-3xl">Preguntas frecuentes</h2>
+      <div class="space-y-3">
+        {
+          faqs.map((faq) => (
+            <details class="group rounded-xl border border-gray-200 bg-white">
+              <summary class="hover:text-primary flex cursor-pointer list-none items-center justify-between p-5 font-bold [&::-webkit-details-marker]:hidden">
+                <span>{faq.q}</span>
+                <svg
+                  class="h-5 w-5 shrink-0 transition-transform group-open:rotate-180"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </summary>
+              <div class="border-t border-gray-100 px-5 py-4 text-sm leading-relaxed text-gray-700">
+                <p>{faq.a}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {/* Relacionados */}
+  <Section background="gray" spacing="lg">
+    <Container>
+      <div class="mb-8">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+          Servicios relacionados
+        </p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">
+          Servicios que usan nuestra flota
+        </h2>
+      </div>
+      <div class="grid gap-6 md:grid-cols-3">
+        <ServiceCard
+          title="Mudanzas locales"
+          description="Unidades de 1, 2 o 4 t según el tamaño de tu vivienda."
+          href="/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/"
+          image="/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg"
+          imageAlt="Mudanza local con camión Expreso Ñan"
+        />
+        <ServiceCard
+          title="Mudanzas inter-provincia"
+          description="Rutas activas a Apurímac, Canchis y Chumbivilcas con unidades 2 y 4 t."
+          href="/mudanza-provincia/"
+          image="/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg"
+          imageAlt="Unidad 4 toneladas para rutas provinciales"
+        />
+        <ServiceCard
+          title="Flete y carga"
+          description="Transporte puntual con la unidad que tu carga necesite."
+          href="/servicio-de-flete-cusco/"
+          image="/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png"
+          imageAlt="Servicio de flete en Cusco"
+        />
+      </div>
+    </Container>
+  </Section>
+
+  <CTASection
+    title="¿Qué unidad necesitas para tu mudanza?"
+    subtitle="Si ya tienes claro o no, escríbenos por WhatsApp y te recomendamos la opción más eficiente."
+    whatsappMessage="Hola, necesito cotización para una mudanza de [descripción]. ¿Qué unidad me recomiendan?"
+  />
+</BaseLayout>

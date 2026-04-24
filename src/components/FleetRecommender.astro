@@ -1,0 +1,157 @@
+---
+/*
+ * Quiz corto que recomienda unidad (1, 2 o 4 toneladas) según el volumen declarado
+ * por el usuario. Lógica cliente pura, cero servidor.
+ */
+import { SITE } from '@lib/site';
+---
+
+<div
+  class="rounded-2xl border border-gray-200 bg-gray-50 p-6 md:p-8"
+  data-whatsapp-number={SITE.whatsapp}
+>
+  <h3 class="font-heading mb-4 text-2xl font-bold md:text-3xl">¿Qué unidad necesitas?</h3>
+  <p class="mb-6 text-sm text-gray-700">
+    Responde dos preguntas y te recomendamos la unidad ideal. Cotizamos el precio final por WhatsApp
+    con el volumen exacto.
+  </p>
+
+  <div class="space-y-5">
+    <div>
+      <p class="mb-3 text-sm font-bold">1. ¿Qué describe mejor tu mudanza?</p>
+      <div class="grid gap-2 sm:grid-cols-3">
+        <label class="cursor-pointer">
+          <input type="radio" name="fleet-size" value="1" class="peer sr-only" checked />
+          <span
+            class="peer-checked:border-primary peer-checked:bg-primary block rounded-lg border-2 border-gray-200 bg-white px-3 py-3 text-center text-sm font-bold peer-checked:text-white"
+          >
+            Cuarto / estudiante
+          </span>
+        </label>
+        <label class="cursor-pointer">
+          <input type="radio" name="fleet-size" value="2" class="peer sr-only" />
+          <span
+            class="peer-checked:border-primary peer-checked:bg-primary block rounded-lg border-2 border-gray-200 bg-white px-3 py-3 text-center text-sm font-bold peer-checked:text-white"
+          >
+            Departamento 1-2 ambientes
+          </span>
+        </label>
+        <label class="cursor-pointer">
+          <input type="radio" name="fleet-size" value="4" class="peer sr-only" />
+          <span
+            class="peer-checked:border-primary peer-checked:bg-primary block rounded-lg border-2 border-gray-200 bg-white px-3 py-3 text-center text-sm font-bold peer-checked:text-white"
+          >
+            Casa / 3+ ambientes
+          </span>
+        </label>
+      </div>
+    </div>
+
+    <div>
+      <p class="mb-3 text-sm font-bold">
+        2. ¿Tienes muebles grandes (sofá de 3+ cuerpos, ropero grande, piano)?
+      </p>
+      <div class="flex gap-2">
+        <label class="flex-1 cursor-pointer">
+          <input type="radio" name="fleet-extra" value="no" class="peer sr-only" checked />
+          <span
+            class="peer-checked:border-primary peer-checked:bg-primary block rounded-lg border-2 border-gray-200 bg-white px-3 py-3 text-center text-sm font-bold peer-checked:text-white"
+            >No</span
+          >
+        </label>
+        <label class="flex-1 cursor-pointer">
+          <input type="radio" name="fleet-extra" value="yes" class="peer sr-only" />
+          <span
+            class="peer-checked:border-primary peer-checked:bg-primary block rounded-lg border-2 border-gray-200 bg-white px-3 py-3 text-center text-sm font-bold peer-checked:text-white"
+            >Sí</span
+          >
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div id="fleet-result" class="mt-6 rounded-xl bg-white p-5">
+    <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">Recomendación</p>
+    <p id="fleet-result-title" class="text-primary mt-1 text-xl font-bold md:text-2xl">
+      Unidad de 1 tonelada
+    </p>
+    <p id="fleet-result-desc" class="mt-2 text-sm text-gray-700">
+      Ideal para cuartos, mini-departamentos y fletes ligeros dentro de Cusco.
+    </p>
+  </div>
+
+  <a
+    id="fleet-cta"
+    href={`https://wa.me/${SITE.whatsapp}`}
+    target="_blank"
+    rel="noopener noreferrer"
+    class="bg-whatsapp hover:bg-whatsapp-dark mt-4 inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-bold text-white transition-colors"
+    data-track="fleet_reco_whatsapp_click"
+  >
+    <svg class="h-5 w-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path
+        d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347"
+      ></path>
+    </svg>
+    Cotizar con esta unidad
+  </a>
+</div>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-whatsapp-number]');
+  if (root) {
+    const phone = root.dataset.whatsappNumber ?? '51925671052';
+    const sizeInputs = document.querySelectorAll<HTMLInputElement>('input[name="fleet-size"]');
+    const extraInputs = document.querySelectorAll<HTMLInputElement>('input[name="fleet-extra"]');
+    const titleEl = document.getElementById('fleet-result-title');
+    const descEl = document.getElementById('fleet-result-desc');
+    const cta = document.getElementById('fleet-cta') as HTMLAnchorElement | null;
+
+    const profiles: Record<string, { title: string; desc: string; mudanza: string }> = {
+      '1': {
+        title: 'Unidad de 1 tonelada',
+        desc: 'Ideal para cuartos, mini-departamentos y fletes ligeros dentro de Cusco.',
+        mudanza: 'cuarto o mini-departamento',
+      },
+      '2': {
+        title: 'Unidad de 2 toneladas',
+        desc: 'Recomendada para departamentos de 1-2 ambientes, oficinas pequeñas y fletes medianos.',
+        mudanza: 'departamento de 1-2 ambientes',
+      },
+      '4': {
+        title: 'Unidad de 4 toneladas',
+        desc: 'La unidad más grande: casas familiares completas, oficinas medianas y fletes a provincias.',
+        mudanza: 'casa familiar o 3+ ambientes',
+      },
+    };
+
+    function getChecked(inputs: NodeListOf<HTMLInputElement>): string | null {
+      for (const input of inputs) {
+        if (input.checked) return input.value;
+      }
+      return null;
+    }
+
+    function update() {
+      if (!titleEl || !descEl || !cta) return;
+      let size = getChecked(sizeInputs) ?? '1';
+      const extra = getChecked(extraInputs) ?? 'no';
+
+      // Si marca muebles grandes, subimos un nivel de unidad.
+      if (extra === 'yes') {
+        if (size === '1') size = '2';
+        else if (size === '2') size = '4';
+      }
+
+      const profile = profiles[size] ?? profiles['1']!;
+      titleEl.textContent = profile.title;
+      descEl.textContent = profile.desc;
+      const message = `Hola, completé el quiz de flota y me recomiendan la ${profile.title}. Mi mudanza es ${profile.mudanza}. ¿Me pueden cotizar?`;
+      cta.href = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+    }
+
+    sizeInputs.forEach((i) => i.addEventListener('change', update));
+    extraInputs.forEach((i) => i.addEventListener('change', update));
+    update();
+  }
+</script>

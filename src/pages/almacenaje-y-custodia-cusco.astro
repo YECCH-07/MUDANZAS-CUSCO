@@ -1,0 +1,401 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+import ServiceCard from '@components/ServiceCard.astro';
+import StorageCalculator from '@components/StorageCalculator.astro';
+import SchemaFAQ from '@components/schema/SchemaFAQ.astro';
+import { SITE } from '@lib/site';
+
+const pageUrl = `${SITE.url}/almacenaje-y-custodia-cusco/`;
+
+const modalidades = [
+  {
+    tag: 'Por días',
+    title: 'Corto plazo — hasta 30 días',
+    description:
+      'Ideal para mudanzas en transición: la nueva casa todavía no está lista, estás remodelando o llega la familia de visita y necesitas liberar espacio temporalmente.',
+    highlights: ['Entrada y salida flexible', 'Sin contrato extenso', 'Tarifa diaria clara'],
+  },
+  {
+    tag: 'Por meses',
+    title: 'Mediano plazo — 1 a 12 meses',
+    description:
+      'Perfecto para viajes prolongados por trabajo o estudios, remodelaciones grandes y casos donde estarás fuera de Cusco varios meses pero quieres conservar tus cosas.',
+    highlights: [
+      'Tarifa mensual con descuento',
+      'Acceso coordinado cuando lo necesites',
+      'Inventario fotográfico al ingresar',
+    ],
+  },
+  {
+    tag: 'Por años',
+    title: 'Largo plazo — 12+ meses',
+    description:
+      'La opción más económica por m³. Ideal para custodia de mobiliario familiar, herencias, inventario comercial de baja rotación o clientes que viven fuera del país.',
+    highlights: ['Tarifa anual con mayor descuento', 'Acta de custodia', 'Acceso con cita previa'],
+  },
+];
+
+const seguridad = [
+  { title: 'Vigilancia 24/7', description: 'Presencia permanente en el depósito.' },
+  { title: 'Cámaras de seguridad', description: 'CCTV en áreas de acceso y almacenaje.' },
+  { title: 'Control de acceso', description: 'Solo personal autorizado y el cliente con cita.' },
+  {
+    title: 'Inventario fotográfico',
+    description: 'Al ingresar se fotografía cada caja y mueble con numeración.',
+  },
+  {
+    title: 'Acta firmada',
+    description: 'Documento con detalle de piezas almacenadas y condiciones.',
+  },
+  {
+    title: 'Condiciones ambientales',
+    description: 'Depósito seco, ventilado y protegido de humedad y polvo.',
+  },
+];
+
+const bundles = [
+  {
+    title: 'Mudanza + 30 días gratis de almacenaje',
+    description:
+      'Contrata una mudanza local y te regalamos 30 días de custodia para la carga que quieras guardar mientras organizas el destino.',
+  },
+  {
+    title: 'Mudanza + custodia + entrega final',
+    description:
+      'Servicio puerta a puerta diferida: recogemos en origen, guardamos el tiempo que necesites, y entregamos en el destino cuando estés listo.',
+  },
+];
+
+const casos = [
+  {
+    title: 'Estudiante UNSAAC regresa a provincia',
+    description:
+      'Guardas tus muebles y cajas durante vacaciones (2-3 meses) en lugar de cargarlos ida y vuelta a Sicuani o Abancay.',
+  },
+  {
+    title: 'Familia en remodelación',
+    description:
+      'Tu casa está en obra 2-4 meses. Almacenamos el mobiliario completo para que no se dañe con polvo y pintura.',
+  },
+  {
+    title: 'Empresa cerrando oficina temporalmente',
+    description:
+      'Mudanza de oficina con almacenaje de estaciones, archivos y equipos hasta que se defina el nuevo local.',
+  },
+  {
+    title: 'Viaje al extranjero por trabajo',
+    description:
+      'Servicio de custodia de 1-3 años mientras estás fuera. Acceso coordinado con familiar de confianza si lo requieres.',
+  },
+];
+
+const faqs = [
+  {
+    q: '¿Puedo retirar parcialmente mis cosas?',
+    a: 'Sí. Coordinamos retiros parciales con 24-48 horas de anticipación. Para retiros pequeños (pocas cajas) hay tarifa mínima; si retiras todo antes del plazo acordado, ajustamos la tarifa proporcionalmente.',
+  },
+  {
+    q: '¿Cómo aviso para retirar mis cosas?',
+    a: 'Por WhatsApp con 1-2 días de anticipación. Te agendamos horario y preparamos tu carga para entrega inmediata. Si necesitas que te lo llevemos al destino, coordinamos el traslado con tarifa de flete.',
+  },
+  {
+    q: '¿Qué pasa si dejo de pagar?',
+    a: 'Tras 30 días de retraso enviamos aviso formal. A los 60 días, si no hay acuerdo de pago, podemos disponer de la mercadería según lo firmado en el acta de custodia. En la práctica siempre intentamos un acuerdo antes — no queremos rematar las cosas de nadie.',
+  },
+  {
+    q: '¿Garantizan que no se pierda nada?',
+    a: 'Tenemos inventario fotográfico al ingreso, acta firmada, control de acceso y vigilancia 24/7. Si al retirar falta algo que ingresó al depósito, asumimos responsabilidad según el acta. Recomendamos declarar objetos de alto valor al momento del ingreso para registrarlos con foto individual.',
+  },
+  {
+    q: '¿Es seguro contra polillas, humedad y roedores?',
+    a: 'El depósito está seco, ventilado y se fumiga periódicamente. Para mayor tranquilidad recomendamos embalar ropa en bolsas selladas y usar cajas cerradas. El embalaje profesional (servicio aparte) incluye protección reforzada.',
+  },
+  {
+    q: '¿Hacen el traslado al ingresar y al retirar?',
+    a: 'Sí. La mayoría de clientes contratan mudanza + almacenaje como servicio integrado. El traslado al ingresar y al retirar se cobra como flete según distancia y volumen. Si es bundle, suele haber descuento en el traslado.',
+  },
+  {
+    q: '¿Qué NO pueden almacenar?',
+    a: 'No guardamos alimentos perecederos, químicos peligrosos, material inflamable, armas, obras de arte sin declaración previa ni animales. Todo lo demás (muebles, ropa, electrónicos, documentos, vehículos bajo acuerdo especial) sí lo aceptamos.',
+  },
+];
+
+const storageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  name: 'Almacenaje y Custodia de Pertenencias en Cusco',
+  description:
+    'Depósito vigilado para almacenaje de muebles, cajas y pertenencias en Cusco. Servicio por días, meses o años con inventario fotográfico y vigilancia 24/7.',
+  serviceType: 'Storage and Warehousing',
+  url: pageUrl,
+  provider: { '@id': `${SITE.url}/#localbusiness` },
+  areaServed: [{ '@type': 'Place', name: 'Cusco, Perú' }],
+  offers: [
+    { '@type': 'Offer', name: 'Almacenaje por días', priceCurrency: 'PEN' },
+    { '@type': 'Offer', name: 'Almacenaje por meses', priceCurrency: 'PEN' },
+    { '@type': 'Offer', name: 'Almacenaje por años', priceCurrency: 'PEN' },
+  ],
+};
+---
+
+<BaseLayout
+  title="Almacenaje y Custodia de Pertenencias en Cusco | Expresos Ñan"
+  description="Guarda tus muebles y pertenencias en depósito vigilado en Cusco. Por días, meses o años. Vigilancia 24/7, inventario fotográfico y seguridad garantizada. Cotiza al 925 671 052."
+  ogImage="/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png"
+  whatsappMessage="Hola, necesito cotización de almacenaje. Quiero guardar [tipo de carga] por [tiempo aprox.]."
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(storageSchema)} is:inline />
+    <SchemaFAQ faqs={faqs} />
+  </Fragment>
+
+  <Hero
+    eyebrow="Almacenaje y custodia"
+    title="Almacenaje y Custodia de Pertenencias en Cusco"
+    subtitle="Guarda tus muebles, cajas y pertenencias en depósito vigilado. Por días, meses o años. Inventario fotográfico, acta firmada y vigilancia 24/7."
+    image="/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png"
+    imageAlt="Servicio de almacenaje y custodia en Cusco — Expreso Ñan"
+    whatsappMessage="Hola, necesito cotización de almacenaje en Cusco. Volumen aproximado: [detalle]. Tiempo: [detalle]."
+    secondaryCta={{
+      label: 'Ver todos los servicios',
+      href: '/servicio-de-caraga-flete-y-mudanza-cusco/',
+    }}
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs
+        items={[
+          { label: 'Inicio', href: '/' },
+          { label: 'Servicios', href: '/servicio-de-caraga-flete-y-mudanza-cusco/' },
+          { label: 'Almacenaje y custodia' },
+        ]}
+      />
+    </Container>
+  </Section>
+
+  {/* Qué es el servicio */}
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <div class="space-y-4 text-base leading-relaxed text-gray-700 md:text-lg">
+        <p>
+          El <strong>almacenaje y custodia de pertenencias</strong> es el servicio que nos diferencia
+          en Cusco: un depósito vigilado donde puedes guardar muebles, cajas o inventario completo desde
+          unos días hasta varios años. Ideal para mudanzas en transición, remodelaciones, viajes prolongados
+          o simplemente porque necesitas espacio sin tener que alquilar un almacén completo.
+        </p>
+        <p>
+          Cada ingreso se documenta con inventario fotográfico y acta firmada. Esto significa que
+          cuando retires tus cosas, podemos verificar pieza por pieza que todo está tal cual
+          ingresó. No dejamos nada al olvido ni a la buena voluntad — todo queda registrado.
+        </p>
+        <p>
+          Combinamos el servicio con mudanzas cuando tiene sentido: recogemos en origen, guardamos
+          el tiempo que necesites y entregamos en el destino final. Es la opción más tranquila si
+          estás en medio de un cambio grande y no quieres coordinar todo en un solo día.
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Modalidades */}
+  <Section background="gray" spacing="lg" aria-labelledby="modalidades-heading">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Modalidades</p>
+        <h2 id="modalidades-heading" class="font-heading text-2xl font-bold md:text-3xl">
+          Tres formas de contratar según cuánto tiempo necesitas
+        </h2>
+      </div>
+      <div class="grid gap-6 md:grid-cols-3">
+        {
+          modalidades.map((m) => (
+            <article class="flex h-full flex-col rounded-2xl bg-white p-6 shadow-sm">
+              <span class="bg-primary/10 text-primary mb-3 inline-block self-start rounded-full px-3 py-1 text-xs font-bold tracking-wider uppercase">
+                {m.tag}
+              </span>
+              <h3 class="font-heading mb-3 text-xl font-bold">{m.title}</h3>
+              <p class="mb-4 flex-1 text-sm text-gray-700">{m.description}</p>
+              <ul class="space-y-2 text-sm text-gray-700">
+                {m.highlights.map((h) => (
+                  <li class="flex gap-2">
+                    <span class="text-primary">✓</span>
+                    {h}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {/* Calculadora */}
+  <Section background="white" spacing="md" id="calculadora">
+    <Container size="narrow">
+      <div class="mb-6">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Calculadora</p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">Estima tu espacio y tarifa</h2>
+      </div>
+      <StorageCalculator />
+    </Container>
+  </Section>
+
+  {/* Seguridad */}
+  <Section background="gray" spacing="lg">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+          Por qué confiar en nosotros
+        </p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">
+          Seguridad y control del depósito
+        </h2>
+      </div>
+      <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {
+          seguridad.map((s) => (
+            <article class="rounded-2xl bg-white p-5 shadow-sm">
+              <div class="mb-3 flex items-center gap-3">
+                <span class="bg-primary/10 text-primary inline-flex h-9 w-9 items-center justify-center rounded-full">
+                  <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path
+                      fill-rule="evenodd"
+                      d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </span>
+                <h3 class="font-heading text-base font-bold">{s.title}</h3>
+              </div>
+              <p class="text-sm text-gray-700">{s.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {/* Bundles */}
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <div class="mb-6">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Combos</p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">Bundles con mudanza</h2>
+        <p class="mt-2 text-gray-700">
+          Si combinas almacenaje con mudanza, te ahorras coordinación y obtienes descuento.
+        </p>
+      </div>
+      <div class="grid gap-5 md:grid-cols-2">
+        {
+          bundles.map((b) => (
+            <article class="border-primary rounded-2xl border-l-4 bg-gray-50 p-6">
+              <h3 class="font-heading mb-2 text-lg font-bold">{b.title}</h3>
+              <p class="text-sm text-gray-700">{b.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {/* Casos de uso */}
+  <Section background="gray" spacing="lg">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Casos típicos</p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">¿Cuándo conviene almacenar?</h2>
+      </div>
+      <div class="grid gap-5 md:grid-cols-2">
+        {
+          casos.map((c) => (
+            <article class="rounded-2xl bg-white p-6 shadow-sm">
+              <h3 class="font-heading mb-2 text-lg font-bold">{c.title}</h3>
+              <p class="text-sm text-gray-700">{c.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {/* FAQs */}
+  <Section background="white" spacing="lg">
+    <Container size="narrow">
+      <h2 class="font-heading mb-8 text-2xl font-bold md:text-3xl">Preguntas frecuentes</h2>
+      <div class="space-y-3">
+        {
+          faqs.map((faq) => (
+            <details class="group rounded-xl border border-gray-200 bg-white">
+              <summary class="hover:text-primary flex cursor-pointer list-none items-center justify-between p-5 font-bold [&::-webkit-details-marker]:hidden">
+                <span>{faq.q}</span>
+                <svg
+                  class="h-5 w-5 shrink-0 transition-transform group-open:rotate-180"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </summary>
+              <div class="border-t border-gray-100 px-5 py-4 text-sm leading-relaxed text-gray-700">
+                <p>{faq.a}</p>
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {/* Servicios relacionados */}
+  <Section background="gray" spacing="lg">
+    <Container>
+      <div class="mb-8">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+          Servicios relacionados
+        </p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">También te puede interesar</h2>
+      </div>
+      <div class="grid gap-6 md:grid-cols-3">
+        <ServiceCard
+          title="Mudanzas locales"
+          description="Combina mudanza y almacenaje con 30 días gratis de custodia."
+          href="/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/"
+          image="/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg"
+          imageAlt="Mudanzas locales en Cusco"
+        />
+        <ServiceCard
+          title="Servicio de embalaje"
+          description="Embalaje profesional antes de almacenar para máxima protección."
+          href="/servicio-de-embalaje-cusco/"
+          image="/wp-content/uploads/2024/05/EMBALAJE-CUSCO.png"
+          imageAlt="Embalaje profesional en Cusco"
+        />
+        <ServiceCard
+          title="Nuestra flota"
+          description="Unidades propias de 1, 2 y 4 toneladas para mover tu carga al depósito."
+          href="/flota-de-camiones-cusco/"
+          image="/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg"
+          imageAlt="Flota de camiones Expreso Ñan"
+        />
+      </div>
+    </Container>
+  </Section>
+
+  <CTASection
+    title="¿Listo para liberar espacio con tranquilidad?"
+    subtitle="Te cotizamos almacenaje en minutos por WhatsApp, según volumen y tiempo que necesites."
+    whatsappMessage="Hola, necesito almacenaje. Quiero guardar: [descripción]. Por aproximadamente: [tiempo]. ¿Me pueden cotizar?"
+  />
+</BaseLayout>
