@@ -5,7 +5,7 @@
  * bloque de confianza.
  *
  * Props:
- *  - items: array de { value, label, icon? (emoji o SVG inline corto) }
+ *  - items: array de { value, label, icon? (string SVG inline — nunca emoji) }
  *  - invert: si se renderiza sobre fondo oscuro (texto blanco)
  *  - align: center por defecto
  */
@@ -53,7 +53,10 @@ const gridCols =
       <div class="flex flex-col items-center">
         {stat.icon && (
           <div
-            class:list={['mb-2 text-2xl', invert ? 'opacity-90' : 'opacity-75']}
+            class:list={[
+              'mb-2 [&_svg]:h-6 [&_svg]:w-6 md:[&_svg]:h-7 md:[&_svg]:w-7',
+              invert ? 'text-white/90' : 'text-primary',
+            ]}
             aria-hidden="true"
             set:html={stat.icon}
           />

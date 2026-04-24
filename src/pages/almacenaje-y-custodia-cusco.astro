@@ -223,9 +223,20 @@ const storageSchema = {
               <p class="mb-4 flex-1 text-sm text-gray-700">{m.description}</p>
               <ul class="space-y-2 text-sm text-gray-700">
                 {m.highlights.map((h) => (
-                  <li class="flex gap-2">
-                    <span class="text-primary">✓</span>
-                    {h}
+                  <li class="flex items-start gap-2">
+                    <svg
+                      class="text-primary mt-0.5 h-4 w-4 shrink-0"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2.5"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M4.5 12.75l6 6 9-13.5" />
+                    </svg>
+                    <span>{h}</span>
                   </li>
                 ))}
               </ul>
