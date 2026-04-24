@@ -1,12 +1,17 @@
 ---
 /*
- * Hero con imagen de portada full-bleed + overlay gradient.
- * Se usa sólo en páginas flagship (home, about, hub de servicios) para dar
- * presencia fotográfica. Las otras páginas (distritos, rutas, landings de
- * servicio) siguen con el <Hero> clásico porque ya tienen imagen lateral.
+ * Hero con imagen de portada al TOP en aspect-ratio natural (3:1) y bloque
+ * de texto debajo sobre sección oscura.
  *
- * Imágenes procesadas en /public/hero/ por scripts/process-hero-images.mjs
- * — 3 slugs disponibles: 'home', 'about', 'services'.
+ * Decisión de diseño: el cliente pidió ver la imagen completa. Con object-cover
+ * recortábamos parte de la foto (especialmente los lados en viewports anchos y
+ * la parte baja en móvil). Con este layout apilado la imagen se muestra al
+ * 100% en cualquier viewport — sin crop, sin overlay por encima. El texto ya
+ * tiene contraste garantizado al estar en bg oscuro.
+ *
+ * Las 3 imágenes procesadas (home, about, services) tienen ratio 3:1 — un
+ * solo aspect-ratio sirve para todas. Si se añaden más fotos con otros
+ * ratios, habría que parametrizarlo.
  */
 import Container from '@components/Container.astro';
 import WhatsAppButton from '@components/WhatsAppButton.astro';
@@ -46,11 +51,15 @@ const {
 const basePath = `/hero/${image}-hero`;
 const srcsetWebp = `${basePath}-mobile.webp 768w, ${basePath}-tablet.webp 1280w, ${basePath}.webp 1920w`;
 const srcsetJpg = `${basePath}.jpg`;
+
+// Dimensiones reales para reservar espacio y evitar CLS.
+// home-hero: 1500x498 (ratio 3.01). about/services: 1920x637 (ratio 3.01).
+// El ratio 3:1 sirve para las 3.
 ---
 
-<section class="relative isolate overflow-hidden bg-[var(--color-dark)]">
-  {/* Imagen de fondo */}
-  <picture class="absolute inset-0 -z-10">
+<section class="relative overflow-hidden bg-[var(--color-dark)]">
+  {/* Imagen completa — sin overlay encima, sin crop. Aspect natural 3:1. */}
+  <picture class="block w-full">
     <source
       type="image/webp"
       srcset={srcsetWebp}
@@ -60,31 +69,17 @@ const srcsetJpg = `${basePath}.jpg`;
       src={srcsetJpg}
       alt={imageAlt}
       width="1920"
-      height="700"
+      height="637"
       loading="eager"
       fetchpriority="high"
       decoding="async"
-      class="h-full w-full object-cover"
+      class="block h-auto w-full"
     />
   </picture>
 
-  {
-    /* Overlay gradient — suficiente para legibilidad del texto pero sin apagar
-      la imagen. El texto ya lleva drop-shadow-lg y el eyebrow panel de blur,
-      por lo que un overlay ligero basta. Desktop: oscuro izq → transparente
-      der. Móvil: oscuro abajo → transparente arriba. */
-  }
-  <div
-    class="absolute inset-0 -z-10 bg-gradient-to-t from-black/65 via-black/25 to-transparent md:bg-gradient-to-r md:from-black/65 md:via-black/25 md:to-transparent"
-    aria-hidden="true"
-  >
-  </div>
-
-  <Container
-    size="wide"
-    class="relative flex min-h-[560px] flex-col justify-center py-16 md:min-h-[620px] md:py-24 lg:min-h-[680px] lg:py-28"
-  >
-    <div class="max-w-2xl">
+  {/* Panel de texto debajo sobre bg oscuro — contraste garantizado. */}
+  <Container size="wide" class="relative py-12 md:py-16 lg:py-20">
+    <div class="max-w-3xl">
       {
         eyebrow && (
           <p class="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold tracking-wider text-white uppercase backdrop-blur">
@@ -94,19 +89,19 @@ const srcsetJpg = `${basePath}.jpg`;
         )
       }
       <HeadingTag
-        class="font-heading text-4xl leading-tight font-bold text-white drop-shadow-lg md:text-5xl lg:text-6xl"
+        class="font-heading text-3xl leading-tight font-bold text-white md:text-4xl lg:text-5xl"
       >
         {title}
       </HeadingTag>
       {
         subtitle && (
-          <p class="mt-5 max-w-xl text-base leading-relaxed text-white/95 drop-shadow md:text-lg">
+          <p class="mt-4 max-w-2xl text-base leading-relaxed text-white/90 md:text-lg">
             {subtitle}
           </p>
         )
       }
 
-      <div class="mt-8 flex flex-wrap gap-3">
+      <div class="mt-6 flex flex-wrap gap-3 md:mt-8">
         <WhatsAppButton
           variant="inline"
           size="lg"
@@ -118,7 +113,7 @@ const srcsetJpg = `${basePath}.jpg`;
               href={secondaryCta.href}
               variant="outline"
               size="lg"
-              class="hover:text-primary border-white bg-transparent text-white backdrop-blur hover:bg-white"
+              class="hover:text-primary border-white bg-transparent text-white hover:bg-white"
             >
               {secondaryCta.label}
             </Button>
@@ -126,16 +121,16 @@ const srcsetJpg = `${basePath}.jpg`;
         }
       </div>
 
-      {/* Stats bar opcional — social proof inmediato */}
+      {/* Stats bar opcional — social proof */}
       {
         stats && stats.length > 0 && (
-          <dl class="mt-10 grid max-w-xl grid-cols-3 gap-4 border-t border-white/20 pt-6">
+          <dl class="mt-8 grid max-w-2xl grid-cols-3 gap-4 border-t border-white/15 pt-6 md:mt-10">
             {stats.map((s: Stat) => (
               <div class="text-white">
                 <dt class="sr-only">{s.label}</dt>
                 <dd>
                   <p class="font-heading text-2xl font-bold md:text-3xl">{s.value}</p>
-                  <p class="mt-0.5 text-xs text-white/80 md:text-sm">{s.label}</p>
+                  <p class="mt-0.5 text-xs text-white/75 md:text-sm">{s.label}</p>
                 </dd>
               </div>
             ))}
@@ -145,6 +140,6 @@ const srcsetJpg = `${basePath}.jpg`;
     </div>
   </Container>
 
-  {/* Borde inferior sutil en color primary — conecta con el resto del sitio */}
+  {/* Borde inferior sutil en primary — conecta con el resto del sitio */}
   <div class="bg-primary absolute right-0 bottom-0 left-0 h-1" aria-hidden="true"></div>
 </section>
