@@ -58,26 +58,26 @@ Unidades de **1 tonelada**, **2 toneladas** y **4 toneladas**.
 
 ## Stack Técnico
 
-| Capa | Tecnología |
-|------|-----------|
-| Framework | **Astro 6.x** |
-| Runtime | **Node.js 24 LTS** (≥22.12 requerido por Astro 6) |
-| Lenguaje | TypeScript 5.x (strict + `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes`) |
-| Estilos | **Tailwind CSS 4.x** (Vite plugin; tokens en `@theme` dentro del CSS, sin `tailwind.config.js`) |
-| Contenido | MDX + Astro Content Collections |
-| i18n | Integración nativa de Astro (`i18n` en `astro.config.mjs`) + diccionario propio en `src/i18n/ui.ts` |
-| Imágenes | `astro:assets` + Sharp (WebP/AVIF) |
-| Lint | **ESLint 9 flat config** (`eslint.config.js`) + `typescript-eslint` + `eslint-plugin-astro` + `eslint-plugin-jsx-a11y` |
-| Formato | Prettier 3 + `prettier-plugin-astro` + `prettier-plugin-tailwindcss` |
-| Pre-commit | Husky 9 + lint-staged 15 |
-| Hosting | VPS AlmaLinux 9.7 + Nginx 1.24+ (delante del Apache de Webuzo) |
-| SSL | Let's Encrypt + Certbot |
-| CDN | Cloudflare (free tier) |
-| CI/CD | GitHub Actions |
-| Repositorio | [YECCH-07/MUDANZAS-CUSCO](https://github.com/YECCH-07/MUDANZAS-CUSCO) (privado) |
-| Backups | rsync + Backblaze B2 |
-| Monitoreo | UptimeRobot |
-| Analítica | Google Analytics 4 + Meta Pixel (`538047728714313`) |
+| Capa        | Tecnología                                                                                                             |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Framework   | **Astro 6.x**                                                                                                          |
+| Runtime     | **Node.js 24 LTS** (≥22.12 requerido por Astro 6)                                                                      |
+| Lenguaje    | TypeScript 5.x (strict + `noUncheckedIndexedAccess` + `exactOptionalPropertyTypes`)                                    |
+| Estilos     | **Tailwind CSS 4.x** (Vite plugin; tokens en `@theme` dentro del CSS, sin `tailwind.config.js`)                        |
+| Contenido   | MDX + Astro Content Collections                                                                                        |
+| i18n        | Integración nativa de Astro (`i18n` en `astro.config.mjs`) + diccionario propio en `src/i18n/ui.ts`                    |
+| Imágenes    | `astro:assets` + Sharp (WebP/AVIF)                                                                                     |
+| Lint        | **ESLint 9 flat config** (`eslint.config.js`) + `typescript-eslint` + `eslint-plugin-astro` + `eslint-plugin-jsx-a11y` |
+| Formato     | Prettier 3 + `prettier-plugin-astro` + `prettier-plugin-tailwindcss`                                                   |
+| Pre-commit  | Husky 9 + lint-staged 15                                                                                               |
+| Hosting     | VPS AlmaLinux 9.7 + Nginx 1.24+ (delante del Apache de Webuzo)                                                         |
+| SSL         | Let's Encrypt + Certbot                                                                                                |
+| CDN         | Cloudflare (free tier)                                                                                                 |
+| CI/CD       | GitHub Actions                                                                                                         |
+| Repositorio | [YECCH-07/MUDANZAS-CUSCO](https://github.com/YECCH-07/MUDANZAS-CUSCO) (privado)                                        |
+| Backups     | rsync + Backblaze B2                                                                                                   |
+| Monitoreo   | UptimeRobot                                                                                                            |
+| Analítica   | Google Analytics 4 + Meta Pixel (`538047728714313`)                                                                    |
 
 > **Nota sobre versiones:** el plan original (DRU) asumía Astro 4 + Tailwind 3. Al iniciar SPRINT-00 en abril 2026, las versiones LTS/estables actuales son Astro 6 y Tailwind 4. El stack se actualizó sin cambiar el alcance funcional; las reglas SEO, URLs preservadas, i18n y decisiones de arquitectura siguen idénticas.
 
@@ -169,14 +169,17 @@ cuscomudanzas/
 ## CTA Principal
 
 **WhatsApp** (canal de conversión número uno). Cada página debe tener:
+
 - Botón flotante persistente esquina inferior derecha (verde `#25D366`).
 - Mensaje pre-armado contextual a la página.
 - Tracking como evento de conversión en GA4.
 
 ## Identidad Visual
 
-- Color primario: `#FB2056` (rojo corporativo, preservar del Astra actual)
-- Color secundario: `#DA1C4B` (rojo oscuro)
+- Color primario: `#D72638` (carmesí confianza, actualizado 2026-04-24)
+- Color secundario: `#A61D2B` (carmesí oscuro, para hovers)
+- Color acento: `#FF6B7A` (carmesí claro, para badges y acentos sutiles)
+- Color neutro oscuro: `#0F0F0F` (casi negro, combina con logo)
 - Tipografía: Montserrat (titulares) + Noto Sans (cuerpo) — preservar del actual
 - Logo: variantes en `/wp-content/uploads/2024/05/NAN-2.png`
 

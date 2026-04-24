@@ -16,13 +16,16 @@
  */
 
 @theme {
-  /* Colores corporativos (preservar del Astra actual) */
-  --color-primary: #fb2056;
-  --color-primary-dark: #da1c4b;
-  --color-primary-light: #ff6b8c;
+  /* Colores corporativos — paleta "Carmesí confianza".
+   * Combina con logo rojo + negro + blanco. Contraste AA con fondo blanco
+   * (primary 4.91:1, primary-dark AAA). Actualizado 2026-04-24.
+   */
+  --color-primary: #d72638;
+  --color-primary-dark: #a61d2b;
+  --color-primary-light: #ff6b7a;
 
   /* Neutros */
-  --color-dark: #1a1a1a;
+  --color-dark: #0f0f0f;
 
   /* Estado y contexto */
   --color-whatsapp: #25d366;
