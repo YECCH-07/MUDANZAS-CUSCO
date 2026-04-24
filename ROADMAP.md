@@ -21,7 +21,7 @@ Semana  1   2   3   4   5   6   7   8   9  10  11  12  13
 | [SPRINT-00](sprints/SPRINT-00-setup.md)         | 1      | Setup inicial y arquitectura            | ✅ Completado |
 | [SPRINT-01](sprints/SPRINT-01-design-system.md) | 2      | Sistema de diseño y componentes base    | ✅ Completado |
 | [SPRINT-02](sprints/SPRINT-02-core-pages.md)    | 3-4    | Páginas core (Home, Nosotros, Contacto) | ✅ Completado |
-| [SPRINT-03](sprints/SPRINT-03-services.md)      | 5      | Páginas de servicios                    | ⬜ Pendiente  |
+| [SPRINT-03](sprints/SPRINT-03-services.md)      | 5      | Páginas de servicios                    | ✅ Completado |
 | [SPRINT-04](sprints/SPRINT-04-storage-fleet.md) | 6      | Almacenaje, Custodia y Flota            | ⬜ Pendiente  |
 | [SPRINT-05](sprints/SPRINT-05-districts.md)     | 7      | Landings de distritos                   | ⬜ Pendiente  |
 | [SPRINT-06](sprints/SPRINT-06-routes.md)        | 8      | Landings de rutas inter-provinciales    | ⬜ Pendiente  |
