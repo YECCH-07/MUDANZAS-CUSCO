@@ -69,12 +69,13 @@ const srcsetJpg = `${basePath}.jpg`;
   </picture>
 
   {
-    /* Overlay gradient: oscuro izquierda → transparente derecha en desktop,
-      oscuro abajo → transparente arriba en móvil (para que el sujeto quede
-      visible y el texto legible). */
+    /* Overlay gradient — suficiente para legibilidad del texto pero sin apagar
+      la imagen. El texto ya lleva drop-shadow-lg y el eyebrow panel de blur,
+      por lo que un overlay ligero basta. Desktop: oscuro izq → transparente
+      der. Móvil: oscuro abajo → transparente arriba. */
   }
   <div
-    class="absolute inset-0 -z-10 bg-gradient-to-t from-black/85 via-black/55 to-black/25 md:bg-gradient-to-r md:from-black/85 md:via-black/60 md:to-black/10"
+    class="absolute inset-0 -z-10 bg-gradient-to-t from-black/65 via-black/25 to-transparent md:bg-gradient-to-r md:from-black/65 md:via-black/25 md:to-transparent"
     aria-hidden="true"
   >
   </div>

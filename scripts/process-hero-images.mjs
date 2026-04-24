@@ -16,14 +16,22 @@ import { dirname, resolve } from 'node:path';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
-const SRC = resolve(ROOT, 'imagenes', 'FOTOGRAFIAS DE PORTADA');
+const IMG_ROOT = resolve(ROOT, 'imagenes');
+const PORTADA_DIR = resolve(IMG_ROOT, 'FOTOGRAFIAS DE PORTADA');
 const OUT = resolve(ROOT, 'public', 'hero');
 
-// source -> slug (output file base name)
+/*
+ * source puede ser una ruta relativa al directorio /imagenes/ o el nombre de
+ * archivo dentro de FOTOGRAFIAS DE PORTADA (resolución automática).
+ */
 const IMAGES = [
-  { source: 'FOTO-DE-PORTADA.jpg', slug: 'home-hero' },
-  { source: 'QUIENES-SOMOS.jpg', slug: 'about-hero' },
-  { source: 'SERVICIOS.jpg', slug: 'services-hero' },
+  {
+    // Home: Plaza de Armas del Cusco con personal — identidad local inequívoca.
+    sourceRel: 'camion-de-mudanza---cusco-servicio-de-flete----foto-de-portada2.jpg',
+    slug: 'home-hero',
+  },
+  { sourceRel: 'FOTOGRAFIAS DE PORTADA/QUIENES-SOMOS.jpg', slug: 'about-hero' },
+  { sourceRel: 'FOTOGRAFIAS DE PORTADA/SERVICIOS.jpg', slug: 'services-hero' },
 ];
 
 const WIDTHS = [
@@ -45,14 +53,14 @@ async function main() {
   await mkdir(OUT, { recursive: true });
 
   for (const img of IMAGES) {
-    const src = resolve(SRC, img.source);
+    const src = resolve(IMG_ROOT, img.sourceRel);
     const srcSize = await fileSize(src);
     if (srcSize === 0) {
-      console.error(`✗ Fuente no encontrada: ${src}`);
+      console.error(`[x] Fuente no encontrada: ${src}`);
       continue;
     }
 
-    console.log(`\n→ ${img.source}  (${(srcSize / 1024).toFixed(0)} KB)`);
+    console.log(`\n--> ${img.sourceRel}  (${(srcSize / 1024).toFixed(0)} KB)`);
 
     for (const { suffix, width } of WIDTHS) {
       // WebP (principal)
@@ -62,7 +70,9 @@ async function main() {
         .webp({ quality: 82, effort: 5 })
         .toFile(webp);
       const webpSize = await fileSize(webp);
-      console.log(`  ✓ ${img.slug}${suffix}.webp  ${width}w  ${(webpSize / 1024).toFixed(0)} KB`);
+      console.log(
+        `   [ok] ${img.slug}${suffix}.webp  ${width}w  ${(webpSize / 1024).toFixed(0)} KB`,
+      );
     }
 
     // JPG fallback sólo en tamaño desktop (WebP cubre todo navegador moderno)
@@ -72,10 +82,10 @@ async function main() {
       .jpeg({ quality: 80, mozjpeg: true })
       .toFile(jpg);
     const jpgSize = await fileSize(jpg);
-    console.log(`  ✓ ${img.slug}.jpg  1920w  ${(jpgSize / 1024).toFixed(0)} KB (fallback)`);
+    console.log(`   [ok] ${img.slug}.jpg  1920w  ${(jpgSize / 1024).toFixed(0)} KB (fallback)`);
   }
 
-  console.log(`\n✓ Listo. Archivos en ${OUT}`);
+  console.log(`\n[ok] Listo. Archivos en ${OUT}`);
 }
 
 main().catch((err) => {
