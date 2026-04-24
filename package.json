@@ -1,0 +1,52 @@
+{
+  "name": "cuscomudanzas",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Sitio web de Expresos Ñan — migración WordPress → Astro. cuscomudanzas.com",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "typecheck": "astro check",
+    "ci": "npm run lint && npm run typecheck && npm run build",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,astro}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,css,mjs,js}": [
+      "prettier --write"
+    ]
+  },
+  "dependencies": {
+    "@astrojs/sitemap": "^3.7.2",
+    "@tailwindcss/vite": "^4.2.4",
+    "astro": "^6.1.9",
+    "tailwindcss": "^4.2.4"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.8",
+    "eslint": "^9.39.4",
+    "eslint-plugin-astro": "^1.7.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
+    "globals": "^15.15.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^15.5.2",
+    "prettier": "^3.8.3",
+    "prettier-plugin-astro": "^0.14.1",
+    "prettier-plugin-tailwindcss": "^0.6.14",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.59.0"
+  }
+}

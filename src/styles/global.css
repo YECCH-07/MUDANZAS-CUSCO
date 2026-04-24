@@ -1,0 +1,63 @@
+@import "tailwindcss";
+
+/*
+ * Sistema de diseño cuscomudanzas.com
+ * Paleta corporativa + tokens + fuentes auto-hospedadas (cargadas en fonts.css).
+ * Tailwind v4: cualquier token aquí declarado se convierte en utilidad (bg-primary, text-primary-dark, font-heading, etc.).
+ */
+
+@theme {
+  /* Colores corporativos (preservar del Astra actual) */
+  --color-primary: #fb2056;
+  --color-primary-dark: #da1c4b;
+  --color-primary-light: #ff6b8c;
+
+  /* Neutros */
+  --color-dark: #1a1a1a;
+
+  /* Estado y contexto */
+  --color-whatsapp: #25d366;
+  --color-whatsapp-dark: #1ea952;
+
+  /* Tipografía (definida en public/fonts/ + src/styles/fonts.css) */
+  --font-heading: "Montserrat", system-ui, sans-serif;
+  --font-sans: "Noto Sans", system-ui, sans-serif;
+
+  /* Ancho de contenedor principal */
+  --container-wide: 1240px;
+
+  /* Radios */
+  --radius-pill: 999px;
+}
+
+/* Smooth scroll global */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--color-dark);
+  background: #ffffff;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-heading);
+}
+
+/* Skip-link accesible (se usa en BaseLayout) */
+.skip-link:focus {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  background: var(--color-primary);
+  color: #ffffff;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+}
