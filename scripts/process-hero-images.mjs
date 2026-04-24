@@ -28,17 +28,17 @@ const OUT = resolve(ROOT, 'public', 'hero');
  */
 const IMAGES = [
   {
-    // Home: equipo completo con herramientas — transmite profesionalismo y escala.
-    sourceRel: 'FOTOGRAFIAS/Nueva carpeta/PERSONAL-EFICIENTE-PARA-CARGAS-Y-MUDANZAS-CUSCO.jpg',
+    // Home: camión HINO + personal con caja + carretera andina. Foto solicitada por YEISON.
+    sourceRel: 'FOTOGRAFIAS DE PORTADA/FOTO-DE-PORTADA.jpg',
     slug: 'home-hero',
   },
   {
-    // About: equipo casual en la calle — humaniza la empresa.
-    sourceRel: 'FOTOGRAFIAS/Nueva carpeta/PERSONAL-DE-MUDANZAS-CUSCO.jpg',
+    // About (Quiénes somos): personal con gorra y panorama de Cusco al fondo.
+    sourceRel: 'FOTOGRAFIAS DE PORTADA/QUIENES-SOMOS.jpg',
     slug: 'about-hero',
   },
   {
-    // Services hub: mudanza real en acción dentro de un departamento.
+    // Services hub: mudanza real dentro de un departamento.
     sourceRel: 'FOTOGRAFIAS/Nueva carpeta/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg',
     slug: 'services-hero',
   },
