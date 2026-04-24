@@ -2,6 +2,8 @@
 interface Props {
   background?: 'white' | 'gray' | 'primary' | 'dark';
   spacing?: 'sm' | 'md' | 'lg' | 'xl';
+  /** Decoración sutil de fondo. 'dots' = puntos SVG, 'gradient' = gradient vertical sutil. */
+  decoration?: 'none' | 'dots' | 'gradient';
   class?: string;
   id?: string;
   'aria-labelledby'?: string;
@@ -10,6 +12,7 @@ interface Props {
 const {
   background = 'white',
   spacing = 'lg',
+  decoration = 'none',
   class: className = '',
   id,
   'aria-labelledby': ariaLabelledBy,
@@ -28,12 +31,39 @@ const spacings = {
   lg: 'py-16 md:py-24',
   xl: 'py-24 md:py-32',
 };
+
+const hasDecoration = decoration !== 'none';
 ---
 
 <section
   id={id}
   aria-labelledby={ariaLabelledBy}
-  class:list={[backgrounds[background], spacings[spacing], className]}
+  class:list={[
+    'relative',
+    backgrounds[background],
+    spacings[spacing],
+    hasDecoration && 'overflow-hidden',
+    className,
+  ]}
 >
-  <slot />
+  {
+    decoration === 'dots' && (
+      <div
+        class="pointer-events-none absolute inset-0 opacity-[0.04]"
+        style="background-image: radial-gradient(circle, currentColor 1px, transparent 1px); background-size: 24px 24px;"
+        aria-hidden="true"
+      />
+    )
+  }
+  {
+    decoration === 'gradient' && (
+      <div
+        class="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-gray-50/0 to-gray-100/50"
+        aria-hidden="true"
+      />
+    )
+  }
+  <div class="relative">
+    <slot />
+  </div>
 </section>

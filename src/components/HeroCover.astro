@@ -1,0 +1,149 @@
+---
+/*
+ * Hero con imagen de portada full-bleed + overlay gradient.
+ * Se usa sólo en páginas flagship (home, about, hub de servicios) para dar
+ * presencia fotográfica. Las otras páginas (distritos, rutas, landings de
+ * servicio) siguen con el <Hero> clásico porque ya tienen imagen lateral.
+ *
+ * Imágenes procesadas en /public/hero/ por scripts/process-hero-images.mjs
+ * — 3 slugs disponibles: 'home', 'about', 'services'.
+ */
+import Container from '@components/Container.astro';
+import WhatsAppButton from '@components/WhatsAppButton.astro';
+import Button from '@components/Button.astro';
+
+type HeroSlug = 'home' | 'about' | 'services';
+
+interface Stat {
+  value: string;
+  label: string;
+}
+
+interface Props {
+  image: HeroSlug;
+  title: string;
+  subtitle?: string;
+  eyebrow?: string;
+  imageAlt: string;
+  whatsappMessage?: string;
+  secondaryCta?: { label: string; href: string };
+  stats?: Stat[];
+  as?: 'h1' | 'h2';
+}
+
+const {
+  image,
+  title,
+  subtitle,
+  eyebrow,
+  imageAlt,
+  whatsappMessage,
+  secondaryCta,
+  stats,
+  as: HeadingTag = 'h1',
+} = Astro.props;
+
+const basePath = `/hero/${image}-hero`;
+const srcsetWebp = `${basePath}-mobile.webp 768w, ${basePath}-tablet.webp 1280w, ${basePath}.webp 1920w`;
+const srcsetJpg = `${basePath}.jpg`;
+---
+
+<section class="relative isolate overflow-hidden bg-[var(--color-dark)]">
+  {/* Imagen de fondo */}
+  <picture class="absolute inset-0 -z-10">
+    <source
+      type="image/webp"
+      srcset={srcsetWebp}
+      sizes="(max-width: 768px) 768px, (max-width: 1280px) 1280px, 1920px"
+    />
+    <img
+      src={srcsetJpg}
+      alt={imageAlt}
+      width="1920"
+      height="700"
+      loading="eager"
+      fetchpriority="high"
+      decoding="async"
+      class="h-full w-full object-cover"
+    />
+  </picture>
+
+  {
+    /* Overlay gradient: oscuro izquierda → transparente derecha en desktop,
+      oscuro abajo → transparente arriba en móvil (para que el sujeto quede
+      visible y el texto legible). */
+  }
+  <div
+    class="absolute inset-0 -z-10 bg-gradient-to-t from-black/85 via-black/55 to-black/25 md:bg-gradient-to-r md:from-black/85 md:via-black/60 md:to-black/10"
+    aria-hidden="true"
+  >
+  </div>
+
+  <Container
+    size="wide"
+    class="relative flex min-h-[560px] flex-col justify-center py-16 md:min-h-[620px] md:py-24 lg:min-h-[680px] lg:py-28"
+  >
+    <div class="max-w-2xl">
+      {
+        eyebrow && (
+          <p class="mb-4 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-1.5 text-xs font-bold tracking-wider text-white uppercase backdrop-blur">
+            <span class="bg-primary inline-block h-1.5 w-1.5 animate-pulse rounded-full" />
+            {eyebrow}
+          </p>
+        )
+      }
+      <HeadingTag
+        class="font-heading text-4xl leading-tight font-bold text-white drop-shadow-lg md:text-5xl lg:text-6xl"
+      >
+        {title}
+      </HeadingTag>
+      {
+        subtitle && (
+          <p class="mt-5 max-w-xl text-base leading-relaxed text-white/95 drop-shadow md:text-lg">
+            {subtitle}
+          </p>
+        )
+      }
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <WhatsAppButton
+          variant="inline"
+          size="lg"
+          {...whatsappMessage !== undefined ? { message: whatsappMessage } : {}}
+        />
+        {
+          secondaryCta && (
+            <Button
+              href={secondaryCta.href}
+              variant="outline"
+              size="lg"
+              class="hover:text-primary border-white bg-transparent text-white backdrop-blur hover:bg-white"
+            >
+              {secondaryCta.label}
+            </Button>
+          )
+        }
+      </div>
+
+      {/* Stats bar opcional — social proof inmediato */}
+      {
+        stats && stats.length > 0 && (
+          <dl class="mt-10 grid max-w-xl grid-cols-3 gap-4 border-t border-white/20 pt-6">
+            {stats.map((s: Stat) => (
+              <div class="text-white">
+                <dt class="sr-only">{s.label}</dt>
+                <dd>
+                  <p class="font-heading text-2xl font-bold md:text-3xl">{s.value}</p>
+                  <p class="mt-0.5 text-xs text-white/80 md:text-sm">{s.label}</p>
+                </dd>
+              </div>
+            ))}
+          </dl>
+        )
+      }
+    </div>
+  </Container>
+
+  {/* Borde inferior sutil en color primary — conecta con el resto del sitio */}
+  <div class="bg-primary absolute right-0 bottom-0 left-0 h-1" aria-hidden="true"></div>
+</section>

@@ -1,0 +1,75 @@
+---
+/*
+ * Bloque de stats reutilizable (social proof). 3-5 números grandes con label
+ * debajo. Pensado para usar en home, /cobertura/, /about/ y otras páginas con
+ * bloque de confianza.
+ *
+ * Props:
+ *  - items: array de { value, label, icon? (emoji o SVG inline corto) }
+ *  - invert: si se renderiza sobre fondo oscuro (texto blanco)
+ *  - align: center por defecto
+ */
+interface Stat {
+  value: string;
+  label: string;
+  icon?: string;
+}
+
+interface Props {
+  items: Stat[];
+  invert?: boolean;
+  align?: 'center' | 'left';
+  class?: string;
+}
+
+const { items, invert = false, align = 'center', class: className = '' } = Astro.props;
+
+const valueColor = invert ? 'text-white' : 'text-primary';
+const labelColor = invert ? 'text-white/80' : 'text-gray-600';
+const dividerColor = invert ? 'border-white/15' : 'border-gray-200';
+const alignClass = align === 'center' ? 'text-center' : 'text-left';
+const gridCols =
+  items.length === 2
+    ? 'grid-cols-2'
+    : items.length === 3
+      ? 'grid-cols-2 md:grid-cols-3'
+      : items.length === 4
+        ? 'grid-cols-2 md:grid-cols-4'
+        : 'grid-cols-2 md:grid-cols-5';
+---
+
+<dl
+  class:list={[
+    'grid gap-6 rounded-2xl border p-6 md:p-8',
+    dividerColor,
+    gridCols,
+    alignClass,
+    invert ? 'bg-white/5 backdrop-blur' : 'bg-white shadow-sm',
+    className,
+  ]}
+>
+  {
+    items.map((stat) => (
+      <div class="flex flex-col items-center">
+        {stat.icon && (
+          <div
+            class:list={['mb-2 text-2xl', invert ? 'opacity-90' : 'opacity-75']}
+            aria-hidden="true"
+            set:html={stat.icon}
+          />
+        )}
+        <dt class="sr-only">{stat.label}</dt>
+        <dd>
+          <p class:list={[valueColor, 'font-heading text-3xl font-bold md:text-4xl lg:text-5xl']}>
+            {stat.value}
+          </p>
+          <p
+            class:list={[labelColor, 'mt-1 text-xs font-bold tracking-wider uppercase md:text-sm']}
+          >
+            {stat.label}
+          </p>
+        </dd>
+      </div>
+    ))
+  }
+</dl>

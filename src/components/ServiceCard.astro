@@ -1,4 +1,6 @@
 ---
+type BadgeTone = 'primary' | 'amber' | 'green' | 'neutral';
+
 interface Props {
   title: string;
   description: string;
@@ -8,14 +10,45 @@ interface Props {
   icon?: string;
   iconAlt?: string;
   cta?: string;
+  badge?: { label: string; tone?: BadgeTone };
 }
 
-const { title, description, href, image, imageAlt, icon, iconAlt, cta = 'Saber más' } = Astro.props;
+const {
+  title,
+  description,
+  href,
+  image,
+  imageAlt,
+  icon,
+  iconAlt,
+  cta = 'Saber más',
+  badge,
+} = Astro.props;
+
+const badgeTones: Record<BadgeTone, string> = {
+  primary: 'bg-primary/10 text-primary-dark',
+  amber: 'bg-amber-100 text-amber-800',
+  green: 'bg-green-100 text-green-800',
+  neutral: 'bg-gray-100 text-gray-700',
+};
+const badgeClass = badge ? badgeTones[badge.tone ?? 'primary'] : '';
 ---
 
 <article
-  class="group flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-shadow hover:shadow-lg"
+  class="group hover:border-primary/30 hover:shadow-primary/10 relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-lg motion-safe:hover:-translate-y-1 motion-reduce:transition-none"
 >
+  {
+    badge && (
+      <span
+        class:list={[
+          'absolute top-3 right-3 z-10 rounded-full px-3 py-1 text-xs font-bold tracking-wider uppercase shadow-sm backdrop-blur',
+          badgeClass,
+        ]}
+      >
+        {badge.label}
+      </span>
+    )
+  }
   {
     image && (
       <a href={href} class="block aspect-[4/3] overflow-hidden bg-gray-100">

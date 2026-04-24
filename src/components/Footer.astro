@@ -71,7 +71,9 @@ const labels =
       };
 ---
 
-<footer class="mt-auto bg-[var(--color-dark)] text-gray-300">
+<footer class="relative mt-auto bg-[var(--color-dark)] text-gray-300">
+  {/* Barra de acento primary arriba del footer — conecta visualmente con el resto del sitio */}
+  <div class="bg-primary h-1 w-full" aria-hidden="true"></div>
   <Container size="wide" class="grid grid-cols-1 gap-10 py-12 md:grid-cols-2 lg:grid-cols-4">
     {/* Col 1 — Sobre */}
     <div>
@@ -135,7 +137,11 @@ const labels =
 
     {/* Col 2 — Servicios */}
     <div>
-      <h2 class="font-heading mb-4 text-lg font-bold text-white">{labels.servicesTitle}</h2>
+      <h2
+        class="font-heading after:bg-primary relative mb-4 pb-2 text-lg font-bold text-white after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-8 after:rounded-full"
+      >
+        {labels.servicesTitle}
+      </h2>
       <ul class="space-y-2 text-sm">
         {
           labels.services.map((s) => (
@@ -151,7 +157,11 @@ const labels =
 
     {/* Col 3 — Cobertura */}
     <div>
-      <h2 class="font-heading mb-4 text-lg font-bold text-white">{labels.coverageTitle}</h2>
+      <h2
+        class="font-heading after:bg-primary relative mb-4 pb-2 text-lg font-bold text-white after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-8 after:rounded-full"
+      >
+        {labels.coverageTitle}
+      </h2>
       <ul class="space-y-2 text-sm">
         {
           labels.coverage.map((c) => (
@@ -167,7 +177,11 @@ const labels =
 
     {/* Col 4 — Contacto */}
     <div>
-      <h2 class="font-heading mb-4 text-lg font-bold text-white">{labels.contactTitle}</h2>
+      <h2
+        class="font-heading after:bg-primary relative mb-4 pb-2 text-lg font-bold text-white after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-8 after:rounded-full"
+      >
+        {labels.contactTitle}
+      </h2>
       <address class="space-y-3 text-sm not-italic">
         <p>
           <a href={getTelUrl()} class="hover:text-primary block font-bold text-white">

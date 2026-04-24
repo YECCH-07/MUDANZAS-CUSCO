@@ -2,7 +2,8 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/Container.astro';
 import Section from '@components/Section.astro';
-import Hero from '@components/Hero.astro';
+import HeroCover from '@components/HeroCover.astro';
+import SectionHeader from '@components/SectionHeader.astro';
 import Breadcrumbs from '@components/Breadcrumbs.astro';
 import CTASection from '@components/CTASection.astro';
 ---
@@ -12,12 +13,12 @@ import CTASection from '@components/CTASection.astro';
   description="Conoce a Expresos Ñan, empresa cusqueña de mudanzas profesionales. Flota propia, equipo capacitado y cobertura local e inter-provincial. Compromiso con cada cliente."
   ogImage="/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg"
 >
-  <Hero
+  <HeroCover
+    image="about"
     eyebrow="Sobre nosotros"
     title="Una empresa cusqueña, hecha para Cusco"
     subtitle="Somos Expresos Ñan: mudanzas, flete, carga y almacenaje con flota propia, equipo profesional y cobertura real en todo el sur del Perú."
-    image="/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg"
-    imageAlt="Equipo de Expresos Ñan realizando una mudanza en Cusco"
+    imageAlt="Personal de Expreso Ñan con logo corporativo frente a panorama de la ciudad de Cusco"
     whatsappMessage="Hola, vi su página de nosotros y quisiera más información sobre sus servicios."
   />
 
@@ -30,8 +31,7 @@ import CTASection from '@components/CTASection.astro';
   {/* Historia */}
   <Section background="white" spacing="md">
     <Container size="narrow">
-      <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Historia</p>
-      <h2 class="font-heading mb-4 text-3xl font-bold md:text-4xl">Nacimos en Cusco, para Cusco</h2>
+      <SectionHeader eyebrow="Historia" title="Nacimos en Cusco, para Cusco" />
       <div class="space-y-4 text-gray-700">
         <p>
           Expresos Ñan es una empresa cusqueña especializada en mudanzas, servicios de flete y

@@ -24,14 +24,16 @@ const {
 } = Astro.props;
 
 const base =
-  'inline-flex items-center justify-center gap-2 font-bold rounded-full transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary';
+  'group/btn inline-flex items-center justify-center gap-2 font-bold rounded-full transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary motion-safe:hover:-translate-y-0.5 motion-reduce:transition-none';
 
 const variants = {
-  primary: 'bg-primary text-white hover:bg-primary-dark',
-  secondary: 'bg-[var(--color-dark)] text-white hover:bg-black',
+  primary:
+    'bg-gradient-to-br from-primary to-primary-dark text-white shadow-md hover:shadow-lg hover:shadow-primary/30',
+  secondary: 'bg-[var(--color-dark)] text-white hover:bg-black shadow-md hover:shadow-lg',
   outline: 'bg-white text-primary border-2 border-primary hover:bg-primary hover:text-white',
   ghost: 'bg-transparent text-primary hover:bg-primary/10',
-  whatsapp: 'bg-whatsapp text-white hover:bg-whatsapp-dark',
+  whatsapp:
+    'bg-gradient-to-br from-whatsapp to-whatsapp-dark text-white shadow-md hover:shadow-lg hover:shadow-whatsapp/30',
 };
 
 const sizes = {

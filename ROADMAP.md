@@ -25,6 +25,7 @@ Semana  1   2   3   4   5   6   7   8   9  10  11  12  13
 | [SPRINT-04](sprints/SPRINT-04-storage-fleet.md) | 6      | Almacenaje, Custodia y Flota            | ✅ Completado |
 | [SPRINT-05](sprints/SPRINT-05-districts.md)     | 7      | Landings de distritos                   | ✅ Completado |
 | [SPRINT-06](sprints/SPRINT-06-routes.md)        | 8      | Landings de rutas inter-provinciales    | ✅ Completado |
+| SPRINT-06.5 (intermedio)                        | 8      | Refinamiento visual + fotos de portada  | ✅ Completado |
 | [SPRINT-07](sprints/SPRINT-07-blog.md)          | 9      | Blog SEO y contenido inicial            | ⬜ Pendiente  |
 | [SPRINT-08](sprints/SPRINT-08-i18n-english.md)  | 10     | Internacionalización al inglés          | ⬜ Pendiente  |
 | [SPRINT-09](sprints/SPRINT-09-seo-technical.md) | 11     | SEO técnico completo                    | ⬜ Pendiente  |

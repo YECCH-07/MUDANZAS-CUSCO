@@ -1,0 +1,67 @@
+---
+/*
+ * Encabezado de sección reutilizable con barra decorativa roja (accent bar),
+ * eyebrow, título y subtítulo opcional.
+ *
+ * Backwards-compatible: el patrón previo (p.eyebrow + h2 + p) sigue funcionando;
+ * este componente es opt-in para secciones que quieran el estilo pulido.
+ */
+interface Props {
+  eyebrow?: string;
+  title: string;
+  subtitle?: string;
+  align?: 'left' | 'center';
+  accent?: boolean;
+  as?: 'h2' | 'h3';
+  id?: string;
+  class?: string;
+  /** Si está en una sección con bg oscuro, pasamos invert para que el texto sea blanco. */
+  invert?: boolean;
+}
+
+const {
+  eyebrow,
+  title,
+  subtitle,
+  align = 'left',
+  accent = true,
+  as: Heading = 'h2',
+  id,
+  class: className = '',
+  invert = false,
+} = Astro.props;
+
+const alignClasses =
+  align === 'center'
+    ? 'text-center items-center mx-auto max-w-3xl'
+    : 'text-left items-start max-w-2xl';
+
+const titleColor = invert ? 'text-white' : 'text-dark';
+const subtitleColor = invert ? 'text-white/85' : 'text-gray-700';
+const eyebrowColor = invert ? 'text-primary-light' : 'text-primary';
+---
+
+<header class:list={['mb-8 flex flex-col gap-3', alignClasses, className]}>
+  {accent && <span class="bg-primary h-1 w-12 rounded-full" aria-hidden="true" />}
+  {
+    eyebrow && (
+      <p class:list={[eyebrowColor, 'text-xs font-bold tracking-wider uppercase']}>{eyebrow}</p>
+    )
+  }
+  <Heading
+    id={id}
+    class:list={[
+      titleColor,
+      'font-heading text-3xl font-bold md:text-4xl lg:text-[2.5rem] lg:leading-[1.1]',
+    ]}
+  >
+    {title}
+  </Heading>
+  {
+    subtitle && (
+      <p class:list={[subtitleColor, 'max-w-xl text-base leading-relaxed md:text-lg']}>
+        {subtitle}
+      </p>
+    )
+  }
+</header>
