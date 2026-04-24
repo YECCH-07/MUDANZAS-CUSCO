@@ -25,10 +25,10 @@ export const SITE = {
     sunday: '08:00 - 18:00',
   },
   social: {
-    facebook: 'https://facebook.com/ExpresoQhapaq',
-    facebookSecondary: 'https://facebook.com/MudanzaCusco1',
-    instagram: 'https://instagram.com/cuscomudanzas1',
-    tiktok: 'https://tiktok.com/@MudanzasCusco11',
+    facebook: 'https://www.facebook.com/MudanzaCusco1',
+    facebookSecondary: 'https://www.facebook.com/ExpresoQhapaq',
+    instagram: 'https://www.instagram.com/cuscomudanzas1/',
+    tiktok: 'https://www.tiktok.com/@MudanzasCusco11',
   },
   logo: {
     primary: '/wp-content/uploads/2024/05/servicio-de-mudanzas-Flete-Carga-Logo-Expreso-Nan.png',

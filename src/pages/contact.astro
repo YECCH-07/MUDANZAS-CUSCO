@@ -5,6 +5,7 @@ import Section from '@components/Section.astro';
 import Breadcrumbs from '@components/Breadcrumbs.astro';
 import WhatsAppButton from '@components/WhatsAppButton.astro';
 import ContactForm from '@components/ContactForm.astro';
+import SocialLinks from '@components/SocialLinks.astro';
 import { SITE } from '@lib/site';
 import { getTelUrl, getMailUrl } from '@lib/whatsapp';
 
@@ -103,6 +104,10 @@ const contactPageSchema = {
                 </p>
               </li>
             </ul>
+
+            <div class="mt-6 border-t border-gray-200 pt-5">
+              <SocialLinks variant="light" size="md" label="Síguenos en redes" />
+            </div>
           </div>
 
           <div class="overflow-hidden rounded-2xl border border-gray-200">

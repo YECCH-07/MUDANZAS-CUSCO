@@ -58,7 +58,8 @@ Unidades de **1 tonelada**, **2 toneladas** y **4 toneladas**.
 - Teléfono / WhatsApp: **925 671 052**
 - Email: **mudanzasexpresoqhapaq@gmail.com**
 - Dirección: René de la Molina, Cusco 08004
-- Facebook: facebook.com/ExpresoQhapaq, facebook.com/MudanzaCusco1
+- Facebook (principal): facebook.com/MudanzaCusco1
+- Facebook (secundario — se mantiene en `sameAs` de Schema.org para backlinks): facebook.com/ExpresoQhapaq
 - Instagram: instagram.com/cuscomudanzas1
 - TikTok: tiktok.com/@MudanzasCusco11
 
