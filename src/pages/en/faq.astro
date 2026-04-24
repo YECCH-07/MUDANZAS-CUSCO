@@ -1,0 +1,177 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+import SchemaFAQ from '@components/schema/SchemaFAQ.astro';
+
+const faqGroups = [
+  {
+    category: 'Pricing & quotes',
+    faqs: [
+      {
+        q: 'How much does a local move cost in Cusco?',
+        a: 'Reference range in 2026: from S/ 150 for a taxi cargo / mini move, S/ 250-450 for a room or studio, S/ 400-1,000 for a 1-3 bedroom apartment, and from S/ 900 for a complete family house. Final price depends on real volume, distance and access.',
+      },
+      {
+        q: 'Do you quote in USD?',
+        a: 'All prices are in Peruvian Soles (S/). Current reference: USD 1 ≈ S/ 3.75 (varies). Business customers can request invoice in Soles with tax ID.',
+      },
+      {
+        q: 'Do you charge per hour or a flat rate?',
+        a: 'Flat rate. We quote total price before the move — no hourly surprises even if access takes longer than expected.',
+      },
+      {
+        q: 'What is included in the base price?',
+        a: 'Driver, 1-2 helpers, own truck, blankets and straps, basic cardboard boxes (if needed), standard furniture disassembly and reassembly, direct transport. Professional packing of fragile items is extra.',
+      },
+    ],
+  },
+  {
+    category: 'Service coverage',
+    faqs: [
+      {
+        q: 'Do you serve the Sacred Valley (Pisac, Urubamba, Ollantaytambo)?',
+        a: 'Yes. We cover 22 localities in the Sacred Valley and surrounding provinces (1-4 hours from Cusco). See the full list on our coverage page.',
+      },
+      {
+        q: 'Do you work with Las Bambas personnel?',
+        a: 'Yes, we regularly serve workers and contractors from the Las Bambas mining corridor (Challhuahuacho, Tambobamba, Haquira, Mara, Coyllurqui). We handle security pass coordination, NDA if needed, and corporate framework agreements.',
+      },
+      {
+        q: 'Do you serve Cusco to Lima?',
+        a: 'No. We do not operate the Cusco-Lima route. For that corridor we recommend contacting specialized long-distance operators.',
+      },
+      {
+        q: 'Do you serve Arequipa, Juliaca or Puno?',
+        a: 'Not yet as active routes. These are marked as "Coming soon" with open pre-registration. Leave your details and we\'ll notify you when the routes become available.',
+      },
+    ],
+  },
+  {
+    category: 'Logistics & process',
+    faqs: [
+      {
+        q: 'How far in advance should I book?',
+        a: 'For Cusco metropolitan area: 2-4 days ideally. For inter-provincial routes (Sicuani, Abancay, Las Bambas corridor): 3-5 days minimum so we can coordinate road conditions and overnight logistics for longer trips.',
+      },
+      {
+        q: 'Do you pack my belongings or do I pack them?',
+        a: 'Your choice. Standard service includes basic protection (blankets, straps, disassembly of standard furniture). Professional packing (fragile items, valuables) is an additional service we can include or coordinate separately.',
+      },
+      {
+        q: 'Can I travel in the truck with my belongings?',
+        a: 'For inter-provincial routes we allow 1 passenger in the cabin with the driver at no extra cost (with SOAT insurance and seatbelt). Most customers travel separately (bus or private car) and meet at destination.',
+      },
+      {
+        q: 'What if the weather is bad on the day of the move?',
+        a: "For inter-provincial routes through mountain passes, we consult Provías (road conditions authority) before leaving. If there's high risk of road closure, we reschedule at no cost.",
+      },
+    ],
+  },
+  {
+    category: 'Payment & invoicing',
+    faqs: [
+      {
+        q: 'How can I pay?',
+        a: 'Cash, bank transfer, Yape, or Plin. For businesses with invoicing requirements we offer electronic invoice with tax ID and can accept wire transfer with payment terms.',
+      },
+      {
+        q: 'Do you issue tax invoices?',
+        a: 'Yes, electronic invoice (factura) with tax ID for businesses, or electronic receipt (boleta) for individuals. No surcharge for invoicing.',
+      },
+      {
+        q: 'Do I pay a deposit before the move?',
+        a: 'For local moves under S/ 500, no deposit needed — payment at end of service. For larger or inter-provincial moves, we agree a partial payment at start and the balance on completion.',
+      },
+    ],
+  },
+  {
+    category: 'Foreigners & expats',
+    faqs: [
+      {
+        q: 'Do you serve expats in Cusco?',
+        a: 'Yes. We regularly work with foreign residents moving within Cusco or to the Sacred Valley. WhatsApp works in English and Spanish.',
+      },
+      {
+        q: 'Can I book before arriving in Cusco?',
+        a: "Yes. We can confirm date and price via WhatsApp/email before you arrive. If you're moving into a new rental, coordinate the handover date with your landlord and share with us.",
+      },
+      {
+        q: 'Do you handle international shipments?',
+        a: "No, we don't cross borders or handle international sea/air freight. We serve Cusco and southern Peru only. For international shipments, contact a specialized freight forwarder.",
+      },
+    ],
+  },
+];
+
+// Flat array for FAQ schema
+const allFaqs = faqGroups.flatMap((g) => g.faqs);
+---
+
+<BaseLayout
+  title="Frequently Asked Questions | Moving in Cusco — Expresos Ñan"
+  description="Common questions about our moving, freight and storage services in Cusco. Pricing, coverage, process, payment and answers for foreign residents."
+  whatsappMessage="Hi, I read the FAQ but still have a question about my move."
+>
+  <Fragment slot="head">
+    <SchemaFAQ faqs={allFaqs} />
+  </Fragment>
+
+  <Hero
+    eyebrow="FAQ"
+    title="Frequently asked questions"
+    subtitle="Common questions about moving, freight and storage in Cusco. If your doubt isn't here, WhatsApp us."
+    image="/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png"
+    imageAlt="Moving service questions in Cusco"
+    whatsappMessage="Hi, I have a question not covered in the FAQ about my move."
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs items={[{ label: 'Home', href: '/en/' }, { label: 'FAQ' }]} />
+    </Container>
+  </Section>
+
+  {
+    faqGroups.map((group) => (
+      <Section background="white" spacing="md">
+        <Container size="narrow">
+          <h2 class="font-heading mb-6 text-2xl font-bold md:text-3xl">{group.category}</h2>
+          <div class="space-y-3">
+            {group.faqs.map((faq) => (
+              <details class="group rounded-xl border border-gray-200 bg-white">
+                <summary class="hover:text-primary flex cursor-pointer list-none items-center justify-between p-5 font-bold [&::-webkit-details-marker]:hidden">
+                  <span>{faq.q}</span>
+                  <svg
+                    class="h-5 w-5 shrink-0 transition-transform group-open:rotate-180"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </summary>
+                <div class="border-t border-gray-100 px-5 py-4 text-sm leading-relaxed text-gray-700">
+                  <p>{faq.a}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </Container>
+      </Section>
+    ))
+  }
+
+  <CTASection
+    title="Your question isn't here?"
+    subtitle="WhatsApp us and we'll answer within minutes."
+    whatsappMessage="Hi, I have a specific question about my move in Cusco."
+  />
+</BaseLayout>

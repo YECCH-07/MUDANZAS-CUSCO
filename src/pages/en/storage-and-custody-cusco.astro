@@ -1,0 +1,178 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+
+const priceRows = [
+  {
+    label: 'Boxes only (15-20 boxes)',
+    monthly: 'S/ 60',
+    fits: 'Sealed boxes, documents, small items',
+  },
+  { label: 'Small room', monthly: 'S/ 100', fits: 'Bed + wardrobe + desk + boxes' },
+  { label: '1-bedroom apartment', monthly: 'S/ 250', fits: 'Full studio furniture' },
+  { label: '2-3 bedroom apartment', monthly: 'S/ 350', fits: 'Family apartment furniture' },
+  { label: 'Complete house', monthly: 'S/ 440', fits: 'House with 3+ bedrooms' },
+];
+
+const includes = [
+  '24/7 monitored facility (cameras + physical security)',
+  'Photo inventory at intake and retrieval',
+  'Signed intake and delivery documents',
+  'Scheduled visits to your stored items (24-48 h notice)',
+  'Flexible retrieval — no minimum stay required',
+  'Long-term anti-moisture packing available (extra)',
+];
+
+const useCases = [
+  {
+    title: 'New home not ready yet',
+    desc: "You signed the contract but the previous tenant hasn't moved out, or renovations take one more week.",
+  },
+  {
+    title: 'Extended travel or work abroad',
+    desc: "You're working in Las Bambas for 6 months, or doing a postgrad abroad for a year.",
+  },
+  {
+    title: 'Major life change',
+    desc: "Relocation, separation, or moving with a partner. Furniture with sentimental value that doesn't fit the new space yet.",
+  },
+  {
+    title: 'Home renovation',
+    desc: 'Remodeling your apartment for 2-3 months. Furniture in the way and gathering dust — better off-site.',
+  },
+];
+---
+
+<BaseLayout
+  title="Storage & Custody in Cusco — Monthly Plans | Expresos Ñan"
+  description="Safe storage for furniture and belongings in Cusco. Monthly plans from S/ 60 (boxes) to S/ 440 (full house). 24/7 surveillance, photo inventory, signed intake."
+  ogImage="/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png"
+>
+  <Hero
+    eyebrow="Storage & custody"
+    title="Secure storage for your belongings in Cusco"
+    subtitle="Monitored facility with 24/7 surveillance, photo inventory and fixed monthly pricing from S/ 60. Store for days, months or years — your choice."
+    image="/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png"
+    imageAlt="Secure storage and custody service for furniture in Cusco"
+    whatsappMessage="Hi, I need a quote for storage in Cusco. Volume: [room/apt/house]. Estimated time: [months]."
+    secondaryCta={{ label: 'See services', href: '/en/services/' }}
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs
+        items={[
+          { label: 'Home', href: '/en/' },
+          { label: 'Services', href: '/en/services/' },
+          { label: 'Storage' },
+        ]}
+      />
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <div class="space-y-4 text-base leading-relaxed text-gray-700 md:text-lg">
+        <p>
+          Not every move is a clean "from A to B in one day". Sometimes there's an
+          <strong> interval in the middle</strong>: your new place isn't ready, you're traveling
+          temporarily, renovating, or between contracts. In those cases, our storage service solves
+          the problem without compromising the move.
+        </p>
+        <p>
+          We manage <strong>fixed monthly rates</strong> by volume type — not by exact cubic meters (which
+          always sounds cheaper but isn't). No minimum stay. You can retrieve your items whenever you
+          need, with 24-48 hour notice.
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="md">
+    <Container size="narrow">
+      <h2 class="font-heading mb-6 text-2xl font-bold md:text-3xl">Monthly rates 2026</h2>
+      <div class="overflow-x-auto rounded-2xl border border-gray-200 bg-white">
+        <table class="w-full text-left">
+          <thead class="bg-gray-50 text-sm font-bold">
+            <tr>
+              <th class="px-4 py-3">Volume</th>
+              <th class="px-4 py-3">Monthly rate</th>
+              <th class="hidden px-4 py-3 md:table-cell">What fits</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            {
+              priceRows.map((row) => (
+                <tr class="text-sm">
+                  <td class="px-4 py-3 font-bold">{row.label}</td>
+                  <td class="text-primary px-4 py-3 font-bold">{row.monthly}</td>
+                  <td class="hidden px-4 py-3 text-gray-600 md:table-cell">{row.fits}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+      <p class="mt-4 text-xs text-gray-600">
+        Discount for prepayment of 3+ months. No minimum stay. If you combine storage with the entry
+        and exit moves (a typical case), we offer a bundle discount.
+      </p>
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <h2 class="font-heading mb-6 text-2xl font-bold md:text-3xl">What's included</h2>
+      <ul class="space-y-3">
+        {
+          includes.map((item) => (
+            <li class="flex items-start gap-3 rounded-lg border border-gray-100 bg-gray-50 p-4">
+              <svg
+                class="text-primary mt-0.5 h-5 w-5 shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+              <span class="text-sm text-gray-700">{item}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="lg">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Common use cases</p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">When storage makes sense</h2>
+      </div>
+      <div class="grid gap-5 md:grid-cols-2">
+        {
+          useCases.map((c) => (
+            <article class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+              <h3 class="font-heading mb-2 text-lg font-bold">{c.title}</h3>
+              <p class="text-sm text-gray-700">{c.desc}</p>
+            </article>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  <CTASection
+    title="Need to store items temporarily?"
+    subtitle="Fixed monthly rate, photo inventory, signed intake. Visit the facility before you decide."
+    whatsappMessage="Hi, I need storage in Cusco. Volume: [room/apt/house]. Estimated time: [months]."
+  />
+</BaseLayout>

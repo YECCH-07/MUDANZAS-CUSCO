@@ -1,0 +1,245 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+
+const units = [
+  {
+    tag: '1 ton',
+    title: '1-ton unit',
+    capacity: '1,000 kg',
+    volume: '≈ 10 m³',
+    dimensions: 'Approx. 3.0 m × 1.8 m × 1.8 m',
+    cases: [
+      'Taxi cargo and express freight within Cusco',
+      'Mini moves: basic room or loose furniture',
+      'Single delivery of appliances or furniture',
+    ],
+    recommended: 'Taxi cargo, mini moves and express freight',
+    image: '/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg',
+  },
+  {
+    tag: '2 tons',
+    title: '2-ton unit',
+    capacity: '2,000 kg',
+    volume: '≈ 16-18 m³',
+    dimensions: 'Approx. 4.0 m × 2.0 m × 2.0 m',
+    cases: [
+      'Furnished rooms (complete)',
+      'Studios and efficiency apartments',
+      'Small 1-bedroom apartments (couples without children)',
+    ],
+    recommended: 'Rooms, studios and small apartments',
+    image: '/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg',
+  },
+  {
+    tag: '4 tons',
+    title: '4-ton unit',
+    capacity: '4,000 kg',
+    volume: '≈ 28-30 m³',
+    dimensions: 'Approx. 5.5 m × 2.2 m × 2.4 m',
+    cases: [
+      'Small apartments with large furniture',
+      '1 to 3 bedroom apartments',
+      'Inter-provincial moves and medium freight',
+      'Cusco ↔ Challhuahuacho route (Las Bambas)',
+    ],
+    recommended: 'Small-to-medium apartments (1-3 bedrooms)',
+    image: '/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg',
+  },
+];
+
+const drivers = [
+  {
+    title: 'Professional licenses',
+    desc: 'All our drivers hold A-IIIb or A-IIIc licenses, matched to the tonnage of the unit they operate.',
+  },
+  {
+    title: 'Route knowledge',
+    desc: 'Local Cusco metropolitan routes and inter-provincial corridors to Apurímac, Canchis and Chumbivilcas.',
+  },
+  {
+    title: 'Fragile cargo handling',
+    desc: 'Trained in smooth maneuvering, progressive braking and defensive driving to minimize vibration on cargo.',
+  },
+  {
+    title: 'Customer service',
+    desc: 'Identifiable uniform, respectful treatment and clear communication — they represent the company on-site.',
+  },
+];
+
+const maintenance = [
+  'Regular preventive maintenance (oil, filters, brakes)',
+  'Vehicle Technical Inspection (RTV) up to date',
+  'SOAT (insurance) current on all units',
+  'Tires with proper tread for high-altitude routes',
+  'Lights and signaling check before every inter-provincial trip',
+];
+---
+
+<BaseLayout
+  title="Our Fleet: 1, 2 and 4 Ton Trucks in Cusco | Expresos Ñan"
+  description="Expresos Ñan operates its own fleet of 1, 2 and 4 ton trucks for local and inter-provincial moves in Cusco. Professional drivers with A-IIIb/A-IIIc licenses."
+  ogImage="/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg"
+>
+  <Hero
+    eyebrow="Our fleet"
+    title="1, 2 and 4 ton trucks — own fleet"
+    subtitle="Own units and professional drivers for local and inter-provincial moves. No subcontracting."
+    image="/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg"
+    imageAlt="Expreso Ñan fleet — truck for moves in Cusco"
+    whatsappMessage="Hi, I'd like to know which unit I need for my move. Details: [description]."
+    secondaryCta={{ label: 'See services', href: '/en/services/' }}
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs
+        items={[
+          { label: 'Home', href: '/en/' },
+          { label: 'Services', href: '/en/services/' },
+          { label: 'Our fleet' },
+        ]}
+      />
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <div class="space-y-4 text-base leading-relaxed text-gray-700 md:text-lg">
+        <p>
+          Operating our <strong>own fleet</strong> is one of the things we value most about Expresos Ñan.
+          We don't depend on third parties to source trucks, there are no last-minute surprises, and we
+          can guarantee that the unit we use is mechanically ready for the day of your move.
+        </p>
+        <p>
+          We operate three unit sizes — <strong>1, 2 and 4 tons</strong> — to cover everything from a
+          <strong>taxi cargo or mini move</strong> to moves of
+          <strong> 1-3 bedroom apartments</strong> and demanding inter-provincial routes like Cusco ↔
+          Challhuahuacho (Las Bambas project). For <strong>complete family homes</strong>
+          or large volumes, we coordinate <strong>two trips with the 4-ton unit</strong> or a combined
+          2 t + 4 t operation.
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="lg">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Units</p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">Three sizes for every move</h2>
+      </div>
+      <div class="grid gap-6 lg:grid-cols-3">
+        {
+          units.map((u) => (
+            <article class="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-sm">
+              <div class="aspect-[4/3] overflow-hidden bg-gray-100">
+                <img
+                  src={u.image}
+                  alt={u.title}
+                  width="480"
+                  height="360"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover"
+                />
+              </div>
+              <div class="flex flex-1 flex-col p-6">
+                <span class="bg-primary/10 text-primary mb-3 inline-block self-start rounded-full px-3 py-1 text-xs font-bold tracking-wider uppercase">
+                  {u.tag}
+                </span>
+                <h3 class="font-heading mb-3 text-xl font-bold">{u.title}</h3>
+                <dl class="mb-4 grid grid-cols-1 gap-2 text-sm">
+                  <div class="flex justify-between border-b border-gray-100 pb-1">
+                    <dt class="text-gray-600">Capacity</dt>
+                    <dd class="font-bold">{u.capacity}</dd>
+                  </div>
+                  <div class="flex justify-between border-b border-gray-100 pb-1">
+                    <dt class="text-gray-600">Volume</dt>
+                    <dd class="font-bold">{u.volume}</dd>
+                  </div>
+                  <div class="border-b border-gray-100 pb-1">
+                    <dt class="text-gray-600">Dimensions</dt>
+                    <dd class="text-xs">{u.dimensions}</dd>
+                  </div>
+                </dl>
+                <p class="mb-2 text-xs font-bold tracking-wider text-gray-500 uppercase">
+                  Ideal for
+                </p>
+                <ul class="mb-4 flex-1 space-y-1 text-sm text-gray-700">
+                  {u.cases.map((c) => (
+                    <li class="flex gap-2">
+                      <span class="text-primary">•</span>
+                      {c}
+                    </li>
+                  ))}
+                </ul>
+                <p class="bg-primary/5 text-primary-dark mt-auto rounded-lg p-3 text-xs font-bold">
+                  Recommended: {u.recommended}
+                </p>
+              </div>
+            </article>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="lg">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Team</p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">
+          Our drivers: the other half of the fleet
+        </h2>
+      </div>
+      <div class="grid gap-5 md:grid-cols-2">
+        {
+          drivers.map((d) => (
+            <article class="rounded-2xl bg-gray-50 p-6">
+              <h3 class="font-heading mb-2 text-lg font-bold">{d.title}</h3>
+              <p class="text-sm text-gray-700">{d.desc}</p>
+            </article>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="md">
+    <Container size="narrow">
+      <h2 class="font-heading mb-6 text-2xl font-bold md:text-3xl">Fleet always ready</h2>
+      <ul class="space-y-3">
+        {
+          maintenance.map((item) => (
+            <li class="flex items-start gap-3 rounded-lg border border-gray-100 bg-white p-4">
+              <svg
+                class="text-primary mt-0.5 h-5 w-5 shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M4.5 12.75l6 6 9-13.5" />
+              </svg>
+              <span class="text-sm text-gray-700">{item}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </Container>
+  </Section>
+
+  <CTASection
+    title="Which unit do you need for your move?"
+    subtitle="Tell us volume and distance — we'll recommend the most efficient unit via WhatsApp."
+    whatsappMessage="Hi, I'd like to know which unit is right for my move."
+  />
+</BaseLayout>

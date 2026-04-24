@@ -1,0 +1,149 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import WhatsAppButton from '@components/WhatsAppButton.astro';
+import ContactForm from '@components/ContactForm.astro';
+import SocialLinks from '@components/SocialLinks.astro';
+import { SITE } from '@lib/site';
+import { getTelUrl, getMailUrl } from '@lib/whatsapp';
+
+const success = Astro.url.searchParams.get('success') === 'true';
+
+const contactPageSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ContactPage',
+  name: `Contact — ${SITE.name}`,
+  url: `${SITE.url}/en/contact/`,
+  inLanguage: 'en',
+  mainEntity: { '@id': `${SITE.url}/#localbusiness` },
+};
+---
+
+<BaseLayout
+  title="Contact — Expresos Ñan | Moving Cusco"
+  description="Reach us via WhatsApp (925 671 052), phone or email. We quote your move in minutes. We serve Cusco metropolitan area and routes to Apurímac, Canchis and Chumbivilcas."
+  whatsappMessage="Hi, I saw the contact page and would like a quote for my move."
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(contactPageSchema)} is:inline />
+  </Fragment>
+
+  <Section background="white" spacing="md">
+    <Container>
+      <Breadcrumbs items={[{ label: 'Home', href: '/en/' }, { label: 'Contact' }]} class="mb-6" />
+
+      <header class="mb-10 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Contact</p>
+        <h1 class="font-heading text-4xl font-bold md:text-5xl">Let's talk about your move</h1>
+        <p class="mt-3 text-gray-700">
+          WhatsApp is the fastest channel — we reply within minutes. You can also call, email, or
+          leave your details in the form and we'll get in touch.
+        </p>
+      </header>
+
+      {
+        success && (
+          <div class="mb-10 rounded-2xl border-l-4 border-green-600 bg-green-50 p-6" role="status">
+            <p class="font-bold text-green-800">Thank you, we received your message!</p>
+            <p class="mt-1 text-sm text-green-700">
+              We'll get back to you in the next few hours. If your move is urgent, also reach us on
+              WhatsApp at {SITE.phoneDisplay}.
+            </p>
+          </div>
+        )
+      }
+
+      <div class="grid gap-10 lg:grid-cols-[1.2fr_1fr]">
+        <div>
+          <h2 class="font-heading mb-4 text-2xl font-bold">Tell us what you need to move</h2>
+          <ContactForm kind="general" />
+        </div>
+
+        <aside class="space-y-6">
+          <div class="rounded-2xl bg-gray-50 p-6">
+            <h2 class="font-heading mb-4 text-xl font-bold">Direct channels</h2>
+            <ul class="space-y-4 text-sm">
+              <li>
+                <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">
+                  WhatsApp (fastest)
+                </p>
+                <WhatsAppButton variant="inline" size="md" class="mt-2" />
+              </li>
+              <li>
+                <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">Phone</p>
+                <a href={getTelUrl()} class="hover:text-primary mt-1 block text-base font-bold">
+                  {SITE.phoneDisplay}
+                </a>
+              </li>
+              <li>
+                <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">Email</p>
+                <a
+                  href={getMailUrl('Inquiry from website')}
+                  class="hover:text-primary mt-1 block break-all"
+                >
+                  {SITE.email}
+                </a>
+              </li>
+              <li>
+                <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">Address</p>
+                <address class="mt-1 text-sm not-italic">
+                  {SITE.address.street}<br />
+                  {SITE.address.locality}, Peru {SITE.address.postalCode}
+                </address>
+              </li>
+              <li>
+                <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">Hours</p>
+                <p class="mt-1 text-sm">
+                  Mon-Sat: {SITE.openingHours.weekdays}<br />
+                  Sunday: {SITE.openingHours.sunday}
+                </p>
+              </li>
+            </ul>
+
+            <div class="mt-6 border-t border-gray-200 pt-5">
+              <SocialLinks variant="light" size="md" label="Follow us" />
+            </div>
+          </div>
+
+          <div class="overflow-hidden rounded-2xl border border-gray-200">
+            <iframe
+              title="Expresos Ñan location in Cusco"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=-72.0%2C-13.56%2C-71.93%2C-13.50&layer=mapnik&marker=-13.5319%2C-71.9675"
+              width="100%"
+              height="260"
+              loading="lazy"
+              style="border:0"></iframe>
+            <div class="bg-white px-4 py-3 text-center">
+              <a
+                href="https://www.openstreetmap.org/?mlat=-13.5319&mlon=-71.9675#map=14/-13.5319/-71.9675"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-primary text-sm font-bold hover:underline"
+              >
+                See larger map →
+              </a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="md">
+    <Container size="narrow">
+      <header class="mb-6">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Business</p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">
+          Office move or recurring freight?
+        </h2>
+        <p class="mt-2 text-gray-700">
+          For businesses we offer formal quotes, electronic invoicing with tax ID, weekend
+          scheduling, and total confidentiality.
+        </p>
+      </header>
+      <ContactForm kind="business" subject="Business inquiry — cuscomudanzas.com" />
+    </Container>
+  </Section>
+</BaseLayout>

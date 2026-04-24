@@ -1,0 +1,195 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+
+const activeRoutes = [
+  {
+    name: 'Cusco ↔ Sicuani',
+    km: 137,
+    hours: '3',
+    region: 'Canchis, Cusco',
+    href: '/mudanzas-cusco-sicuani/',
+  },
+  {
+    name: 'Cusco ↔ Abancay',
+    km: 195,
+    hours: '5',
+    region: 'Apurímac capital',
+    href: '/mudanzas-cusco-abancay/',
+  },
+  {
+    name: 'Cusco ↔ Challhuahuacho',
+    km: 425,
+    hours: '10-12',
+    region: 'Las Bambas',
+    href: '/mudanzas-cusco-challhuahuacho/',
+  },
+  {
+    name: 'Cusco ↔ Tambobamba',
+    km: 365,
+    hours: '9-10',
+    region: 'Cotabambas',
+    href: '/mudanzas-cusco-tambobamba/',
+  },
+  {
+    name: 'Cusco ↔ Haquira',
+    km: 410,
+    hours: '10-11',
+    region: 'Cotabambas',
+    href: '/mudanzas-cusco-haquira/',
+  },
+  {
+    name: 'Cusco ↔ Mara',
+    km: 395,
+    hours: '10',
+    region: 'Cotabambas',
+    href: '/mudanzas-cusco-mara/',
+  },
+  {
+    name: 'Cusco ↔ Coyllurqui',
+    km: 380,
+    hours: '9-10',
+    region: 'Cotabambas',
+    href: '/mudanzas-cusco-coyllurqui/',
+  },
+  {
+    name: 'Cusco ↔ Colquemarca',
+    km: 340,
+    hours: '8-9',
+    region: 'Chumbivilcas',
+    href: '/mudanzas-cusco-colquemarca/',
+  },
+  {
+    name: 'Cusco ↔ Capacmarca',
+    km: 360,
+    hours: '9',
+    region: 'Chumbivilcas',
+    href: '/mudanzas-cusco-capacmarca/',
+  },
+];
+
+const comingSoon = [
+  { name: 'Cusco ↔ Arequipa', href: '/mudanzas-cusco-arequipa/' },
+  { name: 'Arequipa → Cusco', href: '/mudanzas-arequipa-cusco/' },
+  { name: 'Cusco → Juliaca', href: '/mudanzas-cusco-juliaca/' },
+  { name: 'Cusco → Puno', href: '/mudanzas-cusco-puno/' },
+];
+---
+
+<BaseLayout
+  title="Inter-Provincial Moving from Cusco | Expresos Ñan"
+  description="Moving service from Cusco to Apurímac, Canchis and Chumbivilcas. 9 active routes including Sicuani, Abancay and the Las Bambas mining corridor. Fixed pricing, own fleet."
+  ogImage="/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg"
+>
+  <Hero
+    eyebrow="Inter-provincial moving"
+    title="Long routes from Cusco to Apurímac and Chumbivilcas"
+    subtitle="9 active routes including Sicuani, Abancay and the Las Bambas mining corridor (Challhuahuacho, Tambobamba, Haquira, Mara, Coyllurqui)."
+    image="/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg"
+    imageAlt="4-ton Expreso Ñan truck on inter-provincial route"
+    whatsappMessage="Hi, I need a quote for an inter-provincial move. Origin: Cusco. Destination: [city]."
+    secondaryCta={{ label: 'See coverage', href: '/en/coverage/' }}
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs
+        items={[
+          { label: 'Home', href: '/en/' },
+          { label: 'Services', href: '/en/services/' },
+          { label: 'Inter-provincial' },
+        ]}
+      />
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <div class="space-y-4 text-base leading-relaxed text-gray-700 md:text-lg">
+        <p>
+          Our inter-provincial service covers <strong>9 active routes</strong> from Cusco to Apurímac,
+          Canchis and Chumbivilcas. Each route has its own dedicated page with distance, travel time,
+          reference pricing, intermediate stops and specific logistics considerations.
+        </p>
+        <p>
+          <strong>We do not service</strong>: Cusco-Lima, Cusco-Espinar or routes to destinations
+          not listed. For those routes we recommend contacting specialized operators.
+        </p>
+        <p>
+          For routes with longer distances that require driver overnight stays (Challhuahuacho,
+          Tambobamba and Cotabambas province in general), we plan a 2-3 day operation with advance
+          coordination. This ensures cargo and team safety — we don't rush operations that need
+          proper planning.
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="lg">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Active routes</p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">9 routes currently operating</h2>
+        <p class="mt-3 text-gray-700">
+          Each route has its own landing page (in Spanish) with detailed quote tables, FAQs and
+          specific logistics.
+        </p>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {
+          activeRoutes.map((r) => (
+            <a
+              href={r.href}
+              class="hover:border-primary group block rounded-2xl border border-gray-200 bg-white p-5 transition-all hover:shadow-md"
+            >
+              <p class="text-primary mb-1 text-xs font-bold tracking-wider uppercase">
+                {r.km} km · {r.hours} h
+              </p>
+              <h3 class="font-heading group-hover:text-primary text-lg font-bold">{r.name}</h3>
+              <p class="mt-1 text-xs text-gray-600">{r.region}</p>
+              <span class="text-primary mt-3 inline-block text-sm font-bold">See route →</span>
+            </a>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <div class="mb-6">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Coming soon</p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">Routes opening in 2026</h2>
+        <p class="mt-2 text-gray-700">
+          Pre-register on each landing and we'll notify you when the route becomes available.
+        </p>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          comingSoon.map((r) => (
+            <a
+              href={r.href}
+              class="hover:border-primary group block rounded-2xl border border-amber-200 bg-amber-50 p-4 transition-all"
+            >
+              <p class="mb-1 text-xs font-bold tracking-wider text-amber-700 uppercase">
+                Coming soon
+              </p>
+              <h4 class="font-heading group-hover:text-primary text-base font-bold">{r.name}</h4>
+              <span class="text-primary mt-2 inline-block text-xs font-bold">Pre-register →</span>
+            </a>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  <CTASection
+    title="Need an inter-provincial move?"
+    subtitle="Get closed pricing via WhatsApp — specialized routes, own fleet, electronic invoicing."
+    whatsappMessage="Hi, I need a quote for an inter-provincial move from Cusco. Destination: [city]."
+  />
+</BaseLayout>

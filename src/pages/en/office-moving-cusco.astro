@@ -1,0 +1,152 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+
+const features = [
+  {
+    title: 'Weekend scheduling',
+    desc: 'Saturday/Sunday operations to avoid disrupting your workweek.',
+  },
+  {
+    title: 'Electronic invoice (tax ID)',
+    desc: 'RUC-based invoice, SEACE compliance if applicable.',
+  },
+  {
+    title: 'Confidentiality agreement (NDA)',
+    desc: 'For offices with sensitive documentation (legal, accounting, consulting).',
+  },
+  {
+    title: 'Chain of custody',
+    desc: 'Signed intake and delivery acts — full traceability for critical documents.',
+  },
+  {
+    title: 'IT-aware process',
+    desc: 'Coordination with your IT team for servers, network and electronics.',
+  },
+  {
+    title: 'Anti-vibration packing',
+    desc: 'Required for computers, monitors and sensitive equipment.',
+  },
+];
+
+const priceRows = [
+  { label: 'Small office (up to 8 stations)', price: 'S/ 800 – 1,500' },
+  { label: 'Medium office (9-20 stations)', price: 'S/ 1,500 – 3,000' },
+  { label: 'Large office (21-50 stations)', price: 'Formal quote' },
+];
+---
+
+<BaseLayout
+  title="Office Moving in Cusco — Business Service | Expresos Ñan"
+  description="Professional office moving in Cusco with weekend scheduling, electronic invoicing (tax ID), confidentiality agreement and IT-aware process. Free technical visit."
+  ogImage="/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg"
+>
+  <Hero
+    eyebrow="Office moving"
+    title="Business-grade office moving in Cusco"
+    subtitle="Minimum operational disruption. Weekend scheduling, electronic invoicing with tax ID, NDA for sensitive documents, and a free technical visit before the quote."
+    image="/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg"
+    imageAlt="Professional office moving service in Cusco with packing and transport"
+    whatsappMessage="Hi, we need to move our office in Cusco. Company: [name]. Workstations: [number]. Target date: [date]."
+    secondaryCta={{ label: 'Contact us', href: '/en/contact/' }}
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs
+        items={[
+          { label: 'Home', href: '/en/' },
+          { label: 'Services', href: '/en/services/' },
+          { label: 'Office moving' },
+        ]}
+      />
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <div class="space-y-4 text-base leading-relaxed text-gray-700 md:text-lg">
+        <p>
+          Moving an office is not the same as moving a home. The critical difference:
+          <strong> every hour of downtime costs real money</strong>. Emails unanswered, sales calls
+          missed, staff that can't work. Our approach is built to minimize that impact.
+        </p>
+        <p>
+          A well-planned business move should be <strong>invisible to your customers</strong>. They
+          shouldn't notice you changed locations. We achieve that with early planning (3-4 weeks
+          minimum), out-of-hours operations, and continuity of critical infrastructure (email,
+          phone, IT, systems).
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="lg">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+          What we include for business
+        </p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">Standard business features</h2>
+      </div>
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {
+          features.map((f) => (
+            <article class="rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+              <h3 class="font-heading mb-2 text-lg font-bold">{f.title}</h3>
+              <p class="text-sm text-gray-700">{f.desc}</p>
+            </article>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <h2 class="font-heading mb-6 text-2xl font-bold md:text-3xl">Reference pricing 2026</h2>
+      <p class="mb-4 text-sm text-gray-600">
+        Reference ranges within Cusco metropolitan area. Inter-provincial business moves are quoted
+        formally with route cost included.
+      </p>
+      <div class="overflow-x-auto rounded-2xl border border-gray-200 bg-white">
+        <table class="w-full text-left">
+          <thead class="bg-gray-50 text-sm font-bold">
+            <tr>
+              <th class="px-4 py-3">Office size</th>
+              <th class="px-4 py-3">Price</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            {
+              priceRows.map((row) => (
+                <tr class="text-sm">
+                  <td class="px-4 py-3 font-bold">{row.label}</td>
+                  <td class="text-primary px-4 py-3 font-bold">{row.price}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mt-6 rounded-2xl border border-gray-200 bg-gray-50 p-5 text-sm text-gray-700">
+        <p>
+          <strong>Free technical visit</strong>: before any formal quote, our team visits your
+          current and future offices to measure furniture, verify access, and identify sensitive
+          equipment. No charge, no commitment — just a realistic quote.
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  <CTASection
+    title="Planning an office move?"
+    subtitle="Schedule a free technical visit and get a formal quote with minimum operational impact."
+    whatsappMessage="Hi, we need to move our office in Cusco. Could we schedule a technical visit?"
+  />
+</BaseLayout>

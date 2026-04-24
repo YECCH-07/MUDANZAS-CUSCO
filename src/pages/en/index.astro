@@ -1,0 +1,169 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import HeroCover from '@components/HeroCover.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import StatsBar from '@components/StatsBar.astro';
+import ServiceCard from '@components/ServiceCard.astro';
+import CTASection from '@components/CTASection.astro';
+import Button from '@components/Button.astro';
+
+const services = [
+  {
+    title: 'Local moving in Cusco',
+    description:
+      'Moves within the metropolitan area — homes, apartments, small offices. Packing, loading, transport and furniture reassembly included.',
+    href: '/en/local-moving-cusco/',
+    image: '/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg',
+    imageAlt: 'Apartment move in Cusco with Expreso Ñan truck',
+  },
+  {
+    title: 'Inter-provincial moves',
+    description:
+      '9 active routes to Apurímac, Canchis and Chumbivilcas regions — Sicuani, Abancay, Challhuahuacho (Las Bambas) and more.',
+    href: '/en/intercity-moving/',
+    image: '/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg',
+    imageAlt: 'Expreso Ñan truck for inter-provincial freight in Cusco',
+  },
+  {
+    title: 'Storage & custody',
+    description:
+      'Store your furniture and boxes in a monitored facility — by days, months or years. 24/7 surveillance, photo inventory, signed intake document.',
+    href: '/en/storage-and-custody-cusco/',
+    image: '/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png',
+    imageAlt: 'Secure furniture storage and custody service in Cusco',
+  },
+  {
+    title: 'Office moves',
+    description:
+      'Business service with weekend scheduling, electronic invoicing with Tax ID, and full confidentiality for sensitive documents.',
+    href: '/en/office-moving-cusco/',
+    image: '/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg',
+    imageAlt: 'Office move in Cusco with professional team',
+  },
+];
+
+const advantages = [
+  {
+    title: 'Punctuality',
+    description:
+      'We arrive at the agreed time. No delays, no excuses — your time matters as much as ours.',
+  },
+  {
+    title: 'Safety',
+    description:
+      'Professional packing, blankets and straps for every piece. Drivers with A-IIIb/A-IIIc licenses.',
+  },
+  {
+    title: 'Own fleet',
+    description: '1, 2 and 4 ton units. No subcontractors, no middlemen.',
+  },
+  {
+    title: 'Wide coverage',
+    description:
+      'All Cusco metropolitan districts and 9 active routes to Apurímac, Canchis and Chumbivilcas.',
+  },
+  {
+    title: 'No pricing surprises',
+    description: 'We quote via WhatsApp with the final price. What you see is what you pay.',
+  },
+  {
+    title: 'Assembly & disassembly',
+    description:
+      'We disassemble at origin and reassemble at destination — no extra charge in most cases.',
+  },
+];
+---
+
+<BaseLayout
+  title="Moving Services in Cusco | Expresos Ñan"
+  description="Professional moving, freight and storage in Cusco, Peru. Local coverage and active routes to Apurímac, Canchis and Chumbivilcas. Get a quote on WhatsApp: 925 671 052."
+  ogImage="/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png"
+  whatsappMessage="Hi, I saw your website and need a quote for a move in Cusco. Origin: [district]. Destination: [district]."
+>
+  <HeroCover
+    image="home"
+    eyebrow="Expresos Ñan · Moving Cusco"
+    title="Professional moving services in Cusco — safe and reliable transport"
+    subtitle="Full-service packing, loading, transport and unloading. Local coverage across all Cusco districts and active routes to Apurímac, Canchis and Chumbivilcas."
+    imageAlt="Expreso Ñan HINO truck on Andean highway with uniformed staff — moving Cusco"
+    whatsappMessage="Hi, I saw your website and need a quote for a move in Cusco."
+    secondaryCta={{ label: 'See services', href: '/en/services/' }}
+    stats={[
+      { value: '17', label: 'active destinations' },
+      { value: '9', label: 'inter-provincial routes' },
+      { value: '100%', label: 'own fleet' },
+    ]}
+  />
+
+  <Section background="white" spacing="lg" id="services">
+    <Container>
+      <SectionHeader
+        eyebrow="What we do"
+        title="Core services"
+        subtitle="Full moves, freight, storage, packing, furniture assembly and office moves — all with our own fleet and professional team."
+      />
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {services.map((s) => <ServiceCard {...s} />)}
+      </div>
+
+      <div class="mt-10 text-center">
+        <Button href="/en/services/" variant="outline" size="md"> See all services </Button>
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="lg" id="coverage">
+    <Container>
+      <SectionHeader
+        eyebrow="Coverage"
+        title="We reach where you need"
+        subtitle="Active service in three zones: Cusco metropolitan area (up to 1 h), Sacred Valley and surroundings (1-4 h, 22 localities), and long inter-provincial routes (5-12 h) to Apurímac, Canchis and Chumbivilcas."
+      />
+      <div class="mt-6">
+        <StatsBar
+          items={[
+            { value: '8', label: 'metropolitan districts' },
+            { value: '22', label: 'Sacred Valley localities' },
+            { value: '9', label: 'inter-provincial routes' },
+            { value: '4', label: 'routes opening soon' },
+          ]}
+        />
+      </div>
+      <div class="mt-8 text-center">
+        <Button href="/en/coverage/" variant="outline" size="md"> See full coverage </Button>
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="lg">
+    <Container>
+      <SectionHeader
+        eyebrow="Why choose us"
+        title="What sets us apart"
+        subtitle="A Cusco-based company with its own fleet and a process refined across hundreds of family, corporate and inter-provincial moves."
+      />
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {
+          advantages.map((adv, i) => (
+            <article class="rounded-2xl border border-gray-100 p-6">
+              <span class="bg-primary/10 text-primary font-heading mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="font-heading mb-2 text-lg font-bold">{adv.title}</h3>
+              <p class="text-sm text-gray-700">{adv.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  <CTASection
+    title="Ready for your next move?"
+    subtitle="We quote on WhatsApp in minutes. No commitment, no forms, no waiting."
+    whatsappMessage="Hi, I want a quote for a move. Origin: [address]. Destination: [address]. Tentative date: [date]."
+  />
+</BaseLayout>

@@ -1,0 +1,116 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import HeroCover from '@components/HeroCover.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import ServiceCard from '@components/ServiceCard.astro';
+import CTASection from '@components/CTASection.astro';
+
+const services = [
+  {
+    title: 'Local moving',
+    description:
+      'Moves within the Cusco metropolitan area — homes, apartments and offices. Packing, loading and furniture assembly included.',
+    href: '/en/local-moving-cusco/',
+    image: '/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg',
+  },
+  {
+    title: 'Inter-provincial moving',
+    description:
+      '9 active routes to Apurímac, Canchis and Chumbivilcas. Sicuani, Abancay, Challhuahuacho and more.',
+    href: '/en/intercity-moving/',
+    image: '/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg',
+  },
+  {
+    title: 'Office moving',
+    description:
+      'Business service with disassembly, packing and weekend transport. Invoicing with tax ID.',
+    href: '/en/office-moving-cusco/',
+    image: '/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg',
+  },
+  {
+    title: 'Storage & custody',
+    description:
+      'Monitored warehouse for your belongings — by days, months or years. Photo inventory included.',
+    href: '/en/storage-and-custody-cusco/',
+    image: '/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png',
+  },
+  {
+    title: 'Our fleet',
+    description:
+      '1, 2 and 4 ton own units for every type of move. Regular maintenance, professional drivers.',
+    href: '/en/our-fleet/',
+    image: '/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg',
+  },
+  {
+    title: 'Coverage map',
+    description:
+      'All metropolitan districts, 22 Sacred Valley localities and 9 active inter-provincial routes.',
+    href: '/en/coverage/',
+    image: '/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png',
+  },
+];
+---
+
+<BaseLayout
+  title="Moving & Freight Services in Cusco | Expresos Ñan"
+  description="Local and inter-provincial moves, office moves, freight, professional packing and storage in Cusco. Own fleet of 1, 2 and 4 tons. WhatsApp: 925 671 052."
+  ogImage="/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png"
+>
+  <HeroCover
+    image="services"
+    eyebrow="Our services"
+    title="Everything you need for a complete move"
+    subtitle="From family moves to business and inter-provincial transport. Freight, storage, packing and furniture assembly — a single provider for the whole process."
+    imageAlt="Professional moving team from Expreso Ñan handling packing in Cusco"
+    whatsappMessage="Hi, I saw your services page and want a quote. I need information about [specific service]."
+    stats={[
+      { value: '10', label: 'services offered' },
+      { value: '17', label: 'active destinations' },
+      { value: '1-4 t', label: 'own fleet' },
+    ]}
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs items={[{ label: 'Home', href: '/en/' }, { label: 'Services' }]} />
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <div class="space-y-4 text-base leading-relaxed text-gray-700 md:text-lg">
+        <p>
+          At <strong>Expresos Ñan</strong> we offer a full moving, freight and cargo service in Cusco.
+          We cover every step of the process: from professional packing at origin to furniture assembly
+          at destination, with transport on our own 1, 2 and 4 ton units.
+        </p>
+        <p>
+          Our services are designed for different profiles: families relocating, businesses moving
+          offices with minimal disruption, UNSAAC students seeking economical options, merchants
+          with recurring freight to Sicuani or Abancay, and customers who need temporary storage.
+          Each case has its own page with specific details.
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="lg">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">All services</p>
+        <h2 class="font-heading text-3xl font-bold md:text-4xl">Choose what you need</h2>
+      </div>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {services.map((s) => <ServiceCard {...s} />)}
+      </div>
+    </Container>
+  </Section>
+
+  <CTASection
+    title="Not sure which service fits your case?"
+    subtitle="Send us a WhatsApp message — we'll recommend the right combination within minutes."
+    whatsappMessage="Hi, I'm not sure which service fits my case. Could you help me decide?"
+  />
+</BaseLayout>

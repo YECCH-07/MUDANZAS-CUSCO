@@ -1,0 +1,171 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import HeroCover from '@components/HeroCover.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+import SocialLinks from '@components/SocialLinks.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+---
+
+<BaseLayout
+  title="About Us — Expresos Ñan | Moving Company in Cusco"
+  description="Meet Expresos Ñan, a Cusco-based moving and freight company. Own fleet, trained staff and real coverage across southern Peru. Local and inter-provincial service."
+  ogImage="/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg"
+>
+  <HeroCover
+    image="about"
+    eyebrow="About us"
+    title="A Cusco company, built for Cusco"
+    subtitle="We are Expresos Ñan: moving, freight, cargo and storage — with our own fleet, a professional team and real coverage across southern Peru."
+    imageAlt="Expreso Ñan team in a Cusco street — uniformed staff"
+    whatsappMessage="Hi, I read your About page and would like more information about your services."
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs items={[{ label: 'Home', href: '/en/' }, { label: 'About' }]} />
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <SectionHeader eyebrow="Our story" title="Born in Cusco, for Cusco" />
+      <div class="space-y-4 text-gray-700">
+        <p>
+          Expresos Ñan is a Cusco-based company specialized in moving, freight, professional packing
+          and storage. We operate with our own 1, 2 and 4 ton units and trained staff suited to
+          every type of move — from a single-room student move to full household moves and long
+          inter-provincial routes. For complete family homes we coordinate two trips with the 4-ton
+          unit, or a combined 2 t + 4 t operation.
+        </p>
+        <p>
+          The idea behind the project was simple: Cusco lacked a moving company that combined
+          punctuality, clear pricing and real coverage to the southern provinces. Today we cover all
+          metropolitan districts and maintain active routes to Apurímac, Canchis and Chumbivilcas,
+          with special focus on the Las Bambas mining corridor (Challhuahuacho, Tambobamba, Haquira,
+          Mara, Coyllurqui).
+        </p>
+        <p>
+          Our name, <strong>Ñan</strong>, means <em>road</em> or <em>path</em> in Quechua. It is also
+          our philosophy: to accompany every family and business along their path, with the assurance
+          that their belongings arrive intact.
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="lg">
+    <Container>
+      <div class="grid gap-6 md:grid-cols-3">
+        <article class="rounded-2xl bg-white p-6 shadow-sm">
+          <h3 class="font-heading mb-3 text-xl font-bold">Mission</h3>
+          <p class="text-sm text-gray-700">
+            To make every move in Cusco punctual, safe and transparent — so families and businesses
+            can focus on their new chapter without worrying about the move.
+          </p>
+        </article>
+        <article class="rounded-2xl bg-white p-6 shadow-sm">
+          <h3 class="font-heading mb-3 text-xl font-bold">Vision</h3>
+          <p class="text-sm text-gray-700">
+            To be the most recognized moving company in Cusco and southern Peru, expanding coverage
+            and services without losing the close relationship with each customer.
+          </p>
+        </article>
+        <article class="rounded-2xl bg-white p-6 shadow-sm">
+          <h3 class="font-heading mb-3 text-xl font-bold">Values</h3>
+          <ul class="space-y-2 text-sm text-gray-700">
+            {
+              [
+                'Punctuality',
+                'Transport safety',
+                'Honest, close service',
+                'Clear prices — no surprises',
+              ].map((v) => (
+                <li class="flex items-start gap-2">
+                  <svg
+                    class="text-primary mt-0.5 h-4 w-4 shrink-0"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    aria-hidden="true"
+                  >
+                    <path d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                  <span>{v}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </article>
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="primary" spacing="md">
+    <Container>
+      <div class="grid gap-8 text-center md:grid-cols-4">
+        <div>
+          <p class="font-heading text-4xl font-bold md:text-5xl">17</p>
+          <p class="mt-2 text-sm opacity-90">Districts and cities served</p>
+        </div>
+        <div>
+          <p class="font-heading text-4xl font-bold md:text-5xl">3</p>
+          <p class="mt-2 text-sm opacity-90">Truck sizes (1 t, 2 t, 4 t)</p>
+        </div>
+        <div>
+          <p class="font-heading text-4xl font-bold md:text-5xl">24/7</p>
+          <p class="mt-2 text-sm opacity-90">WhatsApp response</p>
+        </div>
+        <div>
+          <p class="font-heading text-4xl font-bold md:text-5xl">100%</p>
+          <p class="mt-2 text-sm opacity-90">Own fleet, no middlemen</p>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="lg">
+    <Container size="narrow">
+      <SectionHeader eyebrow="Team" title="The people behind every move" />
+      <p class="mb-6 text-gray-700">
+        All our staff go through training in fragile cargo handling, professional packing and
+        customer service. Our drivers hold A-IIIb and A-IIIc professional licenses and know local
+        and inter-provincial routes in depth.
+      </p>
+      <img
+        src="/wp-content/uploads/2024/05/SERVICIO-DE-DESARMADO-Y-ARMADO-DE-MUEBLES-CUSCO.jpg"
+        alt="Expreso Ñan team at work"
+        width="900"
+        height="600"
+        loading="lazy"
+        decoding="async"
+        class="w-full rounded-2xl shadow-lg"
+      />
+
+      <div class="mt-10 rounded-2xl border border-gray-200 bg-gray-50 p-6 md:p-8">
+        <div class="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p class="text-primary mb-1 text-xs font-bold tracking-wider uppercase">Follow us</p>
+            <h3 class="font-heading text-xl font-bold">Social media</h3>
+            <p class="mt-1 text-sm text-gray-700">
+              Recent moves, tips, active routes and team in action.
+            </p>
+          </div>
+          <SocialLinks variant="light" size="lg" />
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  <CTASection
+    title="See our work on your next move"
+    subtitle="Get a quote now — we respond in minutes."
+    whatsappMessage="Hi, I read the About page of Expresos Ñan and would like a quote for a move."
+    background="dark"
+  />
+</BaseLayout>

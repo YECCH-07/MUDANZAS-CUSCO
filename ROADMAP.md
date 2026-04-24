@@ -27,7 +27,7 @@ Semana  1   2   3   4   5   6   7   8   9  10  11  12  13
 | [SPRINT-06](sprints/SPRINT-06-routes.md)        | 8      | Landings de rutas inter-provinciales    | ✅ Completado |
 | SPRINT-06.5 (intermedio)                        | 8      | Refinamiento visual + fotos de portada  | ✅ Completado |
 | [SPRINT-07](sprints/SPRINT-07-blog.md)          | 9      | Blog SEO y contenido inicial            | ✅ Completado |
-| [SPRINT-08](sprints/SPRINT-08-i18n-english.md)  | 10     | Internacionalización al inglés          | ⬜ Pendiente  |
+| [SPRINT-08](sprints/SPRINT-08-i18n-english.md)  | 10     | Internacionalización al inglés          | ✅ Completado |
 | [SPRINT-09](sprints/SPRINT-09-seo-technical.md) | 11     | SEO técnico completo                    | ⬜ Pendiente  |
 | [SPRINT-10](sprints/SPRINT-10-vps-deploy.md)    | 12     | VPS, Nginx, SSL y CI/CD                 | ⬜ Pendiente  |
 | [SPRINT-11](sprints/SPRINT-11-qa-prelaunch.md)  | 12-13  | QA exhaustivo y pre-lanzamiento         | ⬜ Pendiente  |
