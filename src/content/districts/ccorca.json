@@ -74,14 +74,19 @@
     "note": "Precios referenciales considerando el estado del camino y la distancia a la comunidad específica. Cotización exacta requiere detalles del destino.",
     "rows": [
       {
-        "label": "Mudanza pequeña a pueblo de Ccorca cercano al eje",
+        "label": "Taxi-carga / mini mudanza a pueblo cercano al eje",
         "price": "S/ 250 – S/ 450",
         "notes": "Unidad 1 t"
       },
       {
-        "label": "Mudanza mediana con acceso por camino afirmado",
-        "price": "S/ 500 – S/ 900",
+        "label": "Habitación / mono-ambiente con acceso por camino afirmado",
+        "price": "S/ 400 – S/ 700",
         "notes": "Unidad 2 t, según distancia"
+      },
+      {
+        "label": "Departamento o mudanza mediana",
+        "price": "S/ 700 – S/ 1200",
+        "notes": "Unidad 2 t (la 4 t rara vez pasa en caminos afirmados)"
       },
       {
         "label": "Flete de materiales a comunidad alejada",

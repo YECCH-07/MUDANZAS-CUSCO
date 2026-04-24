@@ -84,16 +84,21 @@
   "priceTable": {
     "note": "Precios referenciales dentro del Centro Histórico. En zonas con acceso muy restringido puede aplicar recargo por tiempo adicional de carga en tramos.",
     "rows": [
-      { "label": "Cuarto / mini-departamento", "price": "S/ 150 – S/ 300", "notes": "Unidad 1 t" },
+      { "label": "Taxi-carga / mini mudanza", "price": "S/ 150 – S/ 300", "notes": "Unidad 1 t" },
       {
-        "label": "Departamento 2 ambientes",
-        "price": "S/ 350 – S/ 600",
-        "notes": "Puede requerir carga en tramos"
+        "label": "Habitación / mono-ambiente",
+        "price": "S/ 280 – S/ 500",
+        "notes": "Unidad 2 t, puede requerir carga en tramos"
+      },
+      {
+        "label": "Departamento 1-2 ambientes",
+        "price": "S/ 450 – S/ 800",
+        "notes": "Según acceso (unidad 2 t o 4 t donde pase)"
       },
       {
         "label": "Casa o local comercial mediano",
-        "price": "S/ 700 – S/ 1200",
-        "notes": "Con coordinación previa de acceso"
+        "price": "S/ 900 – S/ 1500",
+        "notes": "Coordinación previa de acceso; normalmente 2 viajes con 2 t o combinado"
       },
       {
         "label": "Mudanza de hotel boutique / restaurante",
@@ -110,7 +115,7 @@
     },
     {
       "q": "¿Cuánto tiempo toma una mudanza en el Centro Histórico?",
-      "a": "Si el acceso es directo y la unidad puede estacionar cerca, entre 4 y 8 horas para un departamento de 2 ambientes. En calles con carga por tramos, súmale 2-4 horas. En zonas peatonales puras puede ser una jornada completa."
+      "a": "Si el acceso es directo y la unidad de 2 t puede estacionar cerca, entre 4 y 8 horas para un departamento de 1-2 ambientes. En calles con carga por tramos, súmale 2-4 horas. En zonas peatonales puras puede ser una jornada completa. Para una casa completa en el centro, normalmente coordinamos dos viajes con la unidad que sí entra."
     },
     {
       "q": "¿Hacen mudanzas nocturnas para hoteles y restaurantes?",

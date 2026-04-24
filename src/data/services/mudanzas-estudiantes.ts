@@ -30,8 +30,8 @@ export const mudanzasEstudiantes: ServiceData = {
       title: 'Casos típicos que atendemos',
       paragraphs: [
         '<strong>Cambio de pensión:</strong> de una zona a otra de Cusco. La ruta más común es entre Wanchaq y San Sebastián, y hacia/desde la zona cerca de la UNSAAC.',
-        '<strong>Traslado de cuarto completo:</strong> cama, escritorio, silla, ropero pequeño, cajas. Generalmente cabe en una unidad de 1 tonelada en un solo viaje.',
-        '<strong>Mudanza a mini-departamento:</strong> cuando finalmente consigues tu primer departamento independiente, normalmente con algo más de mobiliario.',
+        '<strong>Traslado de cuarto completo:</strong> cama, escritorio, silla, ropero pequeño, cajas. Generalmente cabe en la unidad de 1 tonelada (taxi-carga) en un solo viaje.',
+        '<strong>Mudanza a mini-departamento:</strong> cuando finalmente consigues tu primer departamento independiente, normalmente con algo más de mobiliario — operamos con la unidad de 2 toneladas.',
         '<strong>Regreso a ciudad de origen:</strong> mudanza a Sicuani, Abancay u otra provincia al terminar el semestre o carrera.',
         '<strong>Mudanza compartida entre amigos:</strong> si son dos o tres que se mudan en la misma zona el mismo día, coordinamos servicio conjunto con descuento.',
       ],
@@ -39,7 +39,7 @@ export const mudanzasEstudiantes: ServiceData = {
   ],
 
   includes: [
-    'Unidad 1 tonelada (suficiente para un cuarto)',
+    'Unidad 1 tonelada (taxi-carga, suficiente para un cuarto)',
     'Chofer + 1 ayudante',
     'Mantas para proteger muebles',
     '3-5 cajas de cartón de cortesía si no tienes',
@@ -66,7 +66,7 @@ export const mudanzasEstudiantes: ServiceData = {
         price: 'S/ 120 – S/ 200',
         notes: 'Unidad 1 t',
       },
-      { label: 'Mini-departamento', price: 'S/ 200 – S/ 350', notes: 'Unidad 1-2 t' },
+      { label: 'Mini-departamento', price: 'S/ 200 – S/ 400', notes: 'Unidad 2 t' },
       {
         label: 'Mudanza express mismo día (extra urgencia)',
         price: '+ S/ 30 sobre tarifa base',

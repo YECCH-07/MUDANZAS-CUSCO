@@ -25,7 +25,7 @@ import { SITE } from '@lib/site';
           <span
             class="peer-checked:border-primary peer-checked:bg-primary block rounded-lg border-2 border-gray-200 bg-white px-3 py-3 text-center text-sm font-bold peer-checked:text-white"
           >
-            Cuarto / estudiante
+            Taxi-carga / mini mudanza
           </span>
         </label>
         <label class="cursor-pointer">
@@ -33,7 +33,7 @@ import { SITE } from '@lib/site';
           <span
             class="peer-checked:border-primary peer-checked:bg-primary block rounded-lg border-2 border-gray-200 bg-white px-3 py-3 text-center text-sm font-bold peer-checked:text-white"
           >
-            Departamento 1-2 ambientes
+            Habitación / mono-ambiente
           </span>
         </label>
         <label class="cursor-pointer">
@@ -41,7 +41,7 @@ import { SITE } from '@lib/site';
           <span
             class="peer-checked:border-primary peer-checked:bg-primary block rounded-lg border-2 border-gray-200 bg-white px-3 py-3 text-center text-sm font-bold peer-checked:text-white"
           >
-            Casa / 3+ ambientes
+            Departamento 1-3 ambientes
           </span>
         </label>
       </div>
@@ -76,7 +76,7 @@ import { SITE } from '@lib/site';
       Unidad de 1 tonelada
     </p>
     <p id="fleet-result-desc" class="mt-2 text-sm text-gray-700">
-      Ideal para cuartos, mini-departamentos y fletes ligeros dentro de Cusco.
+      Ideal para taxi-carga, mini mudanzas y fletes express dentro de Cusco.
     </p>
   </div>
 
@@ -110,18 +110,23 @@ import { SITE } from '@lib/site';
     const profiles: Record<string, { title: string; desc: string; mudanza: string }> = {
       '1': {
         title: 'Unidad de 1 tonelada',
-        desc: 'Ideal para cuartos, mini-departamentos y fletes ligeros dentro de Cusco.',
-        mudanza: 'cuarto o mini-departamento',
+        desc: 'Ideal para taxi-carga, mini mudanzas y fletes express dentro de Cusco.',
+        mudanza: 'taxi-carga o mini mudanza',
       },
       '2': {
         title: 'Unidad de 2 toneladas',
-        desc: 'Recomendada para departamentos de 1-2 ambientes, oficinas pequeñas y fletes medianos.',
-        mudanza: 'departamento de 1-2 ambientes',
+        desc: 'Recomendada para habitaciones amuebladas, mono-ambientes y mini-departamentos pequeños.',
+        mudanza: 'habitación, mono-ambiente o mini-depa pequeño',
       },
       '4': {
         title: 'Unidad de 4 toneladas',
-        desc: 'La unidad más grande: casas familiares completas, oficinas medianas y fletes a provincias.',
-        mudanza: 'casa familiar o 3+ ambientes',
+        desc: 'Para mini-departamentos y departamentos de 1 a 3 ambientes. Es la unidad más grande de la flota.',
+        mudanza: 'departamento de 1 a 3 ambientes',
+      },
+      '4x2': {
+        title: 'Unidad de 4 toneladas × 2 viajes',
+        desc: 'Para casas familiares completas o volúmenes grandes, coordinamos dos viajes con la unidad de 4 t (o un operativo combinado 2 t + 4 t).',
+        mudanza: 'casa familiar completa o volumen grande (2 viajes con la unidad de 4 t)',
       },
     };
 
@@ -138,9 +143,11 @@ import { SITE } from '@lib/site';
       const extra = getChecked(extraInputs) ?? 'no';
 
       // Si marca muebles grandes, subimos un nivel de unidad.
+      // Si ya estamos en 4 t, pasamos al plan de 2 viajes con 4 t (casa completa).
       if (extra === 'yes') {
         if (size === '1') size = '2';
         else if (size === '2') size = '4';
+        else if (size === '4') size = '4x2';
       }
 
       const profile = profiles[size] ?? profiles['1']!;

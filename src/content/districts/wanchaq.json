@@ -80,12 +80,17 @@
   "priceTable": {
     "note": "Precios referenciales dentro de Wanchaq. Para mudanzas a/desde otros distritos, se ajusta por distancia.",
     "rows": [
-      { "label": "Cuarto / pensión UNSAAC", "price": "S/ 80 – S/ 200", "notes": "Unidad 1 t" },
-      { "label": "Departamento 2 ambientes", "price": "S/ 300 – S/ 500", "notes": "Unidad 2 t" },
+      {
+        "label": "Cuarto / pensión UNSAAC",
+        "price": "S/ 80 – S/ 200",
+        "notes": "Unidad 1 t (taxi-carga)"
+      },
+      { "label": "Habitación / mono-ambiente", "price": "S/ 250 – S/ 450", "notes": "Unidad 2 t" },
+      { "label": "Departamento 1-2 ambientes", "price": "S/ 400 – S/ 700", "notes": "Unidad 4 t" },
       {
         "label": "Casa o departamento 3+ ambientes",
-        "price": "S/ 500 – S/ 900",
-        "notes": "Unidad 2-4 t"
+        "price": "S/ 800 – S/ 1400",
+        "notes": "2 viajes con unidad 4 t o combinado 2 t + 4 t"
       },
       {
         "label": "Oficina pequeña (zona comercial)",
@@ -110,7 +115,7 @@
     },
     {
       "q": "¿Qué unidad me recomiendan para Wanchaq?",
-      "a": "Para cuarto de pensión, unidad de 1 tonelada. Para departamento de 2 ambientes, unidad de 2 toneladas. Para casas familiares, 4 toneladas. Las calles de Wanchaq permiten acceso con todas las unidades salvo callejuelas internas de urbanizaciones antiguas."
+      "a": "Para taxi-carga o mudanza pequeña (cuarto de pensión), unidad de 1 tonelada. Para habitación amueblada o mono-ambiente, unidad de 2 toneladas. Para departamentos de 1 a 3 ambientes, la unidad de 4 toneladas. Para casas familiares completas coordinamos dos viajes con la unidad de 4 t. Las calles de Wanchaq permiten acceso con todas las unidades salvo callejuelas internas de urbanizaciones antiguas."
     }
   ],
 

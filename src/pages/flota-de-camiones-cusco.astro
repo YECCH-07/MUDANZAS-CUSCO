@@ -17,13 +17,13 @@ const unidades = [
     dimensions: 'Aprox. 3.0 m × 1.8 m × 1.8 m (caja)',
     volumen: '≈ 10 m³',
     casos: [
-      'Mudanzas de cuarto o mini-departamento',
-      'Fletes ligeros dentro de Cusco',
-      'Entregas urgentes de electrodomésticos',
+      'Taxi-carga y fletes express dentro de Cusco',
+      'Mini mudanzas: habitación básica o muebles sueltos',
+      'Entregas puntuales de electrodomésticos o muebles',
     ],
-    recommended: 'Cuartos, oficinas pequeñas, fletes express',
+    recommended: 'Taxi-carga, mini mudanzas y fletes express',
     image: '/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg',
-    imageAlt: 'Unidad de 1 tonelada de Expreso Ñan para mudanzas pequeñas',
+    imageAlt: 'Unidad de 1 tonelada de Expreso Ñan para taxi-carga y mini mudanzas',
   },
   {
     tag: '2 toneladas',
@@ -32,13 +32,13 @@ const unidades = [
     dimensions: 'Aprox. 4.0 m × 2.0 m × 2.0 m (caja)',
     volumen: '≈ 16-18 m³',
     casos: [
-      'Departamentos de 1-2 ambientes',
-      'Oficinas pequeñas',
-      'Fletes medianos a Sicuani o Abancay',
+      'Habitaciones amuebladas completas',
+      'Mono-ambientes y estudios',
+      'Mini-departamentos pequeños (pareja sin hijos)',
     ],
-    recommended: 'Departamentos, fletes a Sicuani/Abancay',
+    recommended: 'Habitaciones, mono-ambientes y mini-depas pequeños',
     image: '/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg',
-    imageAlt: 'Unidad de 2 toneladas Expreso Ñan',
+    imageAlt: 'Unidad de 2 toneladas Expreso Ñan para habitaciones y mono-ambientes',
   },
   {
     tag: '4 toneladas',
@@ -47,14 +47,14 @@ const unidades = [
     dimensions: 'Aprox. 5.5 m × 2.2 m × 2.4 m (caja)',
     volumen: '≈ 28-30 m³',
     casos: [
-      'Casas familiares completas (3+ ambientes)',
-      'Oficinas medianas',
-      'Mudanzas inter-provinciales con carga grande',
+      'Mini-departamentos con muebles grandes',
+      'Departamentos de 1 a 3 ambientes',
+      'Mudanzas inter-provinciales y fletes medianos',
       'Ruta Cusco ↔ Challhuahuacho (Las Bambas)',
     ],
-    recommended: 'Casas familiares, mudanzas a Apurímac (Las Bambas)',
+    recommended: 'Mini-depas y departamentos (1-3 ambientes)',
     image: '/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg',
-    imageAlt: 'Unidad de 4 toneladas Expreso Ñan',
+    imageAlt: 'Unidad de 4 toneladas Expreso Ñan para departamentos',
   },
 ];
 
@@ -96,7 +96,7 @@ const faqs = [
   },
   {
     q: '¿Todas las unidades entran a zonas angostas de Cusco?',
-    a: 'La unidad de 1 tonelada entra a casi todas las calles, incluyendo parte de la zona histórica. La de 2 t entra a la mayoría. La de 4 t es más limitada en zonas muy angostas — cuando hay acceso complicado coordinamos unidad más pequeña o carga por tramos.',
+    a: 'La unidad de 1 tonelada entra a casi todas las calles, incluyendo parte de la zona histórica. La de 2 t entra a la mayoría. La de 4 t es más limitada en zonas muy angostas — cuando hay acceso complicado coordinamos unidad más pequeña o carga por tramos. Para casas familiares completas solemos hacer dos viajes con la unidad de 4 t o un operativo combinado 2 t + 4 t.',
   },
   {
     q: '¿Las unidades son propias o subcontratan?',
@@ -158,9 +158,13 @@ const faqs = [
           en condiciones para el día de tu mudanza.
         </p>
         <p>
-          Operamos tres tamaños de unidad — <strong>1, 2 y 4 toneladas</strong> — para cubrir desde mudanzas
-          de cuarto de estudiante hasta traslados de casas completas y rutas inter-provinciales exigentes
-          como Cusco ↔ Challhuahuacho (proyecto Las Bambas).
+          Operamos tres tamaños de unidad — <strong>1, 2 y 4 toneladas</strong> — para cubrir desde un
+          <strong>taxi-carga o mini mudanza</strong> hasta el traslado de <strong
+            >departamentos de 1 a 3 ambientes</strong
+          >
+          y rutas inter-provinciales exigentes como Cusco ↔ Challhuahuacho (proyecto Las Bambas). Para
+          <strong>casas familiares completas</strong> o volúmenes grandes coordinamos un operativo combinado
+          o <strong>dos viajes con la unidad de 4 t</strong>.
         </p>
       </div>
     </Container>
@@ -365,7 +369,7 @@ const faqs = [
       <div class="grid gap-6 md:grid-cols-3">
         <ServiceCard
           title="Mudanzas locales"
-          description="Unidades de 1, 2 o 4 t según el tamaño de tu vivienda."
+          description="1 t para taxi-carga, 2 t para habitaciones, 4 t para departamentos."
           href="/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/"
           image="/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg"
           imageAlt="Mudanza local con camión Expreso Ñan"

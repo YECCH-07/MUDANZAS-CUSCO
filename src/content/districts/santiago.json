@@ -18,7 +18,7 @@
   "description": [
     "<strong>Santiago</strong> es uno de los distritos con más historia cusqueña viva. Su nombre viene del apóstol patrón y conserva templos coloniales como el de Santiago Apóstol y el de Almudena. Hoy es un distrito <strong>popular y comercial</strong>, con fuerte presencia de comerciantes, artesanos y familias que han vivido en la zona durante generaciones.",
     "La gran particularidad logística de Santiago es la <strong>proximidad al Mercado Central de San Pedro</strong> — uno de los mercados más importantes del sur del Perú. Muchos comerciantes tienen sus puestos en el mercado y sus viviendas en las calles aledañas. Por eso atendemos muchas mudanzas que combinan traslado de pertenencias residenciales con mercadería comercial.",
-    "El distrito tiene <strong>geografía accidentada</strong>: calles con pendiente pronunciada, sobre todo en la zona alta de Almudena y Belén. Esto requiere destreza en maniobras y a veces uso de la unidad más pequeña para acceder. También hay zonas más planas cerca del mercado y de la Plaza de Santiago donde las unidades de 2 y 4 toneladas circulan sin problema.",
+    "El distrito tiene <strong>geografía accidentada</strong>: calles con pendiente pronunciada, sobre todo en la zona alta de Almudena y Belén. Esto requiere destreza en maniobras y a veces uso de la unidad más pequeña (1 t o 2 t) para acceder. También hay zonas más planas cerca del mercado y de la Plaza de Santiago donde las unidades de 2 y 4 toneladas circulan sin problema.",
     "Frecuentemente atendemos mudanzas <strong>Santiago ↔ Cusco Centro</strong> y <strong>Santiago ↔ Wanchaq</strong>, porque muchos residentes de Santiago trabajan en el centro turístico o en zona comercial de Wanchaq. También recibimos traslados desde Santiago hacia los distritos en expansión (San Sebastián, San Jerónimo) cuando las familias buscan vivienda con más espacio."
   ],
 
@@ -80,15 +80,24 @@
     "note": "Precios referenciales dentro de Santiago o con distritos cercanos (Cusco Centro, Wanchaq).",
     "rows": [
       {
-        "label": "Cuarto / mini-departamento",
+        "label": "Taxi-carga / mini mudanza",
         "price": "S/ 120 – S/ 250",
-        "notes": "Unidad 1 t por pendientes"
+        "notes": "Unidad 1 t (recomendada por pendientes)"
       },
-      { "label": "Departamento 2 ambientes", "price": "S/ 300 – S/ 500", "notes": "Unidad 1-2 t" },
+      {
+        "label": "Habitación / mono-ambiente",
+        "price": "S/ 250 – S/ 450",
+        "notes": "Unidad 1-2 t según pendiente"
+      },
+      {
+        "label": "Departamento 1-2 ambientes",
+        "price": "S/ 400 – S/ 700",
+        "notes": "Unidad 2-4 t según zona"
+      },
       {
         "label": "Casa completa en zona plana",
-        "price": "S/ 600 – S/ 1000",
-        "notes": "Unidad 2-4 t"
+        "price": "S/ 800 – S/ 1400",
+        "notes": "2 viajes con unidad 4 t o combinado 2 t + 4 t"
       },
       {
         "label": "Flete comercial desde Mercado San Pedro",
@@ -101,7 +110,7 @@
   "faqs": [
     {
       "q": "¿Acceden a las calles con pendiente en Almudena y Belén?",
-      "a": "Sí, con unidad de 1 o 2 toneladas. La unidad de 4 t no la recomendamos para pendientes pronunciadas por seguridad. Si tu mudanza es grande, hacemos 2 viajes con la unidad de 2 t."
+      "a": "Sí, con unidad de 1 o 2 toneladas. La unidad de 4 t no la recomendamos para pendientes pronunciadas por seguridad. Si tu mudanza es grande, hacemos 2 viajes con la unidad de 2 t o combinamos con la de 4 t en las zonas planas donde sí puede entrar."
     },
     {
       "q": "¿Hacen flete comercial desde o hacia el Mercado San Pedro?",

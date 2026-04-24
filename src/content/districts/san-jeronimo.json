@@ -78,9 +78,15 @@
   "priceTable": {
     "note": "Precios referenciales dentro de San Jerónimo o rutas cortas con Wanchaq/San Sebastián.",
     "rows": [
-      { "label": "Departamento 1 ambiente", "price": "S/ 200 – S/ 400", "notes": "Unidad 1-2 t" },
-      { "label": "Departamento 2-3 ambientes", "price": "S/ 400 – S/ 700", "notes": "Unidad 2 t" },
-      { "label": "Casa familiar completa", "price": "S/ 700 – S/ 1200", "notes": "Unidad 4 t" },
+      { "label": "Taxi-carga / mini mudanza", "price": "S/ 150 – S/ 300", "notes": "Unidad 1 t" },
+      { "label": "Habitación / mono-ambiente", "price": "S/ 250 – S/ 450", "notes": "Unidad 2 t" },
+      { "label": "Departamento 1-2 ambientes", "price": "S/ 400 – S/ 700", "notes": "Unidad 4 t" },
+      { "label": "Departamento 3 ambientes", "price": "S/ 600 – S/ 1000", "notes": "Unidad 4 t" },
+      {
+        "label": "Casa familiar completa",
+        "price": "S/ 900 – S/ 1500",
+        "notes": "2 viajes con unidad 4 t o combinado 2 t + 4 t"
+      },
       {
         "label": "Mudanza con llegada/salida por aeropuerto",
         "price": "Cotización según horario",

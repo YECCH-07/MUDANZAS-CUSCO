@@ -31,9 +31,10 @@ export const mudanzasLocales: ServiceData = {
     {
       title: 'Tipos de mudanza local que atendemos',
       paragraphs: [
-        '<strong>Departamento pequeño (1 ambiente):</strong> ideal para estudiantes o parejas sin hijos. Generalmente se resuelve con la unidad de 1 tonelada en 3-5 horas.',
-        '<strong>Departamento mediano (2-3 ambientes):</strong> caso típico de familias jóvenes. Requiere unidad de 2 toneladas y entre 5-7 horas de trabajo.',
-        '<strong>Casa familiar completa:</strong> 3+ dormitorios con sala, comedor, cocina y terraza. Normalmente opera con unidad de 4 toneladas o dos viajes de la unidad de 2 toneladas.',
+        '<strong>Taxi-carga o mini mudanza:</strong> habitación básica, muebles sueltos o entregas puntuales. Se resuelve con la unidad de 1 tonelada en 2-4 horas.',
+        '<strong>Habitación amueblada o mono-ambiente:</strong> caso típico de estudiantes, parejas jóvenes o mini-departamentos pequeños. Requiere unidad de 2 toneladas y entre 3-5 horas de trabajo.',
+        '<strong>Departamento de 1 a 3 ambientes:</strong> ideal para familias o parejas. Opera con la unidad de 4 toneladas y entre 5-8 horas, según volumen.',
+        '<strong>Casa familiar completa:</strong> 3+ dormitorios con sala, comedor, cocina y terraza. Normalmente requiere <strong>dos viajes con la unidad de 4 toneladas</strong> o un operativo combinado 2 t + 4 t.',
         '<strong>Oficina pequeña:</strong> hasta 8 estaciones de trabajo. Si es empresa con más complejidad, recomendamos revisar nuestro servicio específico de <a href="/mudanzas-de-o/" class="text-primary underline">mudanzas de oficina</a>.',
       ],
     },
@@ -70,24 +71,29 @@ export const mudanzasLocales: ServiceData = {
     note: 'Precios referenciales dentro de Cusco metropolitano. La cotización final depende del volumen real y la distancia. Valores pendientes de confirmación final.',
     rows: [
       {
-        label: 'Cuarto / mini-departamento',
+        label: 'Taxi-carga / mini mudanza',
         price: 'S/ 150 – S/ 300',
-        notes: 'Unidad de 1 t, 3-4 horas',
+        notes: 'Unidad 1 t, 2-4 horas',
       },
       {
-        label: 'Departamento 2 ambientes',
-        price: 'S/ 300 – S/ 500',
-        notes: 'Unidad de 2 t, 5-6 horas',
+        label: 'Habitación / mono-ambiente',
+        price: 'S/ 250 – S/ 450',
+        notes: 'Unidad 2 t, 3-5 horas',
+      },
+      {
+        label: 'Departamento 1-2 ambientes',
+        price: 'S/ 400 – S/ 700',
+        notes: 'Unidad 4 t, 5-7 horas',
       },
       {
         label: 'Departamento 3 ambientes',
-        price: 'S/ 500 – S/ 800',
-        notes: 'Unidad de 2 t, 6-8 horas',
+        price: 'S/ 600 – S/ 1000',
+        notes: 'Unidad 4 t, 6-8 horas',
       },
       {
         label: 'Casa familiar completa',
-        price: 'S/ 800 – S/ 1500',
-        notes: 'Unidad de 4 t o dos viajes',
+        price: 'S/ 900 – S/ 1600',
+        notes: '2 viajes con unidad 4 t o combinado 2 t + 4 t',
       },
     ],
   },
@@ -114,11 +120,11 @@ export const mudanzasLocales: ServiceData = {
   faqs: [
     {
       q: '¿Cuánto cuesta una mudanza local en Cusco?',
-      a: 'Depende del volumen y distancia, pero a modo de referencia: un cuarto o mini-departamento desde S/ 150, un departamento de 2 ambientes entre S/ 300 y S/ 500, y una casa familiar completa desde S/ 800. Te cotizamos exacto por WhatsApp en minutos.',
+      a: 'Depende del volumen y distancia, pero a modo de referencia: un taxi-carga o mini mudanza desde S/ 150, una habitación o mono-ambiente entre S/ 250 y S/ 450, un departamento de 1-3 ambientes entre S/ 400 y S/ 1000, y una casa familiar completa desde S/ 900. Te cotizamos exacto por WhatsApp en minutos.',
     },
     {
       q: '¿Cuánto tiempo toma la mudanza?',
-      a: 'Un cuarto: 3-4 horas. Un departamento de 2 ambientes: 5-7 horas. Una casa completa: 8-12 horas (a veces un día completo con equipo extra). Estas son horas de trabajo real, no de espera.',
+      a: 'Taxi-carga / mini mudanza: 2-4 horas. Habitación o mono-ambiente: 3-5 horas. Departamento de 1-3 ambientes: 5-8 horas. Casa completa: 10-14 horas, normalmente con dos viajes de la unidad de 4 t (a veces un día completo con equipo extra). Estas son horas de trabajo real, no de espera.',
     },
     {
       q: '¿Embalan todo o solo transportan?',

@@ -70,12 +70,18 @@
     "note": "Precios referenciales entre Saylla y Cusco metropolitano (Wanchaq, Centro, San Jerónimo).",
     "rows": [
       {
-        "label": "Cuarto / departamento pequeño",
+        "label": "Taxi-carga / mini mudanza",
         "price": "S/ 180 – S/ 350",
         "notes": "Unidad 1 t"
       },
-      { "label": "Departamento 2-3 ambientes", "price": "S/ 400 – S/ 700", "notes": "Unidad 2 t" },
-      { "label": "Casa familiar completa", "price": "S/ 700 – S/ 1200", "notes": "Unidad 4 t" },
+      { "label": "Habitación / mono-ambiente", "price": "S/ 280 – S/ 500", "notes": "Unidad 2 t" },
+      { "label": "Departamento 1-2 ambientes", "price": "S/ 450 – S/ 750", "notes": "Unidad 4 t" },
+      { "label": "Departamento 3 ambientes", "price": "S/ 650 – S/ 1000", "notes": "Unidad 4 t" },
+      {
+        "label": "Casa familiar completa",
+        "price": "S/ 900 – S/ 1500",
+        "notes": "2 viajes con unidad 4 t o combinado 2 t + 4 t"
+      },
       {
         "label": "Mudanza combinada Saylla + corredor sur",
         "price": "Cotización integrada",
@@ -91,7 +97,7 @@
     },
     {
       "q": "¿Cuánto toma una mudanza desde Wanchaq a Saylla?",
-      "a": "Traslado 25-35 minutos. Mudanza completa para un departamento de 2 ambientes: 5-7 horas."
+      "a": "Traslado 25-35 minutos. Mudanza completa para un departamento de 1-2 ambientes con unidad de 4 t: 5-7 horas."
     },
     {
       "q": "¿Si mi destino es Oropesa o Urcos pero vivo en Saylla, conviene?",
