@@ -1,0 +1,73 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Button from '@components/Button.astro';
+import WhatsAppButton from '@components/WhatsAppButton.astro';
+---
+
+<BaseLayout
+  title="Página no encontrada (404) | Expresos Ñan"
+  description="Esta página se mudó o ya no existe. Explora nuestros servicios de mudanza, flete y almacenaje en Cusco, o contáctanos por WhatsApp."
+  noindex={true}
+>
+  <Section spacing="xl">
+    <Container size="narrow" class="text-center">
+      <p class="text-primary font-heading mb-4 text-6xl font-bold md:text-8xl">404</p>
+      <h1 class="font-heading mb-4 text-3xl font-bold md:text-4xl">
+        Esta página se mudó (¡como nosotros!)
+      </h1>
+      <p class="mb-8 text-gray-700">
+        No encontramos la página que buscas. Puede que haya cambiado de dirección o que el enlace
+        esté mal. Te ayudamos a llegar a lo que necesitas:
+      </p>
+
+      <div class="mb-10 flex flex-wrap justify-center gap-3">
+        <Button href="/" variant="primary" size="lg">Ir al inicio</Button>
+        <WhatsAppButton
+          variant="inline"
+          size="lg"
+          message="Hola, estaba buscando algo en su web y llegué a una página 404. Necesito ayuda con [detalle]."
+          label="Ayuda por WhatsApp"
+        />
+      </div>
+
+      <div class="rounded-2xl bg-gray-50 p-6 text-left">
+        <h2 class="font-heading mb-4 text-lg font-bold">Páginas más visitadas</h2>
+        <ul class="grid gap-2 text-sm sm:grid-cols-2">
+          <li>
+            <a
+              href="/servicio-de-caraga-flete-y-mudanza-cusco/"
+              class="hover:text-primary hover:underline">Todos los servicios</a>
+          </li>
+          <li>
+            <a
+              href="/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/"
+              class="hover:text-primary hover:underline">Mudanzas locales</a>
+          </li>
+          <li>
+            <a href="/mudanza-provincia/" class="hover:text-primary hover:underline"
+              >Mudanzas inter-provincia</a>
+          </li>
+          <li>
+            <a href="/mudanzas-de-o/" class="hover:text-primary hover:underline"
+              >Mudanzas de oficina</a>
+          </li>
+          <li>
+            <a href="/almacenaje-y-custodia-cusco/" class="hover:text-primary hover:underline"
+              >Almacenaje y custodia</a>
+          </li>
+          <li>
+            <a href="/flota-de-camiones-cusco/" class="hover:text-primary hover:underline"
+              >Nuestra flota</a>
+          </li>
+          <li>
+            <a href="/preguntas-frecuentes/" class="hover:text-primary hover:underline"
+              >Preguntas frecuentes</a>
+          </li>
+          <li><a href="/contact/" class="hover:text-primary hover:underline">Contacto</a></li>
+        </ul>
+      </div>
+    </Container>
+  </Section>
+</BaseLayout>

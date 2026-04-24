@@ -1,0 +1,74 @@
+---
+/*
+ * Grid responsive de testimonios (no un carrusel con JS).
+ * En móvil se convierte en scroll horizontal con scroll-snap (cero JS).
+ * Datos vienen de src/content/testimonials/*.json vía getCollection.
+ */
+import { getCollection } from 'astro:content';
+
+const testimonialsRaw = await getCollection('testimonials', ({ data }) => !data.draft);
+const testimonials = testimonialsRaw.sort((a, b) => a.data.order - b.data.order);
+---
+
+{
+  testimonials.length > 0 && (
+    <div class="relative">
+      <ul class="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 md:mx-0 md:grid md:grid-cols-2 md:overflow-visible md:px-0 lg:grid-cols-3">
+        {testimonials.map((t) => (
+          <li class="min-w-[85%] snap-center md:min-w-0">
+            <figure class="flex h-full flex-col gap-4 rounded-2xl border border-gray-100 bg-white p-6 shadow-sm">
+              <svg
+                class="text-primary h-8 w-8 opacity-60"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                aria-hidden="true"
+              >
+                <path d="M7.17 6.83C5.42 8.58 4.5 10.83 4.5 13.67v3.83h5V13.5H7c.17-1.83 1.33-3.33 3.17-4.17l-3-2.5zm9 0c-1.75 1.75-2.67 4-2.67 6.84v3.83h5V13.5h-2.5c.17-1.83 1.33-3.33 3.17-4.17l-3-2.5z" />
+              </svg>
+              <blockquote class="flex-1 text-sm leading-relaxed text-gray-700 md:text-base">
+                {t.data.quote}
+              </blockquote>
+              <figcaption class="flex items-center gap-3">
+                {t.data.avatar ? (
+                  <img
+                    src={t.data.avatar}
+                    alt=""
+                    width="48"
+                    height="48"
+                    loading="lazy"
+                    class="h-12 w-12 rounded-full object-cover"
+                  />
+                ) : (
+                  <span class="bg-primary/10 text-primary font-heading flex h-12 w-12 items-center justify-center rounded-full text-lg font-bold">
+                    {t.data.name.charAt(0)}
+                  </span>
+                )}
+                <div>
+                  <p class="text-dark font-bold">{t.data.name}</p>
+                  <p class="text-xs text-gray-600">{t.data.role}</p>
+                </div>
+                <div
+                  class="text-primary ml-auto flex gap-0.5"
+                  aria-label={`${t.data.rating} de 5 estrellas`}
+                >
+                  {Array.from({ length: 5 }).map((_, i) => (
+                    <svg
+                      class="h-4 w-4"
+                      viewBox="0 0 20 20"
+                      fill={i < t.data.rating ? 'currentColor' : 'none'}
+                      stroke="currentColor"
+                      stroke-width="1.5"
+                      aria-hidden="true"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.196-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118L2.098 10.1c-.783-.57-.38-1.81.588-1.81h4.915a1 1 0 00.95-.69l1.519-4.674z" />
+                    </svg>
+                  ))}
+                </div>
+              </figcaption>
+            </figure>
+          </li>
+        ))}
+      </ul>
+    </div>
+  )
+}

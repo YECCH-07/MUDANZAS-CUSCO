@@ -1,0 +1,198 @@
+---
+/*
+ * Formulario de contacto con Web3Forms (https://web3forms.com) — envío por email
+ * sin backend. Honeypot anti-spam + validación HTML5 + mensaje de éxito en el
+ * query string (?success=true).
+ *
+ * Requisito: configurar WEB3FORMS_ACCESS_KEY en .env antes del lanzamiento.
+ * Si falta la key, el formulario se muestra pero el submit falla graciosamente.
+ */
+import { SITE } from '@lib/site';
+import { getLangFromUrl } from '@/i18n/config';
+
+interface Props {
+  kind?: 'general' | 'business';
+  subject?: string;
+  class?: string;
+}
+
+const { kind = 'general', subject, class: className = '' } = Astro.props;
+const lang = getLangFromUrl(Astro.url);
+const accessKey = import.meta.env.WEB3FORMS_ACCESS_KEY ?? '';
+
+const labels =
+  lang === 'es'
+    ? {
+        name: 'Nombre completo',
+        email: 'Email',
+        phone: 'Teléfono / WhatsApp',
+        company: 'Empresa',
+        ruc: 'RUC (para factura electrónica)',
+        origin: 'Origen (dirección de partida)',
+        destination: 'Destino',
+        date: 'Fecha tentativa',
+        message: '¿Qué necesitas mover? Describe brevemente.',
+        submit: 'Enviar solicitud',
+        required: '(requerido)',
+        privacy:
+          'Al enviar aceptas que usemos tus datos para responder tu consulta. No compartimos tu información con terceros.',
+        missingKey: 'Formulario en configuración. Mientras tanto puedes contactarnos por WhatsApp.',
+      }
+    : {
+        name: 'Full name',
+        email: 'Email',
+        phone: 'Phone / WhatsApp',
+        company: 'Company',
+        ruc: 'Tax ID (for invoice)',
+        origin: 'Origin address',
+        destination: 'Destination',
+        date: 'Tentative date',
+        message: 'What do you need to move? Briefly describe.',
+        submit: 'Send request',
+        required: '(required)',
+        privacy:
+          "By submitting, you agree we'll use your data to respond. We don't share your info with third parties.",
+        missingKey: 'Form under configuration. In the meantime, please contact us via WhatsApp.',
+      };
+
+const successPath = `${Astro.url.pathname}?success=true`;
+const redirectUrl = new URL(successPath, SITE.url).toString();
+---
+
+<form
+  action="https://api.web3forms.com/submit"
+  method="POST"
+  class:list={['space-y-4', className]}
+  novalidate={false}
+>
+  <input type="hidden" name="access_key" value={accessKey} />
+  <input type="hidden" name="subject" value={subject ?? `Nuevo contacto — ${SITE.name}`} />
+  <input type="hidden" name="from_name" value={SITE.name} />
+  <input type="hidden" name="redirect" value={redirectUrl} />
+  {/* honeypot (nombre que bots suelen rellenar) */}
+  <input type="checkbox" name="botcheck" style="display:none" tabindex="-1" autocomplete="off" />
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">
+        {labels.name}
+        <span class="font-normal text-gray-500">{labels.required}</span>
+      </span>
+      <input
+        type="text"
+        name="name"
+        required
+        autocomplete="name"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      />
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">
+        {labels.phone}
+        <span class="font-normal text-gray-500">{labels.required}</span>
+      </span>
+      <input
+        type="tel"
+        name="phone"
+        required
+        autocomplete="tel"
+        inputmode="tel"
+        pattern="[0-9+\-\s]{6,}"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      />
+    </label>
+  </div>
+
+  <label class="block">
+    <span class="mb-1 block text-sm font-bold">{labels.email}</span>
+    <input
+      type="email"
+      name="email"
+      autocomplete="email"
+      class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+    />
+  </label>
+
+  {
+    kind === 'business' && (
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="block">
+          <span class="mb-1 block text-sm font-bold">{labels.company}</span>
+          <input
+            type="text"
+            name="company"
+            autocomplete="organization"
+            class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+          />
+        </label>
+        <label class="block">
+          <span class="mb-1 block text-sm font-bold">{labels.ruc}</span>
+          <input
+            type="text"
+            name="ruc"
+            inputmode="numeric"
+            pattern="[0-9]{11}"
+            class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+          />
+        </label>
+      </div>
+    )
+  }
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">{labels.origin}</span>
+      <input
+        type="text"
+        name="origin"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      />
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">{labels.destination}</span>
+      <input
+        type="text"
+        name="destination"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      />
+    </label>
+  </div>
+
+  <label class="block">
+    <span class="mb-1 block text-sm font-bold">{labels.date}</span>
+    <input
+      type="date"
+      name="date"
+      class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+    />
+  </label>
+
+  <label class="block">
+    <span class="mb-1 block text-sm font-bold">
+      {labels.message}
+      <span class="font-normal text-gray-500">{labels.required}</span>
+    </span>
+    <textarea
+      name="message"
+      required
+      rows="5"
+      class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+    ></textarea>
+  </label>
+
+  {
+    accessKey === '' && (
+      <p class="rounded-lg bg-yellow-50 px-4 py-3 text-sm text-yellow-800">{labels.missingKey}</p>
+    )
+  }
+
+  <button
+    type="submit"
+    class="bg-primary hover:bg-primary-dark focus-visible:outline-primary inline-flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 font-bold text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 md:w-auto"
+    disabled={accessKey === ''}
+  >
+    {labels.submit}
+  </button>
+
+  <p class="text-xs text-gray-600">{labels.privacy}</p>
+</form>

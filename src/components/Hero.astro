@@ -1,0 +1,85 @@
+---
+import Container from '@components/Container.astro';
+import WhatsAppButton from '@components/WhatsAppButton.astro';
+import Button from '@components/Button.astro';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  eyebrow?: string;
+  image?: string;
+  imageAlt?: string;
+  align?: 'left' | 'center';
+  whatsappMessage?: string;
+  secondaryCta?: { label: string; href: string };
+  as?: 'h1' | 'h2';
+}
+
+const {
+  title,
+  subtitle,
+  eyebrow,
+  image,
+  imageAlt,
+  align = 'left',
+  whatsappMessage,
+  secondaryCta,
+  as: HeadingTag = 'h1',
+} = Astro.props;
+
+const wrapperAlign = align === 'center' ? 'text-center items-center' : 'text-left items-start';
+---
+
+<section class="relative bg-gradient-to-b from-gray-50 to-white py-12 md:py-20">
+  <Container
+    size="wide"
+    class:list={[
+      'grid gap-8 md:gap-12',
+      image ? 'lg:grid-cols-2 lg:items-center' : 'mx-auto max-w-3xl',
+    ]}
+  >
+    <div class:list={['flex flex-col justify-center gap-4', wrapperAlign]}>
+      {eyebrow && <p class="text-primary text-xs font-bold tracking-wider uppercase">{eyebrow}</p>}
+      <HeadingTag class="font-heading text-4xl leading-tight font-bold md:text-5xl lg:text-6xl">
+        {title}
+      </HeadingTag>
+      {subtitle && <p class="max-w-xl text-lg text-gray-700 md:text-xl">{subtitle}</p>}
+      <div
+        class:list={[
+          'mt-2 flex flex-wrap gap-3',
+          align === 'center' ? 'justify-center' : 'justify-start',
+        ]}
+      >
+        <WhatsAppButton
+          variant="inline"
+          size="lg"
+          {...whatsappMessage !== undefined ? { message: whatsappMessage } : {}}
+        />
+        {
+          secondaryCta && (
+            <Button href={secondaryCta.href} variant="outline" size="lg">
+              {secondaryCta.label}
+            </Button>
+          )
+        }
+      </div>
+    </div>
+
+    {
+      image && (
+        <div class="relative">
+          <img
+            src={image}
+            alt={imageAlt ?? ''}
+            width="720"
+            height="540"
+            loading="eager"
+            fetchpriority="high"
+            decoding="async"
+            class="h-auto w-full rounded-2xl object-cover shadow-lg"
+          />
+        </div>
+      )
+    }
+  </Container>
+</section>

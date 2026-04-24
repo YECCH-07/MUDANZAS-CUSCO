@@ -1,0 +1,29 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Button from '@components/Button.astro';
+import WhatsAppButton from '@components/WhatsAppButton.astro';
+---
+
+<BaseLayout
+  title="Error del servidor (500) | Expresos Ñan"
+  description="Ha ocurrido un error temporal en nuestro servidor. Por favor intenta en unos minutos o contáctanos por WhatsApp al 925 671 052."
+  noindex={true}
+>
+  <Section spacing="xl">
+    <Container size="narrow" class="text-center">
+      <p class="text-primary font-heading mb-4 text-6xl font-bold md:text-8xl">500</p>
+      <h1 class="font-heading mb-4 text-3xl font-bold md:text-4xl">Tenemos un problema temporal</h1>
+      <p class="mb-8 text-gray-700">
+        Algo falló de nuestro lado. Estamos resolviéndolo. Mientras tanto, puedes contactarnos por
+        WhatsApp — respondemos en minutos.
+      </p>
+
+      <div class="flex flex-wrap justify-center gap-3">
+        <WhatsAppButton variant="inline" size="lg" />
+        <Button href="/" variant="outline" size="lg">Volver al inicio</Button>
+      </div>
+    </Container>
+  </Section>
+</BaseLayout>

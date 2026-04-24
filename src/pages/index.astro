@@ -2,38 +2,344 @@
 import BaseLayout from '@layouts/BaseLayout.astro';
 import Container from '@components/Container.astro';
 import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import ServiceCard from '@components/ServiceCard.astro';
+import CTASection from '@components/CTASection.astro';
+import TestimonialCarousel from '@components/TestimonialCarousel.astro';
 import Button from '@components/Button.astro';
-import WhatsAppButton from '@components/WhatsAppButton.astro';
+
+const services = [
+  {
+    title: 'Mudanzas locales en Cusco',
+    description:
+      'Traslado dentro del área metropolitana: casas, departamentos, oficinas pequeñas. Embalaje, carga, transporte y armado de muebles incluidos.',
+    href: '/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/',
+    image: '/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg',
+    imageAlt: 'Mudanza de departamento en Cusco con camión Expreso Ñan',
+  },
+  {
+    title: 'Flete y carga',
+    description:
+      'Transporte de mercadería, muebles individuales, electrodomésticos y carga general. Servicio express local y a provincias del sur.',
+    href: '/servicio-de-flete-cusco/',
+    image: '/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg',
+    imageAlt: 'Camión Expreso Ñan para servicio de flete y carga en Cusco',
+  },
+  {
+    title: 'Almacenaje y custodia',
+    description:
+      'Guarda tus muebles y cajas en depósito vigilado por días, meses o años. Vigilancia 24/7, inventario fotográfico y acta firmada.',
+    href: '/almacenaje-y-custodia-cusco/',
+    image: '/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png',
+    imageAlt: 'Servicio de almacenaje y custodia de pertenencias en Cusco',
+  },
+  {
+    title: 'Mudanzas de oficina',
+    description:
+      'Servicio empresarial con desarme, embalaje y traslado en fines de semana. Factura electrónica con RUC y confidencialidad garantizada.',
+    href: '/mudanzas-de-o/',
+    image: '/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg',
+    imageAlt: 'Mudanza de oficina en Cusco — equipo profesional',
+  },
+];
+
+const districts = [
+  { label: 'Cusco Centro', href: '/mudanzas-cusco-centro/' },
+  { label: 'Wanchaq', href: '/mudanzas-wanchaq/' },
+  { label: 'San Sebastián', href: '/mudanzas-san-sebastian/' },
+  { label: 'San Jerónimo', href: '/mudanzas-san-jeronimo/' },
+  { label: 'Santiago', href: '/mudanzas-santiago/' },
+  { label: 'Saylla', href: '/mudanzas-saylla/' },
+  { label: 'Poroy', href: '/mudanzas-poroy/' },
+  { label: 'Ccorca', href: '/mudanzas-ccorca/' },
+];
+
+const routes = [
+  { label: 'Cusco ↔ Sicuani', href: '/mudanzas-cusco-sicuani/' },
+  { label: 'Cusco ↔ Abancay', href: '/mudanzas-cusco-abancay/' },
+  { label: 'Cusco ↔ Challhuahuacho', href: '/mudanzas-cusco-challhuahuacho/' },
+  { label: 'Cusco ↔ Tambobamba', href: '/mudanzas-cusco-tambobamba/' },
+  { label: 'Cusco ↔ Haquira', href: '/mudanzas-cusco-haquira/' },
+  { label: 'Cusco ↔ Mara', href: '/mudanzas-cusco-mara/' },
+  { label: 'Cusco ↔ Coyllurqui', href: '/mudanzas-cusco-coyllurqui/' },
+  { label: 'Cusco ↔ Colquemarca', href: '/mudanzas-cusco-colquemarca/' },
+  { label: 'Cusco ↔ Capacmarca', href: '/mudanzas-cusco-capacmarca/' },
+];
+
+const advantages = [
+  {
+    title: 'Puntualidad',
+    description:
+      'Llegamos al horario pactado. Sin retrasos ni excusas — tu tiempo vale tanto como el nuestro.',
+  },
+  {
+    title: 'Seguridad',
+    description:
+      'Embalaje profesional, mantas y fajas para cada mueble. Choferes con licencia A-IIIb/A-IIIc.',
+  },
+  {
+    title: 'Flota propia',
+    description: 'Unidades de 1, 2 y 4 toneladas. Sin subcontrataciones ni intermediarios.',
+  },
+  {
+    title: 'Cobertura amplia',
+    description:
+      'Todos los distritos de Cusco metropolitano y 9 rutas activas hacia Apurímac, Canchis y Chumbivilcas.',
+  },
+  {
+    title: 'Sin sorpresas en el precio',
+    description: 'Cotizamos por WhatsApp con el precio final. Lo que vemos es lo que pagas.',
+  },
+  {
+    title: 'Armado y desarmado',
+    description:
+      'Desarmamos en origen y armamos en destino sin costo adicional en la mayoría de casos.',
+  },
+];
 ---
 
 <BaseLayout
   title="Servicio De Mudanza En Cusco | Expresos Ñan"
-  description="Ofrecemos un servicio de mudanza completo que incluye embalaje, transporte, carga y descarga de tus pertenencias. Cobertura local y provincial. Cotiza por WhatsApp."
-  noindex={true}
+  description="Servicio completo de mudanza en Cusco: embalaje, transporte, carga y descarga. Cobertura local y provincial (Sicuani, Abancay, Challhuahuacho). Cotiza por WhatsApp al 925 671 052."
+  ogImage="/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png"
 >
-  <Section spacing="xl">
-    <Container class="text-center">
-      <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
-        Sitio en construcción
-      </p>
-      <h1 class="font-heading text-5xl font-bold md:text-6xl">Mudanzas Profesionales en Cusco</h1>
-      <p class="mt-4 text-lg text-gray-700 md:text-xl">
-        Transporte seguro y confiable. Cobertura local y a las provincias del sur.
-      </p>
-      <div class="mt-8 flex flex-wrap justify-center gap-3">
-        <WhatsAppButton variant="inline" size="lg" />
-        <Button href="/styleguide/" variant="outline" size="lg">Ver styleguide interno</Button>
+  {/* 1. Hero principal */}
+  <Hero
+    eyebrow="Expresos Ñan — Mudanzas Cusco"
+    title="Mudanzas Profesionales en Cusco — Transporte Seguro y Confiable"
+    subtitle="Servicio completo de embalaje, carga, transporte y descarga. Cobertura local en todos los distritos de Cusco y rutas activas a Apurímac, Canchis y Chumbivilcas."
+    image="/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg"
+    imageAlt="Camión de mudanzas de Expreso Ñan en Cusco"
+    whatsappMessage="Hola, vi su web y necesito cotización para una mudanza. Mi origen es [ciudad/distrito] y destino [ciudad/distrito]."
+    secondaryCta={{ label: 'Ver servicios', href: '/servicio-de-caraga-flete-y-mudanza-cusco/' }}
+  />
+
+  {/* 2. Servicios destacados */}
+  <Section background="white" spacing="lg" id="servicios" aria-labelledby="servicios-heading">
+    <Container>
+      <div class="mb-10 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Qué hacemos</p>
+        <h2 id="servicios-heading" class="font-heading text-3xl font-bold md:text-4xl">
+          Servicios principales
+        </h2>
+        <p class="mt-3 text-gray-700">
+          Mudanza completa, flete, almacenaje, embalaje, armado de muebles y mudanzas de oficina.
+          Todo con flota propia y equipo profesional.
+        </p>
+      </div>
+
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        {services.map((s) => <ServiceCard {...s} />)}
+      </div>
+
+      <div class="mt-10 text-center">
+        <Button href="/servicio-de-caraga-flete-y-mudanza-cusco/" variant="outline" size="md">
+          Ver todos los servicios
+        </Button>
       </div>
     </Container>
   </Section>
 
-  <Section background="gray" spacing="md">
-    <Container class="text-center">
-      <h2 class="font-heading text-2xl font-bold">Estamos migrando el sitio</h2>
-      <p class="mt-2 text-gray-700">
-        Toda la funcionalidad volverá pronto, mejor que antes. Mientras tanto contáctanos por
-        WhatsApp.
-      </p>
+  {/* 3. Cobertura — distritos + rutas */}
+  <Section background="gray" spacing="lg" id="cobertura" aria-labelledby="cobertura-heading">
+    <Container>
+      <div class="mb-10 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Cobertura</p>
+        <h2 id="cobertura-heading" class="font-heading text-3xl font-bold md:text-4xl">
+          Llegamos donde estés
+        </h2>
+        <p class="mt-3 text-gray-700">
+          Atendemos todos los distritos del área metropolitana de Cusco y mantenemos 9 rutas
+          inter-provinciales activas hacia Apurímac, Canchis y Chumbivilcas.
+        </p>
+      </div>
+
+      <div class="grid gap-8 lg:grid-cols-2">
+        <article>
+          <h3 class="font-heading mb-4 text-xl font-bold">Cusco metropolitano</h3>
+          <ul class="grid grid-cols-2 gap-2">
+            {
+              districts.map((d) => (
+                <li>
+                  <a
+                    href={d.href}
+                    class="hover:border-primary hover:text-primary block rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm transition-colors"
+                  >
+                    {d.label}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </article>
+
+        <article>
+          <h3 class="font-heading mb-4 text-xl font-bold">Rutas inter-provinciales</h3>
+          <ul class="space-y-2">
+            {
+              routes.map((r) => (
+                <li>
+                  <a
+                    href={r.href}
+                    class="hover:border-primary hover:text-primary flex items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm transition-colors"
+                  >
+                    <span>{r.label}</span>
+                    <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                      <path
+                        fill-rule="evenodd"
+                        d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+          <p class="mt-4 text-xs text-gray-600">
+            Próximamente: Cusco ↔ Arequipa, Cusco → Juliaca, Cusco → Puno.
+          </p>
+        </article>
+      </div>
     </Container>
   </Section>
+
+  {/* 4. ¿Por qué elegirnos? */}
+  <Section background="white" spacing="lg">
+    <Container>
+      <div class="mb-10 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+          Por qué elegirnos
+        </p>
+        <h2 class="font-heading text-3xl font-bold md:text-4xl">Lo que nos diferencia</h2>
+        <p class="mt-3 text-gray-700">
+          Empresa cusqueña, flota propia y proceso verificado en cientos de mudanzas familiares,
+          empresariales e inter-provinciales.
+        </p>
+      </div>
+
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {
+          advantages.map((adv, i) => (
+            <article class="rounded-2xl border border-gray-100 p-6">
+              <span class="bg-primary/10 text-primary font-heading mb-4 inline-flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <h3 class="font-heading mb-2 text-lg font-bold">{adv.title}</h3>
+              <p class="text-sm text-gray-700">{adv.description}</p>
+            </article>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {/* 5. Galería abreviada */}
+  <Section background="gray" spacing="lg" id="galeria">
+    <Container>
+      <div class="mb-10 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Nuestro trabajo</p>
+        <h2 class="font-heading text-3xl font-bold md:text-4xl">Mudanzas recientes</h2>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 md:grid-cols-4">
+        <img
+          src="/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg"
+          alt="Mudanza de departamento en Cusco"
+          loading="lazy"
+          decoding="async"
+          width="480"
+          height="480"
+          class="aspect-square w-full rounded-lg object-cover"
+        />
+        <img
+          src="/wp-content/uploads/2024/05/ARMADO-Y-DESARMADO-DE-MUEBLES-CUSCO-MUDANZAS.jpg"
+          alt="Armado y desarmado de muebles en Cusco"
+          loading="lazy"
+          decoding="async"
+          width="480"
+          height="480"
+          class="aspect-square w-full rounded-lg object-cover"
+        />
+        <img
+          src="/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg"
+          alt="Servicio de embalaje profesional en Cusco"
+          loading="lazy"
+          decoding="async"
+          width="480"
+          height="480"
+          class="aspect-square w-full rounded-lg object-cover"
+        />
+        <img
+          src="/wp-content/uploads/2024/05/SERVICIO-DE-DESARMADO-Y-ARMADO-DE-MUEBLES-CUSCO.jpg"
+          alt="Equipo profesional desarmando muebles en Cusco"
+          loading="lazy"
+          decoding="async"
+          width="480"
+          height="480"
+          class="aspect-square w-full rounded-lg object-cover"
+        />
+        <img
+          src="/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg"
+          alt="Camión de 2 toneladas Expreso Ñan"
+          loading="lazy"
+          decoding="async"
+          width="480"
+          height="480"
+          class="aspect-square w-full rounded-lg object-cover"
+        />
+        <img
+          src="/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg"
+          alt="Unidad de 4 toneladas para mudanzas grandes en Cusco"
+          loading="lazy"
+          decoding="async"
+          width="480"
+          height="480"
+          class="aspect-square w-full rounded-lg object-cover"
+        />
+        <img
+          src="/wp-content/uploads/2024/05/EMBALAJE-CUSCO.png"
+          alt="Materiales de embalaje profesional"
+          loading="lazy"
+          decoding="async"
+          width="480"
+          height="480"
+          class="aspect-square w-full rounded-lg bg-white object-contain p-6"
+        />
+        <img
+          src="/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png"
+          alt="Mudanza personalizada en Cusco"
+          loading="lazy"
+          decoding="async"
+          width="480"
+          height="480"
+          class="aspect-square w-full rounded-lg bg-white object-contain p-6"
+        />
+      </div>
+
+      <div class="mt-8 text-center">
+        <Button href="/projects/" variant="outline" size="md">Ver galería completa</Button>
+      </div>
+    </Container>
+  </Section>
+
+  {/* 6. Testimonios */}
+  <Section background="white" spacing="lg" id="testimonios">
+    <Container>
+      <div class="mb-10 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Clientes</p>
+        <h2 class="font-heading text-3xl font-bold md:text-4xl">
+          Lo que dicen quienes ya nos eligieron
+        </h2>
+      </div>
+      <TestimonialCarousel />
+    </Container>
+  </Section>
+
+  {/* 7. CTA final */}
+  <CTASection
+    title="¿Listo para tu próxima mudanza?"
+    subtitle="Te cotizamos en minutos por WhatsApp. Sin compromiso, sin llenar formularios, sin esperas."
+    whatsappMessage="Hola, quiero cotización para mi mudanza. Origen: [dirección]. Destino: [dirección]. Fecha tentativa: [fecha]."
+  />
 </BaseLayout>

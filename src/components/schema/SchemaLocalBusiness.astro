@@ -1,0 +1,81 @@
+---
+/*
+ * Schema.org MovingCompany (subtipo de LocalBusiness).
+ * Se monta globalmente en BaseLayout para que aparezca en todas las páginas.
+ * Cumple regla #6 de docs/SEO-PRESERVATION.md.
+ */
+import { SITE } from '@lib/site';
+import { getLangFromUrl } from '@/i18n/config';
+
+const lang = getLangFromUrl(Astro.url);
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': 'MovingCompany',
+  '@id': `${SITE.url}/#localbusiness`,
+  name: `${SITE.name} — Mudanzas Cusco`,
+  image: `${SITE.url}${SITE.logo.icon}`,
+  logo: `${SITE.url}${SITE.logo.primary}`,
+  url: SITE.url,
+  telephone: SITE.phoneE164,
+  email: SITE.email,
+  address: {
+    '@type': 'PostalAddress',
+    streetAddress: SITE.address.street,
+    addressLocality: SITE.address.locality,
+    addressRegion: SITE.address.region,
+    postalCode: SITE.address.postalCode,
+    addressCountry: SITE.address.country,
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: -13.5319,
+    longitude: -71.9675,
+  },
+  openingHoursSpecification: [
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'],
+      opens: '07:00',
+      closes: '20:00',
+    },
+    {
+      '@type': 'OpeningHoursSpecification',
+      dayOfWeek: 'Sunday',
+      opens: '08:00',
+      closes: '18:00',
+    },
+  ],
+  areaServed: [
+    'Cusco',
+    'Wanchaq',
+    'San Sebastián',
+    'San Jerónimo',
+    'Santiago',
+    'Saylla',
+    'Poroy',
+    'Ccorca',
+    'Sicuani',
+    'Abancay',
+    'Challhuahuacho',
+    'Tambobamba',
+    'Haquira',
+    'Mara',
+    'Coyllurqui',
+    'Colquemarca',
+    'Capacmarca',
+  ],
+  priceRange: 'S/ 150 – S/ 3000',
+  paymentAccepted: ['Cash', 'Bank Transfer', 'Yape', 'Plin'],
+  currenciesAccepted: 'PEN',
+  sameAs: [
+    SITE.social.facebook,
+    SITE.social.facebookSecondary,
+    SITE.social.instagram,
+    SITE.social.tiktok,
+  ],
+  inLanguage: lang,
+};
+---
+
+<script type="application/ld+json" set:html={JSON.stringify(schema)} is:inline />

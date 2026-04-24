@@ -1,0 +1,57 @@
+---
+import Container from '@components/Container.astro';
+import WhatsAppButton from '@components/WhatsAppButton.astro';
+import Button from '@components/Button.astro';
+import { getTelUrl } from '@lib/whatsapp';
+import { SITE } from '@lib/site';
+
+interface Props {
+  title: string;
+  subtitle?: string;
+  whatsappMessage?: string;
+  whatsappLabel?: string;
+  showCall?: boolean;
+  background?: 'primary' | 'dark';
+}
+
+const {
+  title,
+  subtitle,
+  whatsappMessage,
+  whatsappLabel,
+  showCall = true,
+  background = 'primary',
+} = Astro.props;
+
+const bgClass = background === 'primary' ? 'bg-primary' : 'bg-[var(--color-dark)]';
+---
+
+<section class:list={[bgClass, 'text-white']}>
+  <Container class="flex flex-col items-center gap-6 py-16 text-center md:py-20">
+    <h2 class="font-heading max-w-3xl text-3xl font-bold md:text-4xl lg:text-5xl">{title}</h2>
+    {subtitle && <p class="max-w-2xl text-base opacity-95 md:text-lg">{subtitle}</p>}
+    <div class="mt-2 flex flex-wrap justify-center gap-3">
+      <WhatsAppButton
+        variant="inline"
+        size="lg"
+        {...whatsappMessage !== undefined ? { message: whatsappMessage } : {}}
+        {...whatsappLabel !== undefined ? { label: whatsappLabel } : {}}
+      />
+      {
+        showCall && (
+          <Button
+            href={getTelUrl()}
+            variant="outline"
+            size="lg"
+            class="hover:text-primary border-white text-white hover:bg-white"
+          >
+            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+              <path d="M2 3a1 1 0 011-1h2.153a1 1 0 01.986.836l.74 4.435a1 1 0 01-.54 1.06l-1.548.773a11.037 11.037 0 006.105 6.105l.774-1.548a1 1 0 011.059-.54l4.435.74a1 1 0 01.836.986V17a1 1 0 01-1 1h-2C7.82 18 2 12.18 2 5V3z" />
+            </svg>
+            {SITE.phoneDisplay}
+          </Button>
+        )
+      }
+    </div>
+  </Container>
+</section>

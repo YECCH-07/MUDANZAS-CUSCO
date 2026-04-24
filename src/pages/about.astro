@@ -1,0 +1,145 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+---
+
+<BaseLayout
+  title="Nosotros — Expresos Ñan | Empresa de Mudanzas en Cusco"
+  description="Conoce a Expresos Ñan, empresa cusqueña de mudanzas profesionales. Flota propia, equipo capacitado y cobertura local e inter-provincial. Compromiso con cada cliente."
+  ogImage="/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg"
+>
+  <Hero
+    eyebrow="Sobre nosotros"
+    title="Una empresa cusqueña, hecha para Cusco"
+    subtitle="Somos Expresos Ñan: mudanzas, flete, carga y almacenaje con flota propia, equipo profesional y cobertura real en todo el sur del Perú."
+    image="/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg"
+    imageAlt="Equipo de Expresos Ñan realizando una mudanza en Cusco"
+    whatsappMessage="Hola, vi su página de nosotros y quisiera más información sobre sus servicios."
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: 'Nosotros' }]} />
+    </Container>
+  </Section>
+
+  {/* Historia */}
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Historia</p>
+      <h2 class="font-heading mb-4 text-3xl font-bold md:text-4xl">Nacimos en Cusco, para Cusco</h2>
+      <div class="space-y-4 text-gray-700">
+        <p>
+          Expresos Ñan es una empresa cusqueña especializada en mudanzas, servicios de flete y
+          carga, embalaje profesional y almacenaje. Operamos con unidades propias de 1, 2 y 4
+          toneladas y personal capacitado para cada tipo de traslado: desde el cuarto de un
+          estudiante hasta la mudanza completa de una oficina de varios pisos.
+        </p>
+        <p>
+          La idea detrás del proyecto fue simple: en Cusco faltaba una empresa de mudanzas que
+          combinara puntualidad, precios claros y cobertura real a las provincias del sur. Hoy
+          cubrimos todos los distritos del área metropolitana y mantenemos rutas activas hacia
+          Apurímac, Canchis y Chumbivilcas, con especial énfasis en la zona minera de Las Bambas
+          (Challhuahuacho, Tambobamba, Haquira, Mara, Coyllurqui).
+        </p>
+        <p>
+          Nuestro nombre, <strong>Ñan</strong>, significa <em>camino</em> en quechua. Es también nuestra
+          filosofía: acompañar a cada familia y empresa en su camino, con la seguridad de que sus pertenencias
+          llegan intactas a destino.
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Misión, Visión y Valores */}
+  <Section background="gray" spacing="lg">
+    <Container>
+      <div class="grid gap-6 md:grid-cols-3">
+        <article class="rounded-2xl bg-white p-6 shadow-sm">
+          <h3 class="font-heading mb-3 text-xl font-bold">Misión</h3>
+          <p class="text-sm text-gray-700">
+            Facilitar cada mudanza en Cusco con un servicio puntual, seguro y transparente, para que
+            familias y empresas se concentren en su nueva etapa sin preocuparse por el traslado.
+          </p>
+        </article>
+        <article class="rounded-2xl bg-white p-6 shadow-sm">
+          <h3 class="font-heading mb-3 text-xl font-bold">Visión</h3>
+          <p class="text-sm text-gray-700">
+            Ser la empresa de mudanzas más reconocida de Cusco y el sur del Perú, expandiendo
+            nuestra cobertura y servicios sin perder la cercanía con cada cliente.
+          </p>
+        </article>
+        <article class="rounded-2xl bg-white p-6 shadow-sm">
+          <h3 class="font-heading mb-3 text-xl font-bold">Valores</h3>
+          <ul class="space-y-2 text-sm text-gray-700">
+            <li class="flex gap-2"><span class="text-primary">✓</span> Puntualidad</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Seguridad en el traslado</li>
+            <li class="flex gap-2"><span class="text-primary">✓</span> Trato cercano y honesto</li>
+            <li class="flex gap-2">
+              <span class="text-primary">✓</span> Precios claros, sin sorpresas
+            </li>
+          </ul>
+        </article>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Estadísticas */}
+  <Section background="primary" spacing="md">
+    <Container>
+      <div class="grid gap-8 text-center md:grid-cols-4">
+        <div>
+          <p class="font-heading text-4xl font-bold md:text-5xl">17</p>
+          <p class="mt-2 text-sm opacity-90">Distritos y ciudades con servicio activo</p>
+        </div>
+        <div>
+          <p class="font-heading text-4xl font-bold md:text-5xl">3</p>
+          <p class="mt-2 text-sm opacity-90">Tipos de unidad (1 t, 2 t, 4 t)</p>
+        </div>
+        <div>
+          <p class="font-heading text-4xl font-bold md:text-5xl">24/7</p>
+          <p class="mt-2 text-sm opacity-90">Respuesta por WhatsApp</p>
+        </div>
+        <div>
+          <p class="font-heading text-4xl font-bold md:text-5xl">100%</p>
+          <p class="mt-2 text-sm opacity-90">Flota propia, sin intermediarios</p>
+        </div>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Equipo */}
+  <Section background="white" spacing="lg">
+    <Container size="narrow">
+      <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Equipo</p>
+      <h2 class="font-heading mb-4 text-3xl font-bold md:text-4xl">
+        Personas detrás de cada mudanza
+      </h2>
+      <p class="mb-6 text-gray-700">
+        Todo nuestro personal pasa por capacitación en manejo de carga frágil, embalaje profesional
+        y atención al cliente. Nuestros choferes cuentan con licencia A-IIIb y A-IIIc y conocen a
+        fondo las rutas locales y provinciales.
+      </p>
+      <img
+        src="/wp-content/uploads/2024/05/SERVICIO-DE-DESARMADO-Y-ARMADO-DE-MUEBLES-CUSCO.jpg"
+        alt="Equipo de Expresos Ñan trabajando"
+        width="900"
+        height="600"
+        loading="lazy"
+        decoding="async"
+        class="w-full rounded-2xl shadow-lg"
+      />
+    </Container>
+  </Section>
+
+  <CTASection
+    title="Conoce nuestro trabajo en tu próxima mudanza"
+    subtitle="Cotiza ahora y te respondemos en minutos."
+    whatsappMessage="Hola, leí la página Nosotros de Expresos Ñan y quiero cotización para una mudanza."
+    background="dark"
+  />
+</BaseLayout>
