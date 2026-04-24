@@ -14,8 +14,12 @@
 
 ### Servicios que ofrecemos
 
-1. **Mudanzas locales** dentro de Cusco metropolitano y distritos cercanos (Wanchaq, San Sebastián, San Jerónimo, Santiago, Cusco Centro, Saylla, Poroy, Ccorca).
-2. **Mudanzas inter-provinciales activas** (rutas reales actualmente operando):
+1. **Mudanzas locales** dentro de Cusco metropolitano y distritos cercanos (hasta 1 h): Wanchaq, San Sebastián, San Jerónimo, Santiago, Cusco Centro, Saylla, Poroy, Ccorca.
+2. **Mudanzas al Valle Sagrado y alrededores** (1-4 h, servicio activo, 22 localidades):
+   - **1 a 2 h:** Pisac, Calca, Urubamba, Chinchero, Anta, Coya.
+   - **2 a 3 h:** Ollantaytambo, Yucay, Maras, Mollepata, Limatambo, Huarocondo, Zurite.
+   - **3 a 4 h:** Lares, Yanatile, Machupicchu (Aguas Calientes), Oropesa, Urcos, Andahuaylillas, Lucre, Paruro, Paucartambo.
+3. **Mudanzas inter-provinciales largas** (5-12 h, rutas reales actualmente operando):
    - Cusco ↔ Sicuani (Canchis, Cusco)
    - Cusco ↔ Abancay (capital de Apurímac)
    - Cusco ↔ Challhuahuacho (Cotabambas, Apurímac)
@@ -25,12 +29,14 @@
    - Cusco ↔ Coyllurqui (Cotabambas, Apurímac)
    - Cusco ↔ Colquemarca (Chumbivilcas, Cusco)
    - Cusco ↔ Capacmarca (Chumbivilcas, Cusco)
-3. **Mudanzas de oficina** (servicio empresarial).
-4. **Servicio de embalaje y empaque** profesional.
-5. **Flete y carga** general.
-6. **Armado y desarmado de muebles**.
-7. **Almacenaje y custodia** de pertenencias por días, meses o años (servicio diferenciador).
-8. Mudanzas **para estudiantes** UNSAAC.
+4. **Mudanzas de oficina** (servicio empresarial).
+5. **Servicio de embalaje y empaque** profesional.
+6. **Flete y carga** general.
+7. **Armado y desarmado de muebles**.
+8. **Almacenaje y custodia** de pertenencias por días, meses o años (servicio diferenciador).
+9. Mudanzas **para estudiantes** UNSAAC.
+
+> **Nota de fuente única:** la lista estructurada de localidades por zona (con provincias y regiones) vive en [`src/lib/coverage.ts`](src/lib/coverage.ts). Si se agrega o retira una localidad, actualizar ahí y el resto del sitio lo refleja automáticamente.
 
 ### Rutas "Próximamente" (NO operativas, solo captación de leads)
 

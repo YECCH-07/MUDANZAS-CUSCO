@@ -7,6 +7,13 @@ import ServiceCard from '@components/ServiceCard.astro';
 import CTASection from '@components/CTASection.astro';
 import TestimonialCarousel from '@components/TestimonialCarousel.astro';
 import Button from '@components/Button.astro';
+import {
+  METRO,
+  VALLE_SAGRADO_1_2H,
+  VALLE_SAGRADO_2_3H,
+  VALLE_SAGRADO_3_4H,
+  INTERPROVINCIAL,
+} from '@lib/coverage';
 
 const services = [
   {
@@ -43,28 +50,7 @@ const services = [
   },
 ];
 
-const districts = [
-  { label: 'Cusco Centro', href: '/mudanzas-cusco-centro/' },
-  { label: 'Wanchaq', href: '/mudanzas-wanchaq/' },
-  { label: 'San Sebastián', href: '/mudanzas-san-sebastian/' },
-  { label: 'San Jerónimo', href: '/mudanzas-san-jeronimo/' },
-  { label: 'Santiago', href: '/mudanzas-santiago/' },
-  { label: 'Saylla', href: '/mudanzas-saylla/' },
-  { label: 'Poroy', href: '/mudanzas-poroy/' },
-  { label: 'Ccorca', href: '/mudanzas-ccorca/' },
-];
-
-const routes = [
-  { label: 'Cusco ↔ Sicuani', href: '/mudanzas-cusco-sicuani/' },
-  { label: 'Cusco ↔ Abancay', href: '/mudanzas-cusco-abancay/' },
-  { label: 'Cusco ↔ Challhuahuacho', href: '/mudanzas-cusco-challhuahuacho/' },
-  { label: 'Cusco ↔ Tambobamba', href: '/mudanzas-cusco-tambobamba/' },
-  { label: 'Cusco ↔ Haquira', href: '/mudanzas-cusco-haquira/' },
-  { label: 'Cusco ↔ Mara', href: '/mudanzas-cusco-mara/' },
-  { label: 'Cusco ↔ Coyllurqui', href: '/mudanzas-cusco-coyllurqui/' },
-  { label: 'Cusco ↔ Colquemarca', href: '/mudanzas-cusco-colquemarca/' },
-  { label: 'Cusco ↔ Capacmarca', href: '/mudanzas-cusco-capacmarca/' },
-];
+// Datos de cobertura provienen de lib/coverage.ts (fuente única de verdad)
 
 const advantages = [
   {
@@ -140,7 +126,7 @@ const advantages = [
     </Container>
   </Section>
 
-  {/* 3. Cobertura — distritos + rutas */}
+  {/* 3. Cobertura — 3 zonas */}
   <Section background="gray" spacing="lg" id="cobertura" aria-labelledby="cobertura-heading">
     <Container>
       <div class="mb-10 max-w-2xl">
@@ -149,41 +135,77 @@ const advantages = [
           Llegamos donde estés
         </h2>
         <p class="mt-3 text-gray-700">
-          Atendemos todos los distritos del área metropolitana de Cusco y mantenemos 9 rutas
-          inter-provinciales activas hacia Apurímac, Canchis y Chumbivilcas.
+          Servicio activo en tres zonas: Cusco metropolitano (hasta 1 h), Valle Sagrado y
+          alrededores (1 a 4 h, 22 localidades), y rutas inter-provinciales largas (5 a 12 h) a
+          Apurímac, Canchis y Chumbivilcas.
         </p>
       </div>
 
-      <div class="grid gap-8 lg:grid-cols-2">
+      <div class="grid gap-8 lg:grid-cols-3">
+        {/* Zona 1 — Metropolitano */}
         <article>
-          <h3 class="font-heading mb-4 text-xl font-bold">Cusco metropolitano</h3>
+          <p class="text-primary mb-1 text-xs font-bold tracking-wider uppercase">
+            {METRO.timeRange}
+          </p>
+          <h3 class="font-heading mb-4 text-xl font-bold">{METRO.label}</h3>
           <ul class="grid grid-cols-2 gap-2">
             {
-              districts.map((d) => (
+              METRO.localities.map((loc) => (
                 <li>
-                  <a
-                    href={d.href}
-                    class="hover:border-primary hover:text-primary block rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm transition-colors"
-                  >
-                    {d.label}
-                  </a>
+                  {loc.slug ? (
+                    <a
+                      href={`/${loc.slug}/`}
+                      class="hover:border-primary hover:text-primary block rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm transition-colors"
+                    >
+                      {loc.name}
+                    </a>
+                  ) : (
+                    <span class="block rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm text-gray-700">
+                      {loc.name}
+                    </span>
+                  )}
                 </li>
               ))
             }
           </ul>
         </article>
 
+        {/* Zona 2 — Valle Sagrado y alrededores */}
         <article>
-          <h3 class="font-heading mb-4 text-xl font-bold">Rutas inter-provinciales</h3>
+          <p class="text-primary mb-1 text-xs font-bold tracking-wider uppercase">1 a 4 horas</p>
+          <h3 class="font-heading mb-4 text-xl font-bold">Valle Sagrado y alrededores</h3>
+          <div class="space-y-3">
+            {
+              [VALLE_SAGRADO_1_2H, VALLE_SAGRADO_2_3H, VALLE_SAGRADO_3_4H].map((zone) => (
+                <div class="rounded-lg border border-gray-200 bg-white p-3">
+                  <p class="mb-1 text-xs font-bold text-gray-500">{zone.timeRange}</p>
+                  <p class="text-sm text-gray-700">
+                    {zone.localities.map((l) => l.name).join(', ')}
+                  </p>
+                </div>
+              ))
+            }
+          </div>
+          <p class="mt-3 text-xs text-gray-600">
+            22 localidades con servicio activo. Cotización directa por WhatsApp.
+          </p>
+        </article>
+
+        {/* Zona 3 — Inter-provincial */}
+        <article>
+          <p class="text-primary mb-1 text-xs font-bold tracking-wider uppercase">
+            {INTERPROVINCIAL.timeRange}
+          </p>
+          <h3 class="font-heading mb-4 text-xl font-bold">Inter-provincial largo</h3>
           <ul class="space-y-2">
             {
-              routes.map((r) => (
+              INTERPROVINCIAL.localities.map((loc) => (
                 <li>
                   <a
-                    href={r.href}
-                    class="hover:border-primary hover:text-primary flex items-center justify-between rounded-lg border border-gray-200 bg-white px-4 py-3 text-sm transition-colors"
+                    href={loc.slug ? `/${loc.slug}/` : '/mudanza-provincia/'}
+                    class="hover:border-primary hover:text-primary flex items-center justify-between rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm transition-colors"
                   >
-                    <span>{r.label}</span>
+                    <span>Cusco ↔ {loc.name}</span>
                     <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                       <path
                         fill-rule="evenodd"
@@ -196,7 +218,7 @@ const advantages = [
               ))
             }
           </ul>
-          <p class="mt-4 text-xs text-gray-600">
+          <p class="mt-3 text-xs text-gray-600">
             Próximamente: Cusco ↔ Arequipa, Cusco → Juliaca, Cusco → Puno.
           </p>
         </article>

@@ -24,6 +24,7 @@ export const mudanzasLocales: ServiceData = {
     'Las <strong>mudanzas locales en Cusco</strong> son nuestro servicio más solicitado. Cubrimos todos los distritos del área metropolitana — <strong>Wanchaq, San Sebastián, San Jerónimo, Santiago, Cusco Centro, Saylla, Poroy y Ccorca</strong> — con un proceso verificado en cientos de traslados familiares y empresariales.',
     'Entendemos que una mudanza es un momento de cambio y estrés. Por eso, nuestro objetivo es simple: que no tengas que preocuparte por nada. Llegamos con el equipo completo (personal, camión, mantas, fajas, cajas, herramientas), embalamos lo que falte, desarmamos muebles, cargamos, transportamos, descargamos y volvemos a armar en el destino. Tu participación se limita a indicarnos qué va a dónde.',
     'Trabajamos con <strong>unidades propias</strong> — no subcontratamos. Esto significa que tú coordinas con el mismo equipo de principio a fin: misma empresa, mismos choferes, misma responsabilidad. Y si algo necesita ajuste durante el día, lo resolvemos sobre la marcha sin tener que pasar por intermediarios.',
+    '¿Tu mudanza es a <strong>Pisac, Urubamba, Ollantaytambo, Chinchero</strong> o cualquier otra localidad del Valle Sagrado (1 a 4 h desde Cusco)? También es servicio activo — técnicamente es una mudanza inter-provincial corta. Revisa la página de <a href="/mudanza-provincia/" class="text-primary underline">mudanzas inter-provincia</a> o cotiza directo por WhatsApp.',
   ],
 
   sections: [

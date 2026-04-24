@@ -11,7 +11,7 @@ export const mudanzaProvincia: ServiceData = {
     eyebrow: 'Mudanzas inter-provincia',
     title: 'Mudanzas Inter-Provinciales desde Cusco',
     subtitle:
-      'Servicio activo hacia 9 destinos en Apurímac, Canchis y Chumbivilcas. Especialistas en la ruta Cusco ↔ Las Bambas (Challhuahuacho, Tambobamba, Haquira, Mara, Coyllurqui).',
+      'Servicio activo a 22 localidades del Valle Sagrado y alrededores (1 a 4 h) y a 9 destinos largos en Apurímac, Canchis y Chumbivilcas (5 a 12 h). Especialistas en la ruta Cusco ↔ Las Bambas.',
     image: '/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg',
     imageAlt: 'Unidad Expreso Ñan preparada para mudanza inter-provincial desde Cusco',
     whatsappMessage:
@@ -21,13 +21,23 @@ export const mudanzaProvincia: ServiceData = {
   breadcrumb: 'Mudanzas inter-provincia',
 
   description: [
-    'Las <strong>mudanzas inter-provinciales desde Cusco</strong> son una de nuestras especialidades. Mantenemos rutas regulares hacia las principales ciudades del sur del Perú y zonas de operación minera, con unidades adaptadas para trayectos de 3 a 12 horas y choferes que conocen cada ruta en detalle.',
+    'Las <strong>mudanzas inter-provinciales desde Cusco</strong> son una de nuestras especialidades. Mantenemos rutas regulares hacia las principales ciudades del sur del Perú y zonas de operación minera, con unidades adaptadas para trayectos de 1 a 12 horas y choferes que conocen cada ruta en detalle.',
     'A diferencia de las mudanzas locales, los traslados entre provincias requieren planificación adicional: documentación para puntos de control, consideración del clima en rutas de altura (pasos de más de 4000 msnm), descansos del chofer y protección reforzada de la carga para caminos en condiciones variadas. Todo eso ya lo tenemos resuelto en nuestro proceso.',
+    'Nuestra cobertura provincial se divide en <strong>dos bloques</strong>: rutas cortas al <strong>Valle Sagrado y alrededores</strong> (1 a 4 horas, 22 localidades activas) y rutas largas a <strong>Apurímac, Canchis y Chumbivilcas</strong> (5 a 12 horas, 9 landings dedicadas). Ambos tipos de mudanza son servicio estándar — la diferencia es logística y precio, no disponibilidad.',
   ],
 
   sections: [
     {
-      title: 'Rutas activas (operamos hoy)',
+      title: 'Rutas cortas al Valle Sagrado y alrededores (1 a 4 horas)',
+      paragraphs: [
+        '<strong>De 1 a 2 horas:</strong> Pisac, Calca, Urubamba, Chinchero, Anta, Coya. Ideales para mudanzas el mismo día con regreso, traslados a segundas residencias y fletes comerciales al Valle Sagrado.',
+        '<strong>De 2 a 3 horas:</strong> Ollantaytambo, Yucay, Maras, Mollepata, Limatambo, Huarocondo, Zurite. Requieren jornada completa pero se resuelven en un solo día.',
+        '<strong>De 3 a 4 horas:</strong> Lares, Yanatile, Machupicchu (Aguas Calientes), Oropesa, Urcos, Andahuaylillas, Lucre, Paruro, Paucartambo. Mudanzas típicamente planificadas con 1-2 días de anticipación; para Machupicchu/Aguas Calientes coordinamos combinación con tren de carga ya que el pueblo no tiene acceso vehicular directo.',
+        'Estas rutas no tienen landing individual (por ahora) pero el servicio está activo. Cotiza por WhatsApp indicando origen y destino y te respondemos con precio cerrado.',
+      ],
+    },
+    {
+      title: 'Rutas activas largas (operamos hoy)',
       paragraphs: [
         '<strong>Cusco ↔ Sicuani</strong> (138 km, 3 h) — provincia de Canchis. Ruta asfaltada estable. <a href="/mudanzas-cusco-sicuani/" class="text-primary underline">Ver detalle</a>',
         '<strong>Cusco ↔ Abancay</strong> (195 km, 5 h) — capital de Apurímac. <a href="/mudanzas-cusco-abancay/" class="text-primary underline">Ver detalle</a>',
@@ -173,6 +183,30 @@ export const mudanzaProvincia: ServiceData = {
 
   schemaServiceType: 'Long Distance Moving',
   areaServed: [
+    // Valle Sagrado y alrededores
+    'Pisac',
+    'Calca',
+    'Urubamba',
+    'Chinchero',
+    'Anta',
+    'Coya',
+    'Ollantaytambo',
+    'Yucay',
+    'Maras',
+    'Mollepata',
+    'Limatambo',
+    'Huarocondo',
+    'Zurite',
+    'Lares',
+    'Yanatile',
+    'Machupicchu',
+    'Oropesa',
+    'Urcos',
+    'Andahuaylillas',
+    'Lucre',
+    'Paruro',
+    'Paucartambo',
+    // Inter-provincial largo
     'Sicuani',
     'Abancay',
     'Challhuahuacho',
