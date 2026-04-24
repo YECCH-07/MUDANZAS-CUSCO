@@ -1,0 +1,48 @@
+---
+/*
+ * Ruta dinámica que genera las 13 landings de rutas inter-provinciales.
+ * Patrón SEO: la URL final es `/mudanzas-[slug]/` (ej. /mudanzas-cusco-sicuani/).
+ *
+ * El parámetro [route] matchea el slug COMPLETO incluyendo el prefijo "mudanzas-",
+ * así preservamos las URLs sin crear 13 archivos .astro. Si el status es
+ * "active" renderizamos RouteLayout; si es "coming-soon", RouteComingSoonLayout.
+ */
+import { getCollection } from 'astro:content';
+import RouteLayout from '@layouts/RouteLayout.astro';
+import RouteComingSoonLayout from '@layouts/RouteComingSoonLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const all = await getCollection('routes');
+  const activeRoutes = all.filter((r) => r.data.status === 'active');
+
+  return all.map((entry) => {
+    const alternatives =
+      entry.data.status === 'coming-soon'
+        ? entry.data.alternativeRoutes
+            .map((slug) => activeRoutes.find((r) => r.data.slug === slug))
+            .filter((r): r is CollectionEntry<'routes'> => r !== undefined)
+        : [];
+
+    return {
+      params: { route: `mudanzas-${entry.data.slug}` },
+      props: { entry, alternatives },
+    };
+  });
+}
+
+interface Props {
+  entry: CollectionEntry<'routes'>;
+  alternatives: CollectionEntry<'routes'>[];
+}
+
+const { entry, alternatives } = Astro.props as Props;
+---
+
+{
+  entry.data.status === 'active' ? (
+    <RouteLayout route={entry.data} />
+  ) : (
+    <RouteComingSoonLayout route={entry.data} alternatives={alternatives} />
+  )
+}

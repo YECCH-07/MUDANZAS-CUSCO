@@ -1,0 +1,264 @@
+---
+/*
+ * Página índice de cobertura — resumen de todas las zonas que atendemos.
+ * Organizada por cercanía: metropolitano, Valle Sagrado (1-4 h) e inter-provincial largo (5-12 h).
+ * Las localidades con landing propia son enlaces; las demás invitan a cotizar por WhatsApp.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+import { getCollection } from 'astro:content';
+import {
+  METRO,
+  VALLE_SAGRADO_1_2H,
+  VALLE_SAGRADO_2_3H,
+  VALLE_SAGRADO_3_4H,
+  INTERPROVINCIAL,
+} from '@lib/coverage';
+
+const routes = await getCollection('routes');
+const activeRoutes = routes.filter((r) => r.data.status === 'active');
+const comingSoonRoutes = routes.filter((r) => r.data.status === 'coming-soon');
+
+// Agrupo rutas activas por región.
+const routesByRegion = activeRoutes.reduce<Record<string, typeof activeRoutes>>((acc, r) => {
+  const key = `${r.data.province}, ${r.data.region}`;
+  acc[key] ??= [];
+  acc[key].push(r);
+  return acc;
+}, {});
+---
+
+<BaseLayout
+  title="Cobertura completa — Cusco, Valle Sagrado, Apurímac | Expresos Ñan"
+  description="Todos los lugares donde atendemos mudanzas y fletes: 8 distritos de Cusco metropolitano, 22 localidades del Valle Sagrado, y 9 rutas inter-provinciales activas. Cotiza al 925 671 052."
+  ogImage="/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png"
+  whatsappMessage="Hola, quisiera cotizar una mudanza. Mi destino es [localidad]."
+>
+  <Hero
+    eyebrow="Cobertura completa"
+    title="Todas las rutas que atendemos"
+    subtitle="8 distritos metropolitanos · 22 localidades del Valle Sagrado (1-4 h) · 9 rutas inter-provinciales activas · 4 rutas próximamente disponibles."
+    image="/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png"
+    imageAlt="Mapa de cobertura de Expresos Ñan en Cusco y Apurímac"
+    whatsappMessage="Hola, busco mudanza a [localidad]. ¿Está en su zona de cobertura?"
+    secondaryCta={{ label: 'Ver flota', href: '/flota-de-camiones-cusco/' }}
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: 'Cobertura' }]} />
+    </Container>
+  </Section>
+
+  {/* Zona 1 — Cusco metropolitano */}
+  <Section background="white" spacing="lg" id="metro">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+          Zona 1 · {METRO.timeRange}
+        </p>
+        <h2 class="font-heading text-3xl font-bold md:text-4xl">{METRO.label}</h2>
+        <p class="mt-3 text-gray-700">{METRO.description}</p>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          METRO.localities.map((loc) => (
+            <a
+              href={`/${loc.slug}/`}
+              class="hover:border-primary group block rounded-2xl border border-gray-200 bg-gray-50 p-5 transition-all hover:shadow-md"
+            >
+              <p class="text-primary mb-1 text-xs font-bold tracking-wider uppercase">
+                {loc.province}
+              </p>
+              <h3 class="font-heading group-hover:text-primary text-lg font-bold">{loc.name}</h3>
+              <span class="text-primary mt-2 inline-block text-sm font-bold">Ver landing →</span>
+            </a>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {/* Zona 2 — Valle Sagrado */}
+  <Section background="gray" spacing="lg" id="valle-sagrado">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+          Zona 2 · 1 a 4 horas
+        </p>
+        <h2 class="font-heading text-3xl font-bold md:text-4xl">Valle Sagrado y alrededores</h2>
+        <p class="mt-3 text-gray-700">
+          22 localidades con <strong>servicio activo</strong>. Cotización directa por WhatsApp (no
+          tienen landing individual todavía). Organizadas por tiempo de viaje desde Cusco.
+        </p>
+      </div>
+
+      {/* Sub-zona 1-2 h */}
+      <div class="mb-8" id="valle-1-2h">
+        <h3 class="font-heading mb-4 text-xl font-bold">
+          {VALLE_SAGRADO_1_2H.label} ·{' '}
+          <span class="text-primary">{VALLE_SAGRADO_1_2H.timeRange}</span>
+        </h3>
+        <p class="mb-4 text-sm text-gray-700">{VALLE_SAGRADO_1_2H.description}</p>
+        <ul class="flex flex-wrap gap-2">
+          {
+            VALLE_SAGRADO_1_2H.localities.map((loc) => (
+              <li class="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm">
+                <span class="font-bold">{loc.name}</span>
+                <span class="ml-1 text-gray-500">· {loc.province}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      {/* Sub-zona 2-3 h */}
+      <div class="mb-8" id="valle-2-3h">
+        <h3 class="font-heading mb-4 text-xl font-bold">
+          {VALLE_SAGRADO_2_3H.label} ·{' '}
+          <span class="text-primary">{VALLE_SAGRADO_2_3H.timeRange}</span>
+        </h3>
+        <p class="mb-4 text-sm text-gray-700">{VALLE_SAGRADO_2_3H.description}</p>
+        <ul class="flex flex-wrap gap-2">
+          {
+            VALLE_SAGRADO_2_3H.localities.map((loc) => (
+              <li class="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm">
+                <span class="font-bold">{loc.name}</span>
+                <span class="ml-1 text-gray-500">· {loc.province}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+
+      {/* Sub-zona 3-4 h */}
+      <div id="valle-3-4h">
+        <h3 class="font-heading mb-4 text-xl font-bold">
+          {VALLE_SAGRADO_3_4H.label} ·{' '}
+          <span class="text-primary">{VALLE_SAGRADO_3_4H.timeRange}</span>
+        </h3>
+        <p class="mb-4 text-sm text-gray-700">{VALLE_SAGRADO_3_4H.description}</p>
+        <ul class="flex flex-wrap gap-2">
+          {
+            VALLE_SAGRADO_3_4H.localities.map((loc) => (
+              <li class="rounded-full border border-gray-200 bg-white px-4 py-2 text-sm">
+                <span class="font-bold">{loc.name}</span>
+                <span class="ml-1 text-gray-500">· {loc.province}</span>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Zona 3 — Rutas inter-provinciales largas (activas) */}
+  <Section background="white" spacing="lg" id="interprovincial">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+          Zona 3 · {INTERPROVINCIAL.timeRange}
+        </p>
+        <h2 class="font-heading text-3xl font-bold md:text-4xl">
+          Rutas inter-provinciales activas
+        </h2>
+        <p class="mt-3 text-gray-700">
+          9 rutas operativas hacia Apurímac, Canchis y Chumbivilcas. Cada una con landing dedicada,
+          mapa, tarifas referenciales y FAQs.
+        </p>
+      </div>
+
+      {
+        Object.entries(routesByRegion).map(([region, regionRoutes]) => (
+          <div class="mb-8">
+            <h3 class="font-heading mb-4 text-xl font-bold">{region}</h3>
+            <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {regionRoutes.map((r) => (
+                <a
+                  href={`/mudanzas-${r.data.slug}/`}
+                  class="hover:border-primary group block rounded-2xl border border-gray-200 bg-gray-50 p-5 transition-all hover:shadow-md"
+                >
+                  <p class="text-primary mb-1 text-xs font-bold tracking-wider uppercase">
+                    {r.data.distanceKm} km · {r.data.durationHours} h
+                  </p>
+                  <h4 class="font-heading group-hover:text-primary text-lg font-bold">
+                    Cusco ↔ {r.data.destination}
+                  </h4>
+                  <p class="mt-1 text-xs text-gray-600">{r.data.roadType}</p>
+                  <span class="text-primary mt-3 inline-block text-sm font-bold">Ver ruta →</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </Container>
+  </Section>
+
+  {/* Rutas próximamente */}
+  {
+    comingSoonRoutes.length > 0 && (
+      <Section background="gray" spacing="lg">
+        <Container>
+          <div class="mb-8 max-w-2xl">
+            <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Próximamente</p>
+            <h2 class="font-heading text-2xl font-bold md:text-3xl">
+              Rutas en preparación (pre-registro abierto)
+            </h2>
+            <p class="mt-3 text-gray-700">
+              Rutas que abriremos durante 2026. Déjanos tus datos en cada landing y te avisamos
+              cuando confirmemos fecha de apertura.
+            </p>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {comingSoonRoutes.map((r) => (
+              <a
+                href={`/mudanzas-${r.data.slug}/`}
+                class="hover:border-primary group block rounded-2xl border border-amber-200 bg-amber-50 p-5 transition-all hover:shadow-md"
+              >
+                <p class="mb-1 text-xs font-bold tracking-wider text-amber-700 uppercase">
+                  Próximamente · {r.data.distanceKm} km
+                </p>
+                <h4 class="font-heading group-hover:text-primary text-lg font-bold">
+                  {r.data.origin} → {r.data.destination}
+                </h4>
+                <p class="mt-1 text-xs text-gray-600">
+                  {r.data.province}, {r.data.region}
+                </p>
+                <span class="text-primary mt-3 inline-block text-sm font-bold">
+                  Pre-registrarme →
+                </span>
+              </a>
+            ))}
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  {/* Nota sobre rutas no atendidas */}
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <div
+        class="rounded-2xl border-l-4 border-gray-300 bg-gray-50 p-6 text-sm leading-relaxed text-gray-700"
+      >
+        <p class="mb-2 font-bold">Rutas que no atendemos</p>
+        <p>
+          No operamos la ruta <strong>Cusco ↔ Lima</strong> ni rutas hacia Espinar, Quillabamba u otras
+          localidades no listadas. Si tu mudanza es a un destino fuera de nuestra cobertura, te recomendamos
+          contactar con operadores especializados en esa ruta. No cobramos comisión por recomendar.
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  <CTASection
+    title="¿Tu destino está en la lista?"
+    subtitle="Si ves tu ruta, entra a su landing. Si no la ves, escríbenos — te confirmamos si es posible o te recomendamos alternativa."
+    whatsappMessage="Hola, mi mudanza es [origen] → [destino]. ¿Lo atienden?"
+  />
+</BaseLayout>

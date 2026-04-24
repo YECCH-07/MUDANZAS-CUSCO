@@ -1,0 +1,95 @@
+{
+  "slug": "cusco-arequipa",
+  "origin": "Cusco",
+  "destination": "Arequipa",
+  "bidirectional": true,
+  "status": "coming-soon",
+  "province": "Arequipa",
+  "region": "Arequipa",
+  "distanceKm": 521,
+  "durationHours": "10-11",
+  "roadType": "PE-3S / PE-34A — carretera asfaltada, corredor sur",
+  "altitudeMsnm": 2335,
+
+  "metaTitle": "Mudanzas Cusco Arequipa | Próximamente | Expresos Ñan",
+  "metaDescription": "Mudanzas Cusco ↔ Arequipa: ruta próximamente disponible. Déjanos tus datos y te avisamos cuando esté operativa. 521 km, 10-11 horas.",
+  "ogImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+
+  "coordinates": {
+    "origin": { "lat": -13.5319, "lng": -71.9675 },
+    "destination": { "lat": -16.409, "lng": -71.5375 }
+  },
+
+  "heroEyebrow": "Próximamente · Arequipa",
+  "heroTitle": "Mudanzas Cusco → Arequipa",
+  "heroSubtitle": "Estamos por inaugurar esta ruta. Déjanos tus datos y te avisaremos en cuanto esté operativa. También tenemos ruta en sentido inverso Arequipa → Cusco.",
+  "heroImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+  "heroImageAlt": "Ruta Cusco a Arequipa — próximamente disponible",
+
+  "description": [
+    "La ruta <strong>Cusco → Arequipa</strong> es una de las más demandadas del sur peruano. Conecta dos de las ciudades más importantes del Perú: Cusco (la capital turística) y Arequipa (la \"ciudad blanca\" y segundo polo económico del sur). La distancia es de aproximadamente <strong>521 km</strong> y el viaje toma <strong>10-11 horas</strong> por la Panamericana Sur y el corredor PE-34A.",
+    "En Expresos Ñan <strong>estamos preparando la operación</strong> para ofrecer esta ruta como servicio activo. Actualmente no la cotizamos porque preferimos abrirla con la misma calidad que nuestras rutas existentes: flota propia dedicada, choferes con experiencia en el corredor sur, y tarifas cerradas sin sorpresas. Anuncio de apertura: por confirmar en 2026.",
+    "Si te interesa esta ruta, <strong>déjanos tus datos</strong> en el formulario y te avisaremos en cuanto esté operativa. También puedes indicarnos fecha tentativa de mudanza y volumen aproximado — si hay demanda acumulada suficiente, podemos acelerar la apertura.",
+    "Mientras tanto, si tu mudanza es urgente y no puede esperar, te recomendamos operadores especializados de larga distancia. Para destinos <strong>que sí atendemos hoy</strong> (Sicuani, Abancay, corredor minero de Las Bambas, Chumbivilcas), revisa el mapa de rutas activas."
+  ],
+
+  "intermediateStops": ["Sicuani", "Combapata", "Ayaviri", "Juliaca", "Puno (por corredor sur)"],
+  "relevantIndustries": [
+    "Comercio y servicios",
+    "Turismo",
+    "Industria arequipeña",
+    "Servicios profesionales"
+  ],
+
+  "services": [
+    {
+      "title": "Pre-registro de interés",
+      "description": "Déjanos tus datos y te avisamos cuando abramos la ruta.",
+      "href": "#pre-registro"
+    },
+    {
+      "title": "Mudanzas a Sicuani",
+      "description": "Ruta activa en el corredor sur. Punto más cercano a Arequipa que sí operamos.",
+      "href": "/mudanzas-cusco-sicuani/"
+    },
+    {
+      "title": "Mudanzas a Abancay",
+      "description": "Ruta activa hacia Apurímac. Alternativa si tu mudanza sigue al sur.",
+      "href": "/mudanzas-cusco-abancay/"
+    },
+    {
+      "title": "Almacenaje temporal en Cusco",
+      "description": "Si tu mudanza espera por una ruta, guardamos tu mobiliario hasta que confirmemos fecha.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    }
+  ],
+
+  "alternativeRoutes": ["cusco-sicuani", "cusco-abancay"],
+
+  "faqs": [
+    {
+      "q": "¿Cuándo abren la ruta Cusco → Arequipa?",
+      "a": "Estamos preparando la operación durante 2026. La fecha de apertura se anunciará por WhatsApp y en esta misma página. Si dejas tus datos en el formulario, serás uno de los primeros en enterarte."
+    },
+    {
+      "q": "¿Puedo reservar ahora para mudarme cuando la ruta abra?",
+      "a": "No tomamos reservas en firme todavía, pero sí pre-registros con fecha tentativa. Cuando confirmemos apertura, te contactamos y cerramos cotización y fecha."
+    },
+    {
+      "q": "Mientras tanto, ¿pueden atenderme con otro operador?",
+      "a": "No subcontratamos servicios fuera de nuestra flota. Si tu mudanza es urgente y no puede esperar, te recomendamos contactar directamente con operadores especializados en larga distancia Cusco-Arequipa. No cobramos comisión por recomendar."
+    },
+    {
+      "q": "¿La ruta en sentido inverso Arequipa → Cusco también la van a abrir?",
+      "a": "Sí, la operaremos bidireccionalmente. Tenemos página dedicada para ese sentido (/mudanzas-arequipa-cusco/) con su propio pre-registro."
+    },
+    {
+      "q": "¿Cuánto costará aproximadamente?",
+      "a": "Todavía no tenemos tarifas cerradas. Como referencia, una mudanza Cusco-Arequipa de departamento medio debería estar entre S/ 3500 y S/ 6000 aproximadamente. Confirmaremos cifras al abrir la ruta."
+    }
+  ],
+
+  "ctaMessage": "Hola, me interesa la ruta Cusco → Arequipa cuando esté disponible. Fecha tentativa: [fecha]. Volumen: [descripción]. ¿Me pueden pre-registrar?",
+  "ctaTitle": "¿Te interesa la ruta Cusco → Arequipa?",
+  "ctaSubtitle": "Déjanos tus datos en el formulario y te avisamos en cuanto abramos. Sin compromiso ni costo."
+}

@@ -1,0 +1,137 @@
+{
+  "slug": "cusco-abancay",
+  "origin": "Cusco",
+  "destination": "Abancay",
+  "bidirectional": true,
+  "status": "active",
+  "province": "Abancay",
+  "region": "Apurímac",
+  "distanceKm": 195,
+  "durationHours": "5",
+  "roadType": "Carretera asfaltada (PE-3S / PE-3SE, ruta Libertadores de Sur)",
+  "altitudeMsnm": 2378,
+
+  "metaTitle": "Mudanzas Cusco Abancay | Capital de Apurímac | Expresos Ñan",
+  "metaDescription": "Mudanzas Cusco ↔ Abancay: 195 km, 5 horas por la ruta Libertadores. Servicio familiar, empresarial y minería. Flota propia 2 y 4 t. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+
+  "coordinates": {
+    "origin": { "lat": -13.5319, "lng": -71.9675 },
+    "destination": { "lat": -13.6393, "lng": -72.8814 }
+  },
+
+  "heroEyebrow": "Ruta activa · Apurímac",
+  "heroTitle": "Mudanzas Cusco ↔ Abancay",
+  "heroSubtitle": "La capital de Apurímac a 5 horas de Cusco por la ruta Libertadores. Familias, funcionarios públicos, sector minero y docentes entre las dos ciudades del sur andino.",
+  "heroImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+  "heroImageAlt": "Unidad de 4 toneladas Expreso Ñan en ruta Cusco a Abancay",
+
+  "description": [
+    "<strong>Abancay</strong> es la capital del departamento de Apurímac, ubicada a <strong>195 km al suroeste de Cusco</strong>. Es la puerta de entrada al corredor andino que conecta con Andahuaylas, Ayacucho y Lima, y también el paso obligado hacia las provincias mineras de Cotabambas (Challhuahuacho, Tambobamba) y Chumbivilcas. Para Expresos Ñan es una de las <strong>rutas más estratégicas</strong>: ya sea como destino final o como parada intermedia en mudanzas más largas.",
+    "La ruta <strong>Cusco ↔ Abancay</strong> toma aproximadamente <strong>5 horas</strong> por la PE-3S, conocida popularmente como la <strong>Ruta Libertadores</strong>. El recorrido incluye paso por Anta, Izcuchaca, Limatambo, y el descenso espectacular hacia el valle del Pachachaca antes de entrar a Abancay. Es una carretera asfaltada con curvas pronunciadas, especialmente en la bajada final hacia el valle, donde el camino gana y pierde más de 1500 metros de altura en pocos kilómetros.",
+    "Operamos esta ruta con la <strong>unidad de 4 toneladas</strong> para mudanzas completas de departamento, y la <strong>unidad de 2 toneladas</strong> para habitaciones y mono-ambientes. La ruta es exigente mecánicamente por los tramos de curvas y cambios de altitud, así que nuestras unidades tienen mantenimiento específico (frenos, embrague, neumáticos) antes de cada viaje largo. La cabina del chofer viaja con SOAT, botiquín y comunicación por WhatsApp constante durante el trayecto.",
+    "Atendemos tres perfiles: <strong>familias que cambian de región</strong> por trabajo (funcionarios del Gobierno Regional de Apurímac, docentes UGEL, personal de salud); <strong>profesionales del sector minero</strong> que se trasladan temporalmente a proyectos mineros de Cotabambas via Abancay; y <strong>comerciantes</strong> con fletes entre las dos ciudades. Abancay también es base logística para mudanzas que continúan a Challhuahuacho, Tambobamba, Haquira, Mara y Coyllurqui — si tu destino final es alguna de esas localidades, cotizamos el viaje completo sin tener que hacer transbordo."
+  ],
+
+  "intermediateStops": ["Anta", "Izcuchaca", "Limatambo", "Curahuasi"],
+  "relevantIndustries": [
+    "Gobierno Regional de Apurímac",
+    "Minería (acceso a Las Bambas)",
+    "Educación (UNAMBA)",
+    "Agroindustria (anís de Curahuasi)"
+  ],
+  "temporadaCritica": "Diciembre-marzo (lluvias): tramo Limatambo-Curahuasi tiene curvas con neblina densa matutina y deslizamientos puntuales. Ajustamos hora de salida.",
+
+  "challenges": "La ruta Cusco ↔ Abancay es <strong>exigente mecánica y operativamente</strong>, pero predecible si se planifica bien. Puntos críticos: <strong>(1) Abra de Huillque</strong> — paso de altura alrededor de 4000 msnm entre Limatambo y Curahuasi con posible neblina matutina. Preferimos salir de Cusco después de 7:30 para cruzar el abra con visibilidad. <strong>(2) Curvas de Curahuasi-Abancay</strong> — bajada de ~30 km con curvas cerradas y pendiente pronunciada. Exige conducción defensiva; nuestros choferes con licencia A-IIIc están entrenados para este tramo. <strong>(3) Altitud baja en destino</strong> — Abancay está a <strong>2378 msnm</strong>, casi 1000 metros menos que Cusco, lo que afecta a algunos equipos electrónicos durante el viaje (pocos casos, pero los cubrimos con embalaje anti-vibración). <strong>(4) Temporada de lluvias</strong> — enero-marzo vemos deslizamientos menores cerca de Curahuasi; consultamos el reporte de Provías antes de confirmar fecha. <strong>Tip clave:</strong> si tu mudanza es grande, cotizamos operativo de <strong>2 días</strong>: carga en Cusco día 1, viaje y descarga día 2. Evita fatiga del equipo y garantiza llegada con luz de día para descargar con seguridad.",
+
+  "services": [
+    {
+      "title": "Mudanzas inter-provinciales",
+      "description": "Mudanza familiar completa Cusco ↔ Abancay con embalaje, transporte y armado en destino.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Mudanzas para sector minero",
+      "description": "Personal que llega a Abancay como base antes de Las Bambas. Cotización con calendario del contrato.",
+      "href": "/mudanzas-de-o/"
+    },
+    {
+      "title": "Flete y carga comercial",
+      "description": "Transporte de mobiliario de oficina, equipos, mercadería para distribución en Apurímac.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Embalaje profesional",
+      "description": "Crítico en rutas largas con curvas y cambios de altitud. Embalaje anti-vibración para electrónicos.",
+      "href": "/servicio-de-embalaje-cusco/"
+    },
+    {
+      "title": "Almacenaje temporal",
+      "description": "Si llegas a Abancay y la vivienda no está lista, guardamos tu mobiliario en Cusco.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    },
+    {
+      "title": "Rutas a Las Bambas",
+      "description": "Desde Abancay continuamos a Challhuahuacho, Tambobamba, Haquira, Mara, Coyllurqui.",
+      "href": "/mudanzas-cusco-challhuahuacho/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales por viaje ida Cusco → Abancay (o inverso). Para mudanzas que continúan a Las Bambas, cotizamos ruta integrada con descuento. Precios pendientes de confirmación final.",
+    "rows": [
+      { "label": "Taxi-carga / mini mudanza", "price": "S/ 700 – S/ 1100", "notes": "Unidad 1 t" },
+      {
+        "label": "Habitación / mono-ambiente",
+        "price": "S/ 1100 – S/ 1600",
+        "notes": "Unidad 2 t"
+      },
+      {
+        "label": "Departamento 1-3 ambientes",
+        "price": "S/ 1600 – S/ 2400",
+        "notes": "Unidad 4 t"
+      },
+      {
+        "label": "Casa familiar completa",
+        "price": "S/ 2400 – S/ 3600",
+        "notes": "2 viajes con unidad 4 t o combinado"
+      },
+      {
+        "label": "Flete comercial (por viaje)",
+        "price": "Desde S/ 900",
+        "notes": "Cotización por carga y volumen"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Cuánto tiempo toma la mudanza Cusco ↔ Abancay?",
+      "a": "El viaje en carretera es de 5 horas. La mudanza completa (carga + viaje + descarga) para un departamento de 2 ambientes se planifica en 2 días: carga y parte del viaje el día 1, llegada y descarga el día 2. Para mudanzas pequeñas de un solo viaje (mono-ambiente o menos) lo resolvemos en una jornada larga."
+    },
+    {
+      "q": "¿Mi mudanza sigue a Challhuahuacho, Tambobamba u otra localidad de Cotabambas. ¿La atienden?",
+      "a": "Sí, tenemos la ruta abierta. Abancay suele ser una parada intermedia. Cotizamos el viaje completo Cusco → Abancay → destino final. Es más económico que contratar dos servicios separados."
+    },
+    {
+      "q": "¿Atienden mudanzas institucionales del Gobierno Regional de Apurímac?",
+      "a": "Sí. Emitimos factura electrónica con RUC, cumplimos con requisitos de SEACE si aplica (orden de servicio formal, firma de términos), y podemos coordinar fines de semana para no interrumpir operación. Solicita propuesta formal por WhatsApp."
+    },
+    {
+      "q": "¿La carretera es segura en temporada de lluvias?",
+      "a": "Es transitable todo el año, pero en enero-marzo hay mayor riesgo de neblina en el abra de Huillque y deslizamientos puntuales cerca de Curahuasi. Nuestros choferes consultan el reporte de Provías antes de cada viaje. Si hay alerta, reprogramamos sin costo."
+    },
+    {
+      "q": "¿Incluyen seguro de la carga?",
+      "a": "La tarifa base incluye nuestra responsabilidad contractual sobre la carga. Para mudanzas de alto valor (electrónicos, obras de arte, equipos industriales) podemos coordinar un seguro adicional con aseguradora especializada. Se cotiza aparte."
+    },
+    {
+      "q": "¿Qué pasa si mi vivienda en Abancay no está lista al llegar?",
+      "a": "Podemos guardar tu mobiliario en nuestro depósito en Cusco (almacenaje por días o meses) hasta que todo esté listo, y luego coordinamos un segundo viaje con tarifa reducida. Es una opción común en mudanzas por trabajo."
+    }
+  ],
+
+  "ctaMessage": "Hola, necesito mudanza Cusco ↔ Abancay. Origen: [dirección]. Destino: [dirección]. Volumen aproximado: [descripción]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza entre Cusco y Abancay?",
+  "ctaSubtitle": "Ruta activa con flota propia y experiencia en el corredor Cusco-Apurímac. Cotización cerrada antes de salir."
+}

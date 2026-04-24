@@ -89,4 +89,90 @@ const districts = defineCollection({
   }),
 });
 
-export const collections = { testimonials, districts };
+/**
+ * Rutas inter-provinciales con landing individual (SPRINT-06).
+ * El slug del JSON se convierte en la URL `/mudanzas-[slug]/` (ej. /mudanzas-cusco-sicuani/).
+ * status = 'active' usa RouteLayout; status = 'coming-soon' usa RouteComingSoonLayout.
+ */
+const routes = defineCollection({
+  loader: glob({ pattern: '**/*.json', base: './src/content/routes' }),
+  schema: z.object({
+    slug: z.string(),
+    origin: z.string(),
+    destination: z.string(),
+    bidirectional: z.boolean().default(false),
+    status: z.enum(['active', 'coming-soon']),
+    province: z.string(),
+    region: z.string(),
+    distanceKm: z.number().int().positive(),
+    durationHours: z.string(),
+    roadType: z.string(),
+    altitudeMsnm: z.number().int().positive().optional(),
+
+    metaTitle: z.string().max(70),
+    metaDescription: z.string().min(120).max(180),
+    ogImage: z.string(),
+
+    coordinates: z.object({
+      origin: z.object({ lat: z.number(), lng: z.number() }),
+      destination: z.object({ lat: z.number(), lng: z.number() }),
+    }),
+
+    heroEyebrow: z.string(),
+    heroTitle: z.string(),
+    heroSubtitle: z.string(),
+    heroImage: z.string(),
+    heroImageAlt: z.string(),
+
+    /** Párrafos HTML (min 3 para rutas activas, min 2 para coming-soon). */
+    description: z.array(z.string()).min(2),
+
+    intermediateStops: z.array(z.string()).default([]),
+    relevantIndustries: z.array(z.string()).default([]),
+    temporadaCritica: z.string().optional(),
+
+    /** Particularidades logísticas (HTML). Sólo rutas activas. */
+    challenges: z.string().optional(),
+
+    services: z
+      .array(
+        z.object({
+          title: z.string(),
+          description: z.string(),
+          href: z.string(),
+        }),
+      )
+      .default([]),
+
+    priceTable: z
+      .object({
+        note: z.string().optional(),
+        rows: z.array(
+          z.object({
+            label: z.string(),
+            price: z.string(),
+            notes: z.string().optional(),
+          }),
+        ),
+      })
+      .optional(),
+
+    faqs: z
+      .array(
+        z.object({
+          q: z.string(),
+          a: z.string(),
+        }),
+      )
+      .default([]),
+
+    /** Slugs de rutas activas para sugerir como alternativa (en coming-soon). */
+    alternativeRoutes: z.array(z.string()).default([]),
+
+    ctaMessage: z.string(),
+    ctaTitle: z.string(),
+    ctaSubtitle: z.string().optional(),
+  }),
+});
+
+export const collections = { testimonials, districts, routes };

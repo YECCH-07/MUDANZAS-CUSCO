@@ -1,0 +1,95 @@
+{
+  "slug": "cusco-puno",
+  "origin": "Cusco",
+  "destination": "Puno",
+  "bidirectional": false,
+  "status": "coming-soon",
+  "province": "Puno",
+  "region": "Puno",
+  "distanceKm": 387,
+  "durationHours": "8-9",
+  "roadType": "PE-3S — Panamericana Sur, asfaltada",
+  "altitudeMsnm": 3827,
+
+  "metaTitle": "Mudanzas Cusco Puno | Próximamente | Expresos Ñan",
+  "metaDescription": "Mudanzas Cusco → Puno: ruta próximamente disponible. 387 km, 8-9 h. Altiplano, Lago Titicaca. Pre-registro sin costo ni compromiso.",
+  "ogImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+
+  "coordinates": {
+    "origin": { "lat": -13.5319, "lng": -71.9675 },
+    "destination": { "lat": -15.8402, "lng": -70.0219 }
+  },
+
+  "heroEyebrow": "Próximamente · Puno, Titicaca",
+  "heroTitle": "Mudanzas Cusco → Puno",
+  "heroSubtitle": "Ruta a la capital altiplánica y a orillas del Titicaca, próximamente disponible. Para familias, funcionarios y profesionales del corredor sur.",
+  "heroImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+  "heroImageAlt": "Ruta Cusco a Puno — próximamente disponible",
+
+  "description": [
+    "<strong>Puno</strong> es la capital del departamento homónimo, a orillas del Lago Titicaca. Ubicada a <strong>387 km de Cusco</strong>, el viaje toma <strong>8-9 horas</strong> por la PE-3S con paso por Sicuani, Ayaviri y Juliaca. Es un destino importante para familias, estudiantes de la UNAP, funcionarios públicos del Gobierno Regional de Puno y profesionales del corredor turístico del Titicaca.",
+    "En Expresos Ñan <strong>estamos preparando la apertura</strong> de esta ruta. Nuestra filosofía es abrir con flota propia dedicada, tarifa cerrada sin sorpresas y choferes con experiencia específica en el corredor del altiplano. La apertura proyectada es durante 2026.",
+    "La altitud sostenida (Puno a 3827 msnm, superior a Cusco) y los pasos por La Raya (~4300 msnm) exigen una preparación específica de la unidad y del equipo. Los tiempos de viaje suben en temporada de lluvias y en invierno por heladas. Todo eso forma parte del plan operativo que estamos ajustando antes de anunciar apertura.",
+    "Si te interesa esta ruta, déjanos tus datos en el formulario de <strong>pre-registro</strong>. Sin costo ni compromiso. También puedes indicarnos volumen y fecha tentativa para que podamos estimar demanda proyectada."
+  ],
+
+  "intermediateStops": ["Sicuani", "Ayaviri", "Juliaca"],
+  "relevantIndustries": [
+    "Gobierno Regional de Puno",
+    "Educación (UNAP)",
+    "Turismo del Titicaca",
+    "Comercio altiplánico"
+  ],
+
+  "services": [
+    {
+      "title": "Pre-registro de interés",
+      "description": "Déjanos tus datos con detalle y fecha tentativa de mudanza.",
+      "href": "#pre-registro"
+    },
+    {
+      "title": "Mudanzas a Sicuani",
+      "description": "Ruta activa. Punto más cercano a Puno que ya operamos.",
+      "href": "/mudanzas-cusco-sicuani/"
+    },
+    {
+      "title": "Pre-registro Juliaca",
+      "description": "Ciudad hermana de Puno, también próximamente disponible.",
+      "href": "/mudanzas-cusco-juliaca/"
+    },
+    {
+      "title": "Almacenaje en Cusco",
+      "description": "Mientras esperamos apertura, guardamos tu mobiliario mensualmente.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    }
+  ],
+
+  "alternativeRoutes": ["cusco-sicuani", "cusco-abancay"],
+
+  "faqs": [
+    {
+      "q": "¿Cuándo piensan abrir la ruta Cusco → Puno?",
+      "a": "Durante 2026. Estamos ajustando la operación logística (flota dedicada, choferes con experiencia en altiplano). Apenas tengamos fecha confirmada, avisamos a todos los pre-registrados por WhatsApp."
+    },
+    {
+      "q": "¿Atenderán también Juliaca?",
+      "a": "Sí, Juliaca tiene su propia landing de pre-registro. Ambas rutas son muy similares en logística y probablemente las abramos en el mismo período."
+    },
+    {
+      "q": "¿La altitud de Puno afecta la operación?",
+      "a": "Sí — Puno está a 3827 msnm (más alto que Cusco). Chofer y equipo aclimatados, unidad con mantenimiento específico para altitud. Lo tenemos contemplado en el plan de apertura."
+    },
+    {
+      "q": "Si mi mudanza continúa a Bolivia (Desaguadero, La Paz), ¿la atienden?",
+      "a": "No. No cruzamos frontera. Si tu destino es Bolivia, te recomendamos contratar un operador especializado en transporte internacional."
+    },
+    {
+      "q": "¿Pueden sugerirme alternativa hoy?",
+      "a": "Para el tramo Cusco-Sicuani ya lo cubrimos. Para Sicuani-Puno todavía no. Si no puedes esperar, te recomendamos buscar operador especializado en el altiplano."
+    }
+  ],
+
+  "ctaMessage": "Hola, me interesa la ruta Cusco → Puno cuando esté disponible. Fecha tentativa: [fecha]. Volumen: [descripción]. ¿Me pueden pre-registrar?",
+  "ctaTitle": "¿Necesitas mudanza Cusco → Puno?",
+  "ctaSubtitle": "Ruta próximamente disponible. Pre-regístrate y te avisamos al abrir."
+}

@@ -1,0 +1,137 @@
+{
+  "slug": "cusco-coyllurqui",
+  "origin": "Cusco",
+  "destination": "Coyllurqui",
+  "bidirectional": true,
+  "status": "active",
+  "province": "Cotabambas",
+  "region": "Apurímac",
+  "distanceKm": 380,
+  "durationHours": "9-10",
+  "roadType": "PE-3S hasta Abancay + ruta afirmada al sur de Cotabambas",
+  "altitudeMsnm": 3600,
+
+  "metaTitle": "Mudanzas Cusco Coyllurqui | Cotabambas | Expresos Ñan",
+  "metaDescription": "Mudanzas Cusco ↔ Coyllurqui: 380 km, 9-10 h. Distrito sur de Cotabambas, zona de influencia minera. Flota 2 y 4 t. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+
+  "coordinates": {
+    "origin": { "lat": -13.5319, "lng": -71.9675 },
+    "destination": { "lat": -14.0333, "lng": -72.3833 }
+  },
+
+  "heroEyebrow": "Ruta activa · Cotabambas",
+  "heroTitle": "Mudanzas Cusco ↔ Coyllurqui",
+  "heroSubtitle": "Distrito del sur de Cotabambas en zona de influencia del corredor minero. Familias, docentes y contratistas con servicio activo vía Abancay.",
+  "heroImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+  "heroImageAlt": "Mudanza en ruta Cusco a Coyllurqui, Apurímac",
+
+  "description": [
+    "<strong>Coyllurqui</strong> es un distrito de la provincia de <strong>Cotabambas (Apurímac)</strong>, al sur del departamento. Está en la zona de influencia del corredor minero y tiene una economía local mixta — agricultura, ganadería, servicios vinculados al entorno minero y comercio regional. La distancia desde Cusco es de aproximadamente <strong>380 km</strong> vía Abancay, con un viaje de <strong>9-10 horas</strong>.",
+    "Operamos esta ruta de forma <strong>activa pero con frecuencia moderada</strong>. La mayoría de mudanzas son de <strong>funcionarios y personal asignado</strong> (docentes, salud, municipalidad), <strong>familias de trabajadores contratistas</strong> del corredor minero, y <strong>fletes institucionales</strong> hacia las entidades públicas del distrito.",
+    "Usamos la <strong>unidad de 4 toneladas</strong> para mudanzas completas y la <strong>unidad de 2 toneladas</strong> para cargas menores. Por los tramos afirmados y la altitud sostenida, el operativo es de <strong>2-3 días</strong> con pernocte en Abancay. Como en todas las rutas de Cotabambas, pedimos confirmación de acceso al destino final con al menos <strong>4-5 días</strong> de anticipación.",
+    "Si tu destino combina Coyllurqui con otras localidades del sur de Cotabambas (Haquira, Mara), podemos planificar un solo viaje con múltiples paradas. Es la modalidad que más rentabiliza el operativo para empresas que mueven personal entre varios puntos."
+  ],
+
+  "intermediateStops": ["Abancay", "Tambobamba o Haquira (según ruta)"],
+  "relevantIndustries": [
+    "Sector público (UGEL, Municipalidad, Red de Salud)",
+    "Servicios al corredor minero",
+    "Ganadería y agricultura",
+    "Comercio rural"
+  ],
+  "temporadaCritica": "Diciembre-marzo: riesgo de bloqueos por deslizamientos y barro en tramos afirmados. Coordinación con 4-5 días de anticipación.",
+
+  "challenges": "Coyllurqui presenta los desafíos estándar del sur de Cotabambas, más algunos específicos. <strong>(1) Altitud sostenida</strong> — el distrito está a unos 3600 msnm; chofer y personal deben estar aclimatados. <strong>(2) Acceso a comunidades</strong> — muchas familias viven en comunidades periféricas con caminos internos estrechos. Pedimos referencia clara. <strong>(3) Clima</strong> — temperaturas bajas en invierno (junio-agosto) y lluvias intensas en verano (enero-marzo). Ajustamos fecha de mudanza según previsión. <strong>(4) Señal intermitente</strong> — algunas comunidades tienen conectividad limitada; coordinamos horarios fijos de reporte. <strong>Tip clave:</strong> la ruta integrada <strong>Coyllurqui + Mara + Haquira</strong> es una de las más eficientes para empresas que mueven personal al sur de Cotabambas. Si aplica a tu caso, cotizamos con descuento sobre tres mudanzas separadas.",
+
+  "services": [
+    {
+      "title": "Mudanzas familiares inter-provinciales",
+      "description": "Familia completa con embalaje, transporte y armado en Coyllurqui.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Mudanzas del sector público",
+      "description": "Funcionarios UGEL, Red de Salud, Municipalidad. Factura con RUC.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Flete de equipamiento",
+      "description": "Mobiliario y equipamiento para oficinas públicas, colegios, consultorios.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Embalaje reforzado",
+      "description": "Para tramos afirmados con vibración alta.",
+      "href": "/servicio-de-embalaje-cusco/"
+    },
+    {
+      "title": "Almacenaje temporal",
+      "description": "Guardamos parte de tu mobiliario en Cusco durante tu destaque en Coyllurqui.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    },
+    {
+      "title": "Ruta integrada sur de Cotabambas",
+      "description": "Combinamos Coyllurqui + Mara + Haquira en un solo operativo con descuento.",
+      "href": "/mudanzas-cusco-mara/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales por viaje ida Cusco → Coyllurqui. Operativo de 2-3 días. Precios pendientes de confirmación final.",
+    "rows": [
+      {
+        "label": "Taxi-carga / mini mudanza",
+        "price": "S/ 1200 – S/ 1900",
+        "notes": "Unidad 1-2 t"
+      },
+      {
+        "label": "Habitación / mono-ambiente",
+        "price": "S/ 1900 – S/ 2800",
+        "notes": "Unidad 2 t"
+      },
+      {
+        "label": "Departamento 1-3 ambientes",
+        "price": "S/ 2800 – S/ 4200",
+        "notes": "Unidad 4 t"
+      },
+      {
+        "label": "Casa familiar completa",
+        "price": "S/ 4200 – S/ 6000",
+        "notes": "2 viajes con unidad 4 t"
+      },
+      {
+        "label": "Ruta integrada 2-3 destinos sur Cotabambas",
+        "price": "Cotización con descuento",
+        "notes": "Coyllurqui + Mara + Haquira"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Cuánto cuesta una mudanza de departamento a Coyllurqui?",
+      "a": "Un departamento de 1-3 ambientes con unidad de 4 t está en el rango S/ 2800-4200 (ida). Para casa completa planificamos dos viajes con la unidad de 4 t. Cotizamos exacto por WhatsApp con detalle del volumen."
+    },
+    {
+      "q": "¿Atienden mudanzas hacia comunidades periféricas de Coyllurqui?",
+      "a": "Sí, con coordinación previa. Necesitamos nombre de la comunidad, referencias del destino y, si es posible, coordenadas GPS. Si el último tramo exige 4x4, coordinamos transbordo con transporte local."
+    },
+    {
+      "q": "¿Emiten factura para mudanzas del sector público?",
+      "a": "Sí. Factura electrónica con RUC, orden de servicio, cumplimiento de requisitos para SEACE si aplica."
+    },
+    {
+      "q": "¿Qué pasa si la carretera se cierra por lluvias?",
+      "a": "Consultamos Provías antes de salir. Si hay alerta alta reprogramamos sin costo. Si ya estamos en camino y hay bloqueo temporal, esperamos en el tramo seguro más cercano y reportamos avance por WhatsApp."
+    },
+    {
+      "q": "¿Pueden hacer Coyllurqui + Haquira en un solo viaje?",
+      "a": "Sí, y lo recomendamos cuando aplica. Es mucho más económico que dos servicios separados. Cotizamos ruta integrada."
+    }
+  ],
+
+  "ctaMessage": "Hola, necesito mudanza Cusco ↔ Coyllurqui. Origen: [dirección]. Destino: [dirección / comunidad]. Volumen: [descripción]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza o flete a Coyllurqui?",
+  "ctaSubtitle": "Ruta activa al sur de Cotabambas. Coordinación previa y precio cerrado antes de salir."
+}

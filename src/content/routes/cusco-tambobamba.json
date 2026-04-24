@@ -1,0 +1,137 @@
+{
+  "slug": "cusco-tambobamba",
+  "origin": "Cusco",
+  "destination": "Tambobamba",
+  "bidirectional": true,
+  "status": "active",
+  "province": "Cotabambas",
+  "region": "Apurímac",
+  "distanceKm": 365,
+  "durationHours": "9-10",
+  "roadType": "PE-3S hasta Abancay + ruta afirmada hacia Cotabambas",
+  "altitudeMsnm": 3275,
+
+  "metaTitle": "Mudanzas Cusco Tambobamba | Cotabambas | Expresos Ñan",
+  "metaDescription": "Mudanzas Cusco ↔ Tambobamba: 365 km, 9-10 h vía Abancay. Capital de Cotabambas, corredor minero. Flota 2 y 4 t. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+
+  "coordinates": {
+    "origin": { "lat": -13.5319, "lng": -71.9675 },
+    "destination": { "lat": -13.9458, "lng": -72.1794 }
+  },
+
+  "heroEyebrow": "Ruta activa · Cotabambas",
+  "heroTitle": "Mudanzas Cusco ↔ Tambobamba",
+  "heroSubtitle": "La capital de Cotabambas a 9-10 horas de Cusco. Familias, funcionarios municipales y personal de servicios del corredor minero Las Bambas.",
+  "heroImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+  "heroImageAlt": "Mudanza en ruta Cusco a Tambobamba, Cotabambas",
+
+  "description": [
+    "<strong>Tambobamba</strong> es la capital de la provincia de <strong>Cotabambas (Apurímac)</strong>. Se encuentra a unos <strong>365 km al suroeste de Cusco</strong>, vía Abancay. Es el eje administrativo de la provincia y punto estratégico en el corredor hacia Challhuahuacho y el proyecto Las Bambas. Expresos Ñan opera esta ruta para familias, funcionarios de la municipalidad provincial, docentes, personal de salud y servicios vinculados al entorno minero.",
+    "El <strong>recorrido</strong> es de <strong>9-10 horas</strong>. Salimos por la PE-3S hasta Abancay (5 h, asfaltado) y continuamos por la ruta minera 4-5 horas adicionales hasta Tambobamba. Los últimos tramos son afirmados, con curvas sostenidas y altura superior a 3800 msnm en algunos abras. Operamos principalmente con la <strong>unidad de 4 toneladas</strong>; para mudanzas pequeñas usamos la de 2 toneladas.",
+    "Los <strong>casos típicos</strong>: <strong>funcionarios públicos</strong> que se trasladan por asignación (UGEL, Red de Salud, Municipalidad Provincial); <strong>familias de trabajadores mineros</strong> que residen en Tambobamba mientras el titular trabaja en Las Bambas (Challhuahuacho); <strong>mudanzas de retorno</strong> al terminar un período de servicio; y <strong>fletes institucionales</strong> (mobiliario de colegios, oficinas públicas, consultorios).",
+    "Coordinamos cada viaje con <strong>3-4 días de anticipación</strong> para confirmar estado del camino, clima, acceso al destino exacto (algunas comunidades cerca de Tambobamba requieren referencias específicas), y logística de 2 días del operativo. Si tu mudanza sigue a Challhuahuacho o vuelve de allí, cotizamos la ruta completa en un solo servicio."
+  ],
+
+  "intermediateStops": ["Abancay", "Chalhuahuacho (si continúa)", "Cotabambas"],
+  "relevantIndustries": [
+    "Sector público (Municipalidad, UGEL, Red de Salud)",
+    "Minería (corredor Las Bambas)",
+    "Educación rural",
+    "Comercio regional"
+  ],
+  "temporadaCritica": "Diciembre-marzo: tramo afirmado desde Abancay tiene riesgo de deslizamientos y barro. Coordinamos con anticipación y monitoreamos clima.",
+
+  "challenges": "La ruta Cusco ↔ Tambobamba comparte muchos desafíos con Challhuahuacho pero con variantes. <strong>(1) Tramo afirmado intermedio</strong> — desde Abancay el camino se vuelve más exigente. Polvo en seco, barro en lluvia. <strong>(2) Acceso a comunidades</strong> — Tambobamba centro es accesible, pero muchas mudanzas son a comunidades aledañas con caminos internos difíciles. Pedimos referencias claras (escuela, iglesia, puente) e idealmente coordenadas GPS. <strong>(3) Altitud y tiempo</strong> — 9-10 horas de viaje exigen pernocte en Abancay y llegada con luz de día a Tambobamba. Operativo de 2 días mínimo. <strong>(4) Conectividad</strong> — en zonas rurales hay intermitencia de señal; coordinamos llamadas en los puntos donde tenemos cobertura para reportar avance. <strong>Tip clave:</strong> si tu mudanza incluye tramos a Challhuahuacho + Tambobamba (por ejemplo personal que se traslada de campamento a vivienda provincial), podemos hacer ambas entregas en un solo viaje con descuento por ruta integrada.",
+
+  "services": [
+    {
+      "title": "Mudanzas para sector público",
+      "description": "Funcionarios asignados a Tambobamba (UGEL, Municipalidad, Red de Salud). Cotización con orden de servicio.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Mudanzas familiares",
+      "description": "Familias que acompañan a trabajadores del corredor minero y se asientan en Tambobamba.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Flete institucional",
+      "description": "Mobiliario de colegios, consultorios, oficinas públicas. Factura electrónica con RUC.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Embalaje reforzado",
+      "description": "Para el tramo afirmado. Doble cartón, burbuja, fajas internas.",
+      "href": "/servicio-de-embalaje-cusco/"
+    },
+    {
+      "title": "Almacenaje temporal en Cusco",
+      "description": "Si rotas entre Tambobamba y Cusco, guardamos lo que no llevas.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    },
+    {
+      "title": "Ruta integrada Tambobamba + Challhuahuacho",
+      "description": "Si tu servicio incluye ambos destinos, cotizamos en un solo viaje.",
+      "href": "/mudanzas-cusco-challhuahuacho/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales por viaje ida Cusco → Tambobamba. Operativo de 2 días con pernocte. Precios pendientes de confirmación final.",
+    "rows": [
+      {
+        "label": "Taxi-carga / mini mudanza",
+        "price": "S/ 1200 – S/ 1900",
+        "notes": "Unidad 1-2 t"
+      },
+      {
+        "label": "Habitación / mono-ambiente",
+        "price": "S/ 1900 – S/ 2800",
+        "notes": "Unidad 2 t"
+      },
+      {
+        "label": "Departamento 1-3 ambientes",
+        "price": "S/ 2800 – S/ 4200",
+        "notes": "Unidad 4 t"
+      },
+      {
+        "label": "Casa familiar completa",
+        "price": "S/ 4200 – S/ 6000",
+        "notes": "2 viajes con unidad 4 t"
+      },
+      {
+        "label": "Flete institucional (mobiliario público)",
+        "price": "Cotización formal",
+        "notes": "Con orden de servicio"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Atienden comunidades rurales alrededor de Tambobamba?",
+      "a": "Sí, con coordinación previa. Necesitamos referencias claras del destino (escuela, iglesia, puente) o coordenadas GPS. Si el acceso requiere vehículo 4x4, coordinamos con operadores locales para el último tramo."
+    },
+    {
+      "q": "¿Cuánto dura el operativo de mudanza?",
+      "a": "Mínimo 2 días: carga y viaje hasta Abancay el día 1 (con pernocte), viaje a Tambobamba y descarga el día 2. Para mudanzas completas de casa planificamos 3 días. Si es flete ligero (1 viaje) y condiciones permiten, lo hacemos en 1 día largo."
+    },
+    {
+      "q": "¿Trabajan con la Municipalidad Provincial de Cotabambas?",
+      "a": "Sí. Emitimos factura con RUC, firmamos orden de servicio, y cumplimos con requisitos administrativos (SOAT, revisión técnica vigente, certificado MTC). Si hay licitación por SEACE, cotizamos según bases."
+    },
+    {
+      "q": "¿Hay seguridad en la ruta?",
+      "a": "En general sí, la ruta Cusco-Abancay-Cotabambas es frecuentemente transitada. El chofer mantiene comunicación continua y coordinamos horarios para no viajar de noche en tramos afirmados."
+    },
+    {
+      "q": "¿El camión de 4 t pasa por todos los caminos de Cotabambas?",
+      "a": "Por los principales sí (Abancay-Tambobamba, Tambobamba-Challhuahuacho). Para acceder a comunidades alejadas con caminos muy estrechos, a veces es mejor la unidad de 2 t. Lo evaluamos en la cotización según destino exacto."
+    }
+  ],
+
+  "ctaMessage": "Hola, necesito mudanza Cusco ↔ Tambobamba. Origen: [dirección]. Destino: [dirección / comunidad]. Volumen: [descripción]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza o flete a Tambobamba?",
+  "ctaSubtitle": "Ruta activa vía Abancay. Operativo de 2 días con pernocte y descarga con luz de día."
+}

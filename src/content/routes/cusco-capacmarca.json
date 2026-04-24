@@ -1,0 +1,137 @@
+{
+  "slug": "cusco-capacmarca",
+  "origin": "Cusco",
+  "destination": "Capacmarca",
+  "bidirectional": true,
+  "status": "active",
+  "province": "Chumbivilcas",
+  "region": "Cusco",
+  "distanceKm": 360,
+  "durationHours": "9",
+  "roadType": "PE-3S + desvío Yauri + afirmada Chumbivilcas",
+  "altitudeMsnm": 3695,
+
+  "metaTitle": "Mudanzas Cusco Capacmarca | Chumbivilcas | Expresos Ñan",
+  "metaDescription": "Mudanzas Cusco ↔ Capacmarca: 360 km, 9 h vía Sicuani. Distrito de Chumbivilcas en el corredor minero. Flota 2 y 4 t. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+
+  "coordinates": {
+    "origin": { "lat": -13.5319, "lng": -71.9675 },
+    "destination": { "lat": -14.0833, "lng": -72.2333 }
+  },
+
+  "heroEyebrow": "Ruta activa · Chumbivilcas, Cusco",
+  "heroTitle": "Mudanzas Cusco ↔ Capacmarca",
+  "heroSubtitle": "Distrito de Chumbivilcas en frontera con Cotabambas (Apurímac). Ruta con experiencia en el corredor minero y servicios al sector público rural.",
+  "heroImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+  "heroImageAlt": "Mudanza en ruta Cusco a Capacmarca, Chumbivilcas",
+
+  "description": [
+    "<strong>Capacmarca</strong> es un distrito de <strong>Chumbivilcas (Cusco)</strong>, ubicado en la frontera con la provincia de Cotabambas (Apurímac). Su cercanía al corredor minero de <strong>Las Bambas</strong> lo convierte en un destino frecuente para personal que trabaja en el entorno minero pero reside en el lado cusqueño del corredor. Está a unos <strong>360 km de Cusco</strong> y el viaje toma <strong>alrededor de 9 horas</strong> vía Sicuani y el desvío a Chumbivilcas.",
+    "Operamos esta ruta con <strong>servicio activo regular</strong>. Los perfiles que atendemos: <strong>familias de trabajadores</strong> vinculados al corredor minero (titular trabaja en Las Bambas o en obra vinculada, familia vive en Capacmarca o viceversa); <strong>funcionarios públicos</strong> de UGEL, Municipalidad y Red de Salud; <strong>docentes asignados</strong> a puestos rurales; y <strong>fletes</strong> de mobiliario y equipamiento para entidades locales.",
+    "Trabajamos principalmente con la <strong>unidad de 4 toneladas</strong>. Para cargas menores y tramos con acceso restringido, la de 2 toneladas. El operativo típico es de <strong>2 días</strong> con pernocte en Sicuani. Por los tramos afirmados y la altitud, planificamos con <strong>4-5 días de anticipación</strong> para confirmar estado del camino y acceso al destino.",
+    "Capacmarca tiene la particularidad de compartir influencia económica con <strong>Cotabambas (Apurímac)</strong>. Muchas familias tienen vínculos administrativos con Cusco (por pertenencer a Chumbivilcas) pero vínculos laborales con Apurímac (por Las Bambas). Si tu mudanza combina Capacmarca con una localidad de Apurímac (Challhuahuacho, Mara, Haquira), podemos cotizar ruta integrada."
+  ],
+
+  "intermediateStops": ["Sicuani", "Yauri", "Santo Tomás (opcional)"],
+  "relevantIndustries": [
+    "Sector público rural (UGEL, Municipalidad, Red de Salud)",
+    "Servicios al corredor minero Las Bambas",
+    "Ganadería",
+    "Comercio local"
+  ],
+  "temporadaCritica": "Diciembre-marzo: tramos afirmados con barro y bloqueos puntuales. Junio-agosto: heladas en pasos de altura.",
+
+  "challenges": "Capacmarca comparte los desafíos de Chumbivilcas y Cotabambas. <strong>(1) Altitud</strong> — pasos de hasta 4200 msnm entre Sicuani y Santo Tomás. <strong>(2) Tramo afirmado</strong> — polvo en seco, barro en lluvia. Exige unidad con neumáticos adecuados. <strong>(3) Acceso a comunidades</strong> — muchos destinos son rurales; pedimos referencia o GPS. <strong>(4) Coordinación con vecinos administrativos</strong> — si tu destino es frontera con Apurímac, el acceso final puede pasar por comunidades de Cotabambas. <strong>(5) Clima</strong> — frío intenso invierno, lluvias fuertes en verano. <strong>Tip clave:</strong> Capacmarca + Challhuahuacho es una combinación frecuente (personal con base minera y base familiar). Si aplica, cotizamos ruta integrada con descuento significativo.",
+
+  "services": [
+    {
+      "title": "Mudanzas familiares inter-regionales",
+      "description": "Familias con base en Capacmarca y trabajo en Las Bambas. Mudanza completa.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Mudanzas de docentes",
+      "description": "UGEL Chumbivilcas — asignaciones a puestos rurales de Capacmarca.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Flete institucional",
+      "description": "Mobiliario y equipamiento para colegios, consultorios, oficinas públicas.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Embalaje reforzado",
+      "description": "Para tramos afirmados y cambios de altitud.",
+      "href": "/servicio-de-embalaje-cusco/"
+    },
+    {
+      "title": "Almacenaje temporal",
+      "description": "En Cusco mientras rotas entre Capacmarca y el corredor minero.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    },
+    {
+      "title": "Ruta integrada con Cotabambas",
+      "description": "Capacmarca + Challhuahuacho o + Mara en un solo operativo con descuento.",
+      "href": "/mudanzas-cusco-challhuahuacho/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales por viaje ida Cusco → Capacmarca. Operativo de 2 días con pernocte. Precios pendientes de confirmación final.",
+    "rows": [
+      {
+        "label": "Taxi-carga / mini mudanza",
+        "price": "S/ 1200 – S/ 1900",
+        "notes": "Unidad 1-2 t"
+      },
+      {
+        "label": "Habitación / mono-ambiente",
+        "price": "S/ 1900 – S/ 2800",
+        "notes": "Unidad 2 t"
+      },
+      {
+        "label": "Departamento 1-3 ambientes",
+        "price": "S/ 2800 – S/ 4200",
+        "notes": "Unidad 4 t"
+      },
+      {
+        "label": "Casa familiar completa",
+        "price": "S/ 4200 – S/ 6000",
+        "notes": "2 viajes con unidad 4 t"
+      },
+      {
+        "label": "Ruta integrada Capacmarca + Cotabambas",
+        "price": "Cotización con descuento",
+        "notes": "Un solo operativo"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿La ruta a Capacmarca es la misma que a Colquemarca?",
+      "a": "Comparte la primera mitad (Cusco-Sicuani-Yauri), pero el desvío final es distinto. Capacmarca está en el extremo suroeste de Chumbivilcas, hacia la frontera con Cotabambas. Por eso es más práctico combinarla con destinos de Cotabambas que con Colquemarca."
+    },
+    {
+      "q": "¿Podemos contratar Capacmarca + Challhuahuacho en un solo viaje?",
+      "a": "Sí, y es la combinación más frecuente. El acceso geográfico lo permite. Cotizamos ruta integrada con descuento vs. dos mudanzas separadas."
+    },
+    {
+      "q": "¿Cuánto cuesta un flete institucional a Capacmarca?",
+      "a": "Depende de volumen y si hay orden de servicio (SEACE, adjudicación directa). Enviamos cotización formal con factura electrónica. Consulta por WhatsApp con detalle del requerimiento."
+    },
+    {
+      "q": "¿Qué unidad recomiendan?",
+      "a": "Para mudanzas completas de departamento, unidad de 4 t. Para habitaciones y cargas pequeñas, unidad de 2 t. La de 1 t rara vez es viable por la distancia — el costo por viaje es casi el mismo independientemente del tamaño de la unidad."
+    },
+    {
+      "q": "¿Atienden familias con vinculación minera?",
+      "a": "Sí, es uno de los perfiles más frecuentes. El personal suele rotar entre campamentos y hogar en Capacmarca, así que tenemos flexibilidad en calendarios y coordinación de pases si el destino es área operativa."
+    }
+  ],
+
+  "ctaMessage": "Hola, necesito mudanza Cusco ↔ Capacmarca. Origen: [dirección]. Destino: [dirección / comunidad]. Volumen: [descripción]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza o flete a Capacmarca?",
+  "ctaSubtitle": "Ruta activa con experiencia en el corredor Chumbivilcas-Cotabambas. Cotización formal antes de salir."
+}

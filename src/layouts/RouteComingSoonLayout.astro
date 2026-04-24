@@ -1,0 +1,439 @@
+---
+/*
+ * Layout para landings de rutas "Próximamente" (captación de leads anticipada).
+ * Banner destacado, descripción breve, ficha, formulario Web3Forms con campo
+ * hidden `route_slug` para filtrar leads después, y alternativas activas.
+ */
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import WhatsAppButton from '@components/WhatsAppButton.astro';
+import RouteMap from '@components/RouteMap.astro';
+import SchemaFAQ from '@components/schema/SchemaFAQ.astro';
+import { SITE } from '@lib/site';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  route: CollectionEntry<'routes'>['data'];
+  alternatives: CollectionEntry<'routes'>[];
+}
+
+const { route, alternatives } = Astro.props;
+const pageUrl = `${SITE.url}/mudanzas-${route.slug}/`;
+const accessKey = import.meta.env.WEB3FORMS_ACCESS_KEY ?? '';
+const successPath = `${Astro.url.pathname}?success=true`;
+const redirectUrl = new URL(successPath, SITE.url).toString();
+const success = Astro.url.searchParams.get('success') === 'true';
+
+/*
+ * Schema.org Service con estado "PreOrder" para marcar ruta no operativa aún.
+ * No usamos MovingCompany para no confundir a los motores de búsqueda —
+ * es un servicio en pre-lanzamiento, no un servicio activo.
+ */
+const preOrderSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  serviceType: `Mudanza ${route.origin} → ${route.destination}`,
+  provider: { '@id': `${SITE.url}/#localbusiness` },
+  areaServed: [
+    {
+      '@type': 'Place',
+      name: route.origin,
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: route.coordinates.origin.lat,
+        longitude: route.coordinates.origin.lng,
+      },
+    },
+    {
+      '@type': 'Place',
+      name: `${route.destination}, ${route.province}, ${route.region}`,
+      geo: {
+        '@type': 'GeoCoordinates',
+        latitude: route.coordinates.destination.lat,
+        longitude: route.coordinates.destination.lng,
+      },
+    },
+  ],
+  offers: {
+    '@type': 'Offer',
+    availability: 'https://schema.org/PreOrder',
+    url: pageUrl,
+  },
+  url: pageUrl,
+  description: route.metaDescription,
+};
+---
+
+<BaseLayout
+  title={route.metaTitle}
+  description={route.metaDescription}
+  ogImage={route.ogImage}
+  whatsappMessage={route.ctaMessage}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(preOrderSchema)} is:inline />
+    {route.faqs.length > 0 && <SchemaFAQ faqs={route.faqs} />}
+  </Fragment>
+
+  <Hero
+    eyebrow={route.heroEyebrow}
+    title={route.heroTitle}
+    subtitle={route.heroSubtitle}
+    image={route.heroImage}
+    imageAlt={route.heroImageAlt}
+    whatsappMessage={route.ctaMessage}
+    secondaryCta={{ label: 'Ver rutas activas', href: '/cobertura/' }}
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs
+        items={[
+          { label: 'Inicio', href: '/' },
+          { label: 'Cobertura', href: '/cobertura/' },
+          { label: `${route.origin} → ${route.destination} · Próximamente` },
+        ]}
+      />
+    </Container>
+  </Section>
+
+  {/* Banner informativo de estado "Próximamente" */}
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <div class="rounded-2xl border border-amber-200 bg-amber-50 p-6">
+        <p class="mb-2 text-xs font-bold tracking-wider text-amber-800 uppercase">
+          Ruta próximamente disponible
+        </p>
+        <p class="text-base leading-relaxed text-amber-900">
+          Esta ruta aún <strong>no está operativa</strong>. Estamos preparando la flota y operación
+          logística para abrirla próximamente. Si te interesa, déjanos tus datos en el formulario de
+          pre-registro — te avisaremos en cuanto confirmemos fecha de apertura. Sin compromiso ni
+          costo.
+        </p>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Mapa + ficha de ruta */}
+  <Section background="white" spacing="md">
+    <Container>
+      <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+        <RouteMap
+          originLat={route.coordinates.origin.lat}
+          originLng={route.coordinates.origin.lng}
+          originName={route.origin}
+          destLat={route.coordinates.destination.lat}
+          destLng={route.coordinates.destination.lng}
+          destName={route.destination}
+          status="coming-soon"
+        />
+        <aside class="rounded-2xl border border-gray-200 bg-gray-50 p-6">
+          <h2 class="font-heading mb-4 text-xl font-bold">Ficha de ruta (preliminar)</h2>
+          <dl class="space-y-3 text-sm">
+            <div>
+              <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">Origen</dt>
+              <dd class="mt-1 font-bold">{route.origin}</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">Destino</dt>
+              <dd class="mt-1 font-bold">
+                {route.destination} ({route.province}, {route.region})
+              </dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">Distancia</dt>
+              <dd class="mt-1">{route.distanceKm} km aprox.</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">
+                Tiempo estimado
+              </dt>
+              <dd class="mt-1">{route.durationHours} horas aprox.</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">
+                Tipo de carretera
+              </dt>
+              <dd class="mt-1">{route.roadType}</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">Estado</dt>
+              <dd class="mt-1 font-bold text-amber-700">Próximamente · apertura 2026</dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Descripción */}
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <h2 class="font-heading mb-4 text-2xl font-bold md:text-3xl">
+        Ruta {route.origin} → {route.destination}
+      </h2>
+      <div class="prose-content space-y-4 text-base leading-relaxed text-gray-700 md:text-lg">
+        {route.description.map((para) => <p set:html={para} />)}
+      </div>
+    </Container>
+  </Section>
+
+  {/* Formulario de pre-registro */}
+  <Section background="gray" spacing="lg" id="pre-registro">
+    <Container size="narrow">
+      <div class="mb-6">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Pre-registro</p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">
+          Déjanos tus datos y te avisamos al abrir
+        </h2>
+        <p class="mt-2 text-sm text-gray-700">
+          Sin costo, sin compromiso. Si hay demanda suficiente podemos acelerar la apertura de la
+          ruta.
+        </p>
+      </div>
+
+      {
+        success && (
+          <div class="mb-6 rounded-2xl border-l-4 border-green-600 bg-green-50 p-6" role="status">
+            <p class="font-bold text-green-800">¡Pre-registro recibido!</p>
+            <p class="mt-1 text-sm text-green-700">
+              Te avisaremos en cuanto confirmemos apertura de la ruta Cusco ↔ {route.destination}.
+              Mientras tanto, si tu mudanza es urgente, escríbenos por WhatsApp al{' '}
+              {SITE.phoneDisplay}.
+            </p>
+          </div>
+        )
+      }
+
+      <form
+        action="https://api.web3forms.com/submit"
+        method="POST"
+        class="space-y-4 rounded-2xl border border-gray-200 bg-white p-6"
+      >
+        <input type="hidden" name="access_key" value={accessKey} />
+        <input
+          type="hidden"
+          name="subject"
+          value={`Pre-registro ruta ${route.origin} → ${route.destination} — ${SITE.name}`}
+        />
+        <input type="hidden" name="from_name" value={SITE.name} />
+        <input type="hidden" name="redirect" value={redirectUrl} />
+        <input type="hidden" name="route_slug" value={route.slug} />
+        <input type="hidden" name="route_label" value={`${route.origin} → ${route.destination}`} />
+        {/* honeypot */}
+        <input
+          type="checkbox"
+          name="botcheck"
+          style="display:none"
+          tabindex="-1"
+          autocomplete="off"
+        />
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">
+              Nombre completo <span class="font-normal text-gray-500">(requerido)</span>
+            </span>
+            <input
+              type="text"
+              name="name"
+              required
+              autocomplete="name"
+              class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+            />
+          </label>
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">
+              WhatsApp <span class="font-normal text-gray-500">(requerido)</span>
+            </span>
+            <input
+              type="tel"
+              name="phone"
+              required
+              autocomplete="tel"
+              inputmode="tel"
+              pattern="[0-9+\-\s]{6,}"
+              class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+            />
+          </label>
+        </div>
+
+        <label class="block">
+          <span class="mb-1 block text-sm font-bold">Email (opcional)</span>
+          <input
+            type="email"
+            name="email"
+            autocomplete="email"
+            class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+          />
+        </label>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">
+              Origen exacto ({route.origin})
+            </span>
+            <input
+              type="text"
+              name="origin_address"
+              placeholder="Distrito / dirección"
+              class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+            />
+          </label>
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">
+              Destino exacto ({route.destination})
+            </span>
+            <input
+              type="text"
+              name="destination_address"
+              placeholder="Distrito / dirección"
+              class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+            />
+          </label>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Fecha tentativa</span>
+            <input
+              type="date"
+              name="tentative_date"
+              class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+            />
+          </label>
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Volumen estimado</span>
+            <select
+              name="volume"
+              class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+            >
+              <option value="">Selecciona…</option>
+              <option value="taxi-carga">Taxi-carga / mini mudanza</option>
+              <option value="habitacion">Habitación / mono-ambiente</option>
+              <option value="depa-1-3">Departamento 1-3 ambientes</option>
+              <option value="casa">Casa familiar completa</option>
+              <option value="flete">Flete comercial / institucional</option>
+              <option value="otro">Otro</option>
+            </select>
+          </label>
+        </div>
+
+        <label class="block">
+          <span class="mb-1 block text-sm font-bold">Comentarios</span>
+          <textarea
+            name="message"
+            rows="4"
+            placeholder="Cualquier detalle adicional que debamos saber."
+            class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+          ></textarea>
+        </label>
+
+        {
+          accessKey === '' && (
+            <p class="rounded-lg bg-yellow-50 px-4 py-3 text-sm text-yellow-800">
+              Formulario en configuración. Mientras tanto puedes pre-registrarte por WhatsApp.
+            </p>
+          )
+        }
+
+        <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <button
+            type="submit"
+            class="bg-primary hover:bg-primary-dark focus-visible:outline-primary inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 font-bold text-white transition-colors focus-visible:outline-2 focus-visible:outline-offset-2"
+            disabled={accessKey === ''}
+          >
+            Pre-registrarme
+          </button>
+          <span class="text-sm text-gray-600">o también por</span>
+          <WhatsAppButton variant="inline" size="md" message={route.ctaMessage} label="WhatsApp" />
+        </div>
+
+        <p class="text-xs text-gray-600">
+          Tus datos se usan solo para avisarte de la apertura de esta ruta. No los compartimos con
+          terceros.
+        </p>
+      </form>
+    </Container>
+  </Section>
+
+  {/* Rutas alternativas activas */}
+  {
+    alternatives.length > 0 && (
+      <Section background="white" spacing="lg">
+        <Container>
+          <div class="mb-8 max-w-2xl">
+            <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+              Mientras tanto
+            </p>
+            <h2 class="font-heading text-2xl font-bold md:text-3xl">
+              Rutas activas más cercanas que sí atendemos
+            </h2>
+            <p class="mt-2 text-sm text-gray-700">
+              Si tu mudanza puede ajustarse a una ruta que ya operamos, cotizamos por WhatsApp en
+              minutos.
+            </p>
+          </div>
+          <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+            {alternatives.map((alt) => (
+              <a
+                href={`/mudanzas-${alt.data.slug}/`}
+                class="hover:border-primary hover:shadow-primary/10 group block rounded-2xl border border-gray-200 bg-white p-5 transition-all hover:shadow-md"
+              >
+                <p class="text-primary mb-1 text-xs font-bold tracking-wider uppercase">
+                  Ruta activa
+                </p>
+                <h3 class="font-heading group-hover:text-primary mb-2 text-lg font-bold">
+                  Cusco ↔ {alt.data.destination}
+                </h3>
+                <p class="mb-2 text-sm text-gray-700">
+                  {alt.data.distanceKm} km · {alt.data.durationHours} h · {alt.data.province},{' '}
+                  {alt.data.region}
+                </p>
+                <span class="text-primary text-sm font-bold">Ver landing →</span>
+              </a>
+            ))}
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  {/* FAQs */}
+  {
+    route.faqs.length > 0 && (
+      <Section background="gray" spacing="lg">
+        <Container size="narrow">
+          <h2 class="font-heading mb-8 text-2xl font-bold md:text-3xl">Preguntas frecuentes</h2>
+          <div class="space-y-3">
+            {route.faqs.map((faq) => (
+              <details class="group rounded-xl border border-gray-200 bg-white">
+                <summary class="hover:text-primary flex cursor-pointer list-none items-center justify-between p-5 font-bold [&::-webkit-details-marker]:hidden">
+                  <span>{faq.q}</span>
+                  <svg
+                    class="h-5 w-5 shrink-0 transition-transform group-open:rotate-180"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </summary>
+                <div class="border-t border-gray-100 px-5 py-4 text-sm leading-relaxed text-gray-700">
+                  <p set:html={faq.a} />
+                </div>
+              </details>
+            ))}
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+</BaseLayout>

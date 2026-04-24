@@ -1,0 +1,133 @@
+{
+  "slug": "cusco-sicuani",
+  "origin": "Cusco",
+  "destination": "Sicuani",
+  "bidirectional": true,
+  "status": "active",
+  "province": "Canchis",
+  "region": "Cusco",
+  "distanceKm": 137,
+  "durationHours": "3",
+  "roadType": "Carretera asfaltada (PE-3S, Panamericana Sur)",
+  "altitudeMsnm": 3544,
+
+  "metaTitle": "Mudanzas Cusco Sicuani | Ruta Canchis | Expresos Ñan",
+  "metaDescription": "Mudanzas Cusco ↔ Sicuani: 137 km, 3 horas por la PE-3S. Servicio familiar, comercial y fletes. Flota propia 2 y 4 t. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+
+  "coordinates": {
+    "origin": { "lat": -13.5319, "lng": -71.9675 },
+    "destination": { "lat": -14.2698, "lng": -71.2285 }
+  },
+
+  "heroEyebrow": "Ruta activa · Canchis",
+  "heroTitle": "Mudanzas Cusco ↔ Sicuani",
+  "heroSubtitle": "La ruta inter-provincial más transitada del sur. Familias, comerciantes y personal de paso entre Cusco metropolitano y Sicuani en 3 horas por carretera asfaltada.",
+  "heroImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+  "heroImageAlt": "Camión de mudanzas Expreso Ñan en ruta Cusco a Sicuani",
+
+  "description": [
+    "<strong>Sicuani</strong> es la capital de la provincia de Canchis y una de las ciudades más importantes del sur del Perú. Ubicada a <strong>137 km de Cusco</strong> por la Panamericana Sur (PE-3S), es una ciudad comercial con fuerte actividad ganadera, agrícola y textil. En Expresos Ñan, la ruta <strong>Cusco ↔ Sicuani</strong> es una de las más transitadas: la hacemos varias veces por semana, con clientes familiares, estudiantes que van a UNSAAC o colegios de Cusco, y comerciantes que mueven mercadería entre las dos ciudades.",
+    "El <strong>recorrido</strong> es predecible: salimos de Cusco por la Av. de la Cultura, tomamos la vía Evitamiento hacia Huambutío, continuamos por la PE-3S bordeando el río Vilcanota pasando por Oropesa, Andahuaylillas, Urcos, Cusipata, Checacupe y Combapata hasta llegar a Sicuani. <strong>3 horas</strong> en condiciones normales, hasta 4 si hay congestión en Urcos o lluvia fuerte. La carretera está asfaltada en todo el trayecto y es la mejor ruta del sur peruano en términos de estado y señalización.",
+    "En términos operativos, la ruta es <strong>cómoda para la flota</strong>: altitud sostenida (3400-3600 msnm) sin pasos de altura complicados, pocas curvas cerradas y amplios paraderos donde descansar. Trabajamos con la <strong>unidad de 4 toneladas</strong> para mudanzas de departamento completo, y la de <strong>2 toneladas</strong> para habitaciones o mono-ambientes. Para fletes comerciales de comerciantes regulares tenemos tarifas con descuento por frecuencia.",
+    "Atendemos tres perfiles principales: <strong>familias que se mudan por trabajo</strong> entre Cusco y Sicuani (docentes, funcionarios públicos, personal de salud); <strong>estudiantes</strong> que se van a estudiar a Cusco y vuelven al terminar el ciclo o carrera; y <strong>comerciantes</strong> con fletes recurrentes — mercadería agrícola de Canchis hacia Cusco, o productos industriales de Cusco hacia Sicuani para su distribución en la sierra sur."
+  ],
+
+  "intermediateStops": ["Oropesa", "Andahuaylillas", "Urcos", "Checacupe", "Combapata"],
+  "relevantIndustries": [
+    "Ganadería y lácteos",
+    "Textiles andinos",
+    "Comercio agroindustrial",
+    "Sector educativo"
+  ],
+  "temporadaCritica": "Enero-marzo (lluvias): posibles derrumbes en tramo Urcos-Checacupe. Consultamos el estado de la vía antes de salir.",
+
+  "challenges": "La ruta Cusco ↔ Sicuani es de las <strong>menos exigentes</strong> para nuestra flota, pero tiene tres puntos que cuidamos: <strong>(1) tramo Urcos</strong> — el cruce hacia Paucartambo y Puerto Maldonado genera tráfico pesado (camiones cargueros); evitamos horarios pico matutinos (6:00-8:00). <strong>(2) Temporada de lluvias</strong> (enero-marzo) — la bajada a Combapata tiene tramos donde han caído huaicos históricos. Consultamos MTC e informes de Provías antes de confirmar fecha. <strong>(3) Altitud sostenida</strong> — Sicuani está a <strong>3544 msnm</strong>, similar a Cusco, pero el tramo máximo por La Raya pasa los 4100 si continuamos hacia Puno. Si tu mudanza sigue a Juliaca/Puno avísanos, la cotizamos integrada aunque esa última parte aún no es servicio propio. <strong>Tip clave:</strong> si tu mudanza es comercial recurrente (mercadería cada semana o cada 15 días), tenemos plan de <strong>flete comercial</strong> con tarifa cerrada mensual, mucho más económico que cotizar por viaje.",
+
+  "services": [
+    {
+      "title": "Mudanzas familiares",
+      "description": "Familias que cambian de ciudad por trabajo o estudios. Embalaje + transporte + armado en destino.",
+      "href": "/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/"
+    },
+    {
+      "title": "Flete comercial recurrente",
+      "description": "Comerciantes con mercadería regular entre Cusco y Sicuani. Tarifa cerrada mensual.",
+      "href": "/flete-comercial-cusco/"
+    },
+    {
+      "title": "Mudanzas de estudiantes",
+      "description": "Cuartos y pensiones de estudiantes que regresan a Sicuani al finalizar el ciclo.",
+      "href": "/mudanzas-estudiantes-cusco/"
+    },
+    {
+      "title": "Embalaje profesional",
+      "description": "Importante para mudanzas largas: la vibración en 137 km exige embalaje más robusto.",
+      "href": "/servicio-de-embalaje-cusco/"
+    },
+    {
+      "title": "Almacenaje temporal en Cusco",
+      "description": "Si tu destino en Sicuani no está listo, guardamos tu mobiliario en nuestro depósito en Cusco.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    },
+    {
+      "title": "Armado y desarmado",
+      "description": "Desarmamos en origen y armamos en destino. Esencial para roperos grandes en viaje de 3 h.",
+      "href": "/armado-y-desarmado-de-muebles-cusco/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales por viaje ida dentro de Cusco ↔ Sicuani. Ida y vuelta se cotiza con descuento. Precios pendientes de confirmación final.",
+    "rows": [
+      { "label": "Taxi-carga / mini mudanza", "price": "S/ 400 – S/ 700", "notes": "Unidad 1 t" },
+      { "label": "Habitación / mono-ambiente", "price": "S/ 700 – S/ 1100", "notes": "Unidad 2 t" },
+      {
+        "label": "Departamento 1-3 ambientes",
+        "price": "S/ 1100 – S/ 1700",
+        "notes": "Unidad 4 t"
+      },
+      {
+        "label": "Casa familiar completa",
+        "price": "S/ 1700 – S/ 2600",
+        "notes": "2 viajes con unidad 4 t o combinado"
+      },
+      {
+        "label": "Flete comercial (mercadería, por viaje)",
+        "price": "Desde S/ 500",
+        "notes": "Plan mensual con descuento disponible"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Cuánto demora una mudanza Cusco ↔ Sicuani?",
+      "a": "El traslado en carretera es de 3 horas aproximadamente. Sumando carga en origen, transporte y descarga en destino, un departamento de 2 ambientes se resuelve en una jornada (10-12 horas). Para mudanzas grandes planeamos dos días: carga un día, viaje y descarga al siguiente."
+    },
+    {
+      "q": "¿Hacen ida y vuelta el mismo día?",
+      "a": "Sí para fletes comerciales ligeros (el camión regresa a Cusco vacío el mismo día). Para mudanzas completas preferimos dejar un día intermedio para descarga sin prisa. Si necesitas ida y vuelta urgente, avísanos."
+    },
+    {
+      "q": "¿Atienden mudanzas desde Sicuani hacia Cusco?",
+      "a": "Sí, la ruta es bidireccional. Familias que vienen a estudiar o trabajar a Cusco son clientes frecuentes. Cotizamos con origen en Sicuani (la unidad sale desde Cusco vacía, carga en Sicuani y trae la mudanza)."
+    },
+    {
+      "q": "¿Qué pasa si el camión se retrasa por la carretera?",
+      "a": "Nuestro chofer mantiene comunicación por WhatsApp contigo durante todo el viaje. Si hay retraso por clima o tráfico te avisamos. En temporada de lluvias (enero-marzo) cotizamos con 1 día de holgura por si hay que reprogramar por derrumbe."
+    },
+    {
+      "q": "¿Necesito acompañar el camión en el viaje?",
+      "a": "No es obligatorio. Muchos clientes viajan aparte (en bus o auto propio) y llegan a recibir en destino. Otros prefieren ir en la cabina del camión con el chofer — admitimos 1 acompañante sin costo adicional, siempre con SOAT y cinturón."
+    },
+    {
+      "q": "¿Emiten factura con RUC para empresas?",
+      "a": "Sí, emitimos factura electrónica con RUC. Para fletes comerciales recurrentes con empresas de Sicuani (lácteos, agro) tenemos convenio con tarifa mensual cerrada. Solicita propuesta por WhatsApp."
+    }
+  ],
+
+  "ctaMessage": "Hola, necesito mudanza Cusco ↔ Sicuani. Origen: [dirección]. Destino: [dirección]. Volumen aproximado: [descripción]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza o flete entre Cusco y Sicuani?",
+  "ctaSubtitle": "Ruta activa, flota propia, precio cerrado antes de salir. Cotizamos en minutos por WhatsApp."
+}

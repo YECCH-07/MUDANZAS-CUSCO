@@ -1,0 +1,95 @@
+{
+  "slug": "cusco-juliaca",
+  "origin": "Cusco",
+  "destination": "Juliaca",
+  "bidirectional": false,
+  "status": "coming-soon",
+  "province": "San Román",
+  "region": "Puno",
+  "distanceKm": 347,
+  "durationHours": "7-8",
+  "roadType": "PE-3S — Panamericana Sur, asfaltada",
+  "altitudeMsnm": 3825,
+
+  "metaTitle": "Mudanzas Cusco Juliaca | Próximamente | Expresos Ñan",
+  "metaDescription": "Mudanzas Cusco → Juliaca (Puno): ruta próximamente disponible. 347 km, 7-8 h. Déjanos tus datos y te avisamos al abrir. Pre-registro sin compromiso.",
+  "ogImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+
+  "coordinates": {
+    "origin": { "lat": -13.5319, "lng": -71.9675 },
+    "destination": { "lat": -15.4997, "lng": -70.1328 }
+  },
+
+  "heroEyebrow": "Próximamente · Puno",
+  "heroTitle": "Mudanzas Cusco → Juliaca",
+  "heroSubtitle": "Ruta al altiplano del sur peruano, próximamente disponible. Para familias, comerciantes y profesionales entre Cusco y la ciudad comercial más grande de Puno.",
+  "heroImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+  "heroImageAlt": "Ruta Cusco a Juliaca — próximamente disponible",
+
+  "description": [
+    "<strong>Juliaca</strong> es la ciudad comercial más grande del altiplano peruano, capital de la provincia de San Román (Puno). Está a <strong>347 km de Cusco</strong>, con un viaje aproximado de <strong>7-8 horas</strong> por la PE-3S. Es nodo de conexión con Puno, Desaguadero (Bolivia) y el corredor del altiplano. La demanda de mudanzas es constante: comercio, servicios profesionales, estudiantes universitarios y funcionarios públicos.",
+    "En Expresos Ñan <strong>estamos preparando la operación</strong> para esta ruta. Una vez confirmada apertura, vamos a ofrecer: mudanzas residenciales completas, fletes comerciales (Juliaca es punto clave de mercadería hacia Cusco y viceversa), y mudanzas de estudiantes entre UNSAAC/UANCV y familias de origen.",
+    "Si te interesa la ruta, <strong>pre-regístrate</strong> con tus datos. No es compromiso en firme — es la forma de mantenerte en nuestra lista para avisarte cuando abramos.",
+    "Mientras tanto, si tu mudanza sigue un corredor similar, nuestras rutas activas a <strong>Sicuani</strong> cubren el tramo más cercano a Juliaca. Para el resto del camino, podemos recomendar operadores especializados en el altiplano."
+  ],
+
+  "intermediateStops": ["Sicuani", "Ayaviri", "Pucará"],
+  "relevantIndustries": [
+    "Comercio mayorista",
+    "Servicios profesionales",
+    "Educación (UNAP, UANCV)",
+    "Sector público"
+  ],
+
+  "services": [
+    {
+      "title": "Pre-registro de interés",
+      "description": "Déjanos tus datos con detalle de tu mudanza y te avisamos al abrir.",
+      "href": "#pre-registro"
+    },
+    {
+      "title": "Mudanzas a Sicuani",
+      "description": "Ruta activa. Mismo corredor, punto más cercano a Juliaca que ya operamos.",
+      "href": "/mudanzas-cusco-sicuani/"
+    },
+    {
+      "title": "Almacenaje en Cusco",
+      "description": "Si esperas apertura de ruta, guardamos tu mobiliario mensualmente.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    },
+    {
+      "title": "Flete comercial",
+      "description": "Para empresas con base en Cusco que muevan mercadería al sur.",
+      "href": "/flete-comercial-cusco/"
+    }
+  ],
+
+  "alternativeRoutes": ["cusco-sicuani"],
+
+  "faqs": [
+    {
+      "q": "¿Por qué no atienden Juliaca todavía?",
+      "a": "Queremos abrir la ruta con la misma calidad de nuestros servicios activos (flota propia, tarifa cerrada, chofer con experiencia en el corredor del altiplano). Estamos preparando la logística para lanzarla correctamente en 2026."
+    },
+    {
+      "q": "¿La ruta va a ser solo de ida o bidireccional?",
+      "a": "Inicialmente lanzaremos sentido Cusco → Juliaca. Según demanda, consideraremos el sentido inverso con landing dedicada."
+    },
+    {
+      "q": "¿Atenderán Puno también?",
+      "a": "Puno es destino próximo pero tiene su propia landing de pre-registro (/mudanzas-cusco-puno/). El plan es abrir Cusco → Juliaca primero y Cusco → Puno después, según demanda."
+    },
+    {
+      "q": "¿Pueden recomendarme un operador mientras abren?",
+      "a": "No hacemos referidos pagados. Si necesitas mudanza urgente, busca empresas especializadas en el corredor del altiplano. Cuando abramos, mantendremos nuestras garantías habituales."
+    },
+    {
+      "q": "¿El pre-registro tiene algún costo?",
+      "a": "No. Es gratuito y sin compromiso. Simplemente nos permite avisarte al abrir la ruta y, si hay demanda suficiente, acelerar la apertura."
+    }
+  ],
+
+  "ctaMessage": "Hola, me interesa la ruta Cusco → Juliaca cuando esté disponible. Fecha tentativa: [fecha]. Volumen: [descripción]. ¿Me pueden pre-registrar?",
+  "ctaTitle": "¿Necesitas mudanza Cusco → Juliaca?",
+  "ctaSubtitle": "Ruta próximamente disponible. Déjanos tus datos y te avisamos al abrir."
+}

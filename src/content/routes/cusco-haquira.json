@@ -1,0 +1,137 @@
+{
+  "slug": "cusco-haquira",
+  "origin": "Cusco",
+  "destination": "Haquira",
+  "bidirectional": true,
+  "status": "active",
+  "province": "Cotabambas",
+  "region": "Apurímac",
+  "distanceKm": 410,
+  "durationHours": "10-11",
+  "roadType": "PE-3S hasta Abancay + ruta afirmada al sur de Cotabambas",
+  "altitudeMsnm": 3700,
+
+  "metaTitle": "Mudanzas Cusco Haquira | Cotabambas, Apurímac | Expresos Ñan",
+  "metaDescription": "Mudanzas Cusco ↔ Haquira: 410 km, 10-11 h vía Abancay. Sur de Cotabambas, entorno minero. Flota 2 y 4 t. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+
+  "coordinates": {
+    "origin": { "lat": -13.5319, "lng": -71.9675 },
+    "destination": { "lat": -14.2111, "lng": -72.3111 }
+  },
+
+  "heroEyebrow": "Ruta activa · Cotabambas",
+  "heroTitle": "Mudanzas Cusco ↔ Haquira",
+  "heroSubtitle": "Distrito al sur de Cotabambas, próximo al corredor minero. Familias, docentes y personal de servicios con servicio activo vía Abancay.",
+  "heroImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+  "heroImageAlt": "Mudanza en ruta Cusco a Haquira, Cotabambas",
+
+  "description": [
+    "<strong>Haquira</strong> es un distrito de la provincia de <strong>Cotabambas, Apurímac</strong>, ubicado al sur de Tambobamba y vinculado indirectamente al corredor minero de Las Bambas. Está a aproximadamente <strong>410 km de Cusco</strong> y el viaje toma <strong>10-11 horas</strong> por la ruta vía Abancay. Es una zona con fuerte tradición agropecuaria y presencia creciente de servicios vinculados a la minería de la región.",
+    "Atendemos esta ruta con menor frecuencia que Challhuahuacho o Tambobamba, pero el <strong>servicio es activo y regular</strong>. Los casos que más vemos son <strong>docentes, personal de salud y funcionarios municipales</strong> asignados a la zona; <strong>familias de trabajadores vinculados al entorno minero</strong>; y <strong>fletes ocasionales</strong> de materiales, mobiliario y equipamiento.",
+    "Operamos con la <strong>unidad de 4 toneladas</strong> para mudanzas completas y con la de <strong>2 toneladas</strong> para cargas pequeñas. La distancia y el tramo afirmado final exigen operativo de <strong>2-3 días</strong>, con pernocte en Abancay. Como en todas las rutas de Cotabambas, coordinamos fechas con anticipación para confirmar estado del camino y acceso al destino.",
+    "Si tu mudanza combina <strong>Haquira con otro distrito del corredor</strong> (Challhuahuacho, Tambobamba, Mara, Coyllurqui), cotizamos ruta integrada con descuento. Para comunidades rurales alejadas del centro distrital, pedimos referencias claras o punto GPS."
+  ],
+
+  "intermediateStops": ["Abancay", "Tambobamba"],
+  "relevantIndustries": [
+    "Educación rural (UGEL Cotabambas)",
+    "Sector salud",
+    "Servicios al entorno minero",
+    "Agricultura y ganadería"
+  ],
+  "temporadaCritica": "Diciembre-marzo: tramos afirmados con riesgo de deslizamientos. Coordinamos con 4-5 días de anticipación.",
+
+  "challenges": "Haquira es un destino <strong>menos frecuente pero accesible</strong>. Desafíos: <strong>(1) Distancia</strong> — 10-11 h exige pernocte del chofer en Abancay, y llegada con luz a Haquira para descargar con seguridad. <strong>(2) Tramo afirmado final</strong> — polvo en seco, barro en lluvia, con algunas curvas pronunciadas. <strong>(3) Acceso a comunidades</strong> — muchas mudanzas son a puntos fuera del centro distrital; pedimos referencia clara o GPS. <strong>(4) Conectividad limitada</strong> — avisamos por WhatsApp donde haya señal; en tramos rurales la comunicación puede ser intermitente. <strong>Tip clave:</strong> si vas a Haquira por motivos laborales (docencia, salud, minería), cuéntanos la duración del contrato — podemos combinar la mudanza ida con la reserva del viaje de retorno a tarifa más económica.",
+
+  "services": [
+    {
+      "title": "Mudanzas inter-provinciales",
+      "description": "Familia completa con embalaje, transporte y armado en Haquira.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Mudanzas de docentes y personal de salud",
+      "description": "Asignaciones UGEL, Red de Salud o Municipalidad. Factura electrónica.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Flete de materiales y equipamiento",
+      "description": "Materiales de construcción, mobiliario rural, equipamiento agrícola.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Embalaje robusto",
+      "description": "Importante para mudanzas largas con tramos afirmados.",
+      "href": "/servicio-de-embalaje-cusco/"
+    },
+    {
+      "title": "Almacenaje en Cusco",
+      "description": "Si trabajas temporalmente en Haquira, guardamos parte de tu mobiliario en Cusco.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    },
+    {
+      "title": "Ruta integrada Cotabambas",
+      "description": "Combinamos Haquira con Tambobamba, Mara o Coyllurqui en un solo viaje.",
+      "href": "/mudanzas-cusco-tambobamba/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales por viaje ida Cusco → Haquira. Operativo de 2-3 días. Precios pendientes de confirmación final.",
+    "rows": [
+      {
+        "label": "Taxi-carga / mini mudanza",
+        "price": "S/ 1300 – S/ 2000",
+        "notes": "Unidad 1-2 t"
+      },
+      {
+        "label": "Habitación / mono-ambiente",
+        "price": "S/ 2000 – S/ 3000",
+        "notes": "Unidad 2 t"
+      },
+      {
+        "label": "Departamento 1-3 ambientes",
+        "price": "S/ 3000 – S/ 4500",
+        "notes": "Unidad 4 t"
+      },
+      {
+        "label": "Casa familiar completa",
+        "price": "S/ 4500 – S/ 6500",
+        "notes": "2 viajes con unidad 4 t"
+      },
+      {
+        "label": "Flete de materiales",
+        "price": "Cotización específica",
+        "notes": "Según volumen y acceso"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Trabajan en temporada de lluvias en Haquira?",
+      "a": "Sí, pero con más cuidado. Coordinamos con 4-5 días de anticipación, consultamos el estado del camino y reprogramamos sin costo si hay alto riesgo de cierre de vía."
+    },
+    {
+      "q": "¿Cuánto toma una mudanza familiar completa Cusco ↔ Haquira?",
+      "a": "Operativo de 2-3 días. Carga en Cusco el día 1, viaje y descarga en Haquira día 2 (o 3 si hay contingencia). Incluye pernocte del equipo en Abancay en la primera noche."
+    },
+    {
+      "q": "¿Atienden comunidades rurales cercanas a Haquira?",
+      "a": "Sí, con coordinación previa y referencia clara del destino. Si el acceso final es con camino muy difícil, podemos coordinar transbordo con vehículo local."
+    },
+    {
+      "q": "¿Pueden coordinar mudanzas para docentes de UGEL Cotabambas?",
+      "a": "Sí, es uno de los perfiles frecuentes. Emitimos boleta o factura según necesidad. Con 4-5 días de anticipación aseguramos fecha."
+    },
+    {
+      "q": "¿Mi destino combina Haquira con otra localidad del corredor minero?",
+      "a": "Sí, podemos combinar. Por ejemplo Challhuahuacho + Haquira en un mismo viaje con descuento por ruta integrada. Avísanos en la cotización."
+    }
+  ],
+
+  "ctaMessage": "Hola, necesito mudanza Cusco ↔ Haquira. Origen: [dirección]. Destino: [dirección / comunidad]. Volumen: [descripción]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza a Haquira?",
+  "ctaSubtitle": "Ruta activa vía Abancay con coordinación previa. Cotización cerrada antes de salir."
+}

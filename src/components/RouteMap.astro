@@ -1,0 +1,156 @@
+---
+/*
+ * Mapa de una ruta inter-provincial usando Leaflet + OpenStreetMap.
+ * Dibuja polilínea origen → destino con marcadores en ambos extremos.
+ * Zero API keys, zero costo. Carga solo en páginas que importan este componente.
+ */
+import 'leaflet/dist/leaflet.css';
+
+interface Props {
+  originLat: number;
+  originLng: number;
+  originName: string;
+  destLat: number;
+  destLng: number;
+  destName: string;
+  status?: 'active' | 'coming-soon';
+  class?: string;
+}
+
+const {
+  originLat,
+  originLng,
+  originName,
+  destLat,
+  destLng,
+  destName,
+  status = 'active',
+  class: className = '',
+} = Astro.props;
+---
+
+<div
+  class:list={['overflow-hidden rounded-2xl border border-gray-200', className]}
+  data-route-map
+  data-origin-lat={originLat}
+  data-origin-lng={originLng}
+  data-origin-name={originName}
+  data-dest-lat={destLat}
+  data-dest-lng={destLng}
+  data-dest-name={destName}
+  data-status={status}
+>
+  <div
+    id="route-map"
+    class="h-80 w-full md:h-[28rem]"
+    role="img"
+    aria-label={`Mapa de ruta ${originName} a ${destName}`}
+  >
+  </div>
+</div>
+
+<script>
+  import L from 'leaflet';
+
+  const container = document.querySelector<HTMLElement>('[data-route-map]');
+  const mapEl = document.getElementById('route-map');
+  if (container && mapEl) {
+    const originLat = parseFloat(container.dataset.originLat ?? '0');
+    const originLng = parseFloat(container.dataset.originLng ?? '0');
+    const originName = container.dataset.originName ?? '';
+    const destLat = parseFloat(container.dataset.destLat ?? '0');
+    const destLng = parseFloat(container.dataset.destLng ?? '0');
+    const destName = container.dataset.destName ?? '';
+    const status = container.dataset.status ?? 'active';
+
+    // Centro del mapa: punto medio entre origen y destino.
+    const centerLat = (originLat + destLat) / 2;
+    const centerLng = (originLng + destLng) / 2;
+
+    const map = L.map(mapEl, {
+      center: [centerLat, centerLng],
+      zoom: 7,
+      scrollWheelZoom: false,
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+      maxZoom: 18,
+    }).addTo(map);
+
+    // Marker origen — círculo rojo con "O".
+    const originMarker = L.divIcon({
+      html: `
+        <div style="
+          width: 36px;
+          height: 36px;
+          background: #d72638;
+          border: 3px solid #ffffff;
+          border-radius: 50%;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: 800;
+          font-size: 14px;
+        ">O</div>
+      `,
+      className: '',
+      iconSize: [36, 36],
+      iconAnchor: [18, 18],
+    });
+
+    // Marker destino — círculo oscuro con "D" (gris si coming-soon).
+    const destBg = status === 'coming-soon' ? '#6b7280' : '#0f0f0f';
+    const destMarker = L.divIcon({
+      html: `
+        <div style="
+          width: 36px;
+          height: 36px;
+          background: ${destBg};
+          border: 3px solid #ffffff;
+          border-radius: 50%;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-weight: 800;
+          font-size: 14px;
+        ">D</div>
+      `,
+      className: '',
+      iconSize: [36, 36],
+      iconAnchor: [18, 18],
+    });
+
+    L.marker([originLat, originLng], { icon: originMarker })
+      .addTo(map)
+      .bindPopup(`<strong>Origen</strong><br>${originName}`);
+
+    L.marker([destLat, destLng], { icon: destMarker })
+      .addTo(map)
+      .bindPopup(`<strong>Destino</strong><br>${destName}`);
+
+    // Polilínea origen-destino (punteada si coming-soon, continua si activa).
+    const lineColor = status === 'coming-soon' ? '#9ca3af' : '#d72638';
+    const dashArray = status === 'coming-soon' ? '10, 8' : undefined;
+    const polyline = L.polyline(
+      [
+        [originLat, originLng],
+        [destLat, destLng],
+      ],
+      {
+        color: lineColor,
+        weight: 4,
+        opacity: 0.85,
+        ...(dashArray !== undefined ? { dashArray } : {}),
+      },
+    ).addTo(map);
+
+    // Ajuste de viewport para mostrar toda la ruta con padding.
+    map.fitBounds(polyline.getBounds(), { padding: [40, 40] });
+  }
+</script>

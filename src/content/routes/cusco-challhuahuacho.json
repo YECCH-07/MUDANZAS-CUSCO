@@ -1,0 +1,141 @@
+{
+  "slug": "cusco-challhuahuacho",
+  "origin": "Cusco",
+  "destination": "Challhuahuacho",
+  "bidirectional": true,
+  "status": "active",
+  "province": "Cotabambas",
+  "region": "Apurímac",
+  "distanceKm": 425,
+  "durationHours": "10-12",
+  "roadType": "Carretera asfaltada + afirmada (PE-3S hasta Abancay, luego ruta minera)",
+  "altitudeMsnm": 3695,
+
+  "metaTitle": "Mudanzas Cusco Challhuahuacho | Las Bambas | Expresos Ñan",
+  "metaDescription": "Mudanzas Cusco ↔ Challhuahuacho: 425 km, 10-12 h vía Abancay. Ruta especializada para personal de Las Bambas. Flota 4 t. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+
+  "coordinates": {
+    "origin": { "lat": -13.5319, "lng": -71.9675 },
+    "destination": { "lat": -14.0833, "lng": -72.2667 }
+  },
+
+  "heroEyebrow": "Ruta activa · Cotabambas · Las Bambas",
+  "heroTitle": "Mudanzas Cusco ↔ Challhuahuacho",
+  "heroSubtitle": "La ruta al corazón de Las Bambas: 425 km en 10-12 horas vía Abancay. Especialistas en traslados de personal minero, familias contratistas y fletes de operación.",
+  "heroImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+  "heroImageAlt": "Unidad de 4 toneladas Expreso Ñan en ruta minera a Challhuahuacho",
+
+  "description": [
+    "<strong>Challhuahuacho</strong> es el distrito cabeza del corredor minero de Las Bambas — uno de los proyectos de cobre más grandes del mundo, operado por MMG. Ubicado en la provincia de <strong>Cotabambas, Apurímac</strong>, es el punto de referencia logístico para miles de trabajadores, contratistas y familias que rotan constantemente entre sus lugares de origen y el proyecto. Expresos Ñan atiende esta ruta desde hace años con <strong>experiencia directa en terreno minero</strong>.",
+    "El recorrido <strong>Cusco ↔ Challhuahuacho</strong> es de <strong>425 km y toma 10-12 horas</strong>. La primera mitad es PE-3S hasta Abancay (195 km, asfaltada), y la segunda es la ruta minera hacia Las Bambas pasando por Tambobamba antes de llegar a Challhuahuacho. Los tramos afirmados y de altura (superiores a 4000 msnm) exigen unidad con mantenimiento al día, chofer con experiencia en carretera minera, y <strong>SOAT + permisos vigentes</strong>. Para mudanzas completas operamos con la <strong>unidad de 4 toneladas</strong>.",
+    "Las <strong>mudanzas típicas</strong> en esta ruta son: <strong>personal del proyecto</strong> (ingenieros, supervisores, técnicos) que llega a trabajar en la mina y lleva su mobiliario desde Cusco o lugar de origen; <strong>familias de contratistas</strong> que se quedan temporalmente en el área; <strong>fletes operativos</strong> de equipamiento, suministros, mobiliario de oficina para empresas de servicios a la mina; y <strong>mudanzas de retorno</strong> cuando termina el contrato y el trabajador vuelve a su región.",
+    "Esta no es una ruta turística ni comercial común: es un servicio <strong>especializado</strong>. Coordinamos cada viaje con <strong>3-5 días de anticipación</strong> para confirmar el estado de la vía (afecta con lluvias), revisar permisos de acceso al campamento (varias zonas requieren coordinación previa con seguridad de MMG o contratistas), y planificar la logística del operativo (2 días de viaje, pernocte, alimentación del chofer). Si tu mudanza es al campamento mismo o a viviendas contratadas por la mina en Challhuahuacho pueblo, avísanos — el protocolo es distinto."
+  ],
+
+  "intermediateStops": ["Abancay", "Tambobamba"],
+  "relevantIndustries": [
+    "Minería (MMG Las Bambas)",
+    "Contratistas mineros",
+    "Transporte y logística especializada",
+    "Construcción civil"
+  ],
+  "temporadaCritica": "Diciembre-marzo: tramo afirmado Tambobamba-Challhuahuacho puede cerrar temporalmente por lluvias. Coordinamos con 3-5 días de anticipación y consultamos Provías + contactos locales.",
+
+  "challenges": "Challhuahuacho es una de las <strong>rutas más exigentes</strong> que operamos. Puntos críticos: <strong>(1) Distancia y altitud</strong> — 425 km con varios pasos de altura (hasta 4500 msnm en abras). Exige unidad con buena potencia y chofer con experiencia en carretera minera. <strong>(2) Tramo afirmado final</strong> — desde Tambobamba hasta Challhuahuacho el camino es afirmado, con polvo en temporada seca y barro/huaicos en temporada de lluvias. Usamos unidad de 4 t con neumáticos adecuados y coordinamos fechas fuera de temporada crítica cuando es posible. <strong>(3) Acceso al campamento</strong> — si tu destino es dentro del área operativa de MMG o de contratistas, necesitamos coordinación previa con seguridad del proyecto (pase, registro del vehículo, horarios de acceso). Avísanos con anticipación para no llegar y esperar horas en el portón. <strong>(4) Protocolos de salud y seguridad</strong> — chofer y personal de carga cumplen con EPP básico (casco, chaleco reflectivo, botas) cuando ingresan a áreas industriales; si el cliente o empresa contratista exige protocolos adicionales (oxígeno para altitud, pruebas médicas), coordinamos. <strong>Tip clave:</strong> las mudanzas en esta ruta son 90% de personal rotativo — si tu empresa mueve personal regularmente, podemos coordinar <strong>servicio corporativo</strong> con tarifa plana por movimiento y prioridad en calendarios.",
+
+  "services": [
+    {
+      "title": "Mudanzas para personal minero",
+      "description": "Traslado de mobiliario del trabajador y su familia al área de operación. Con coordinación de pases y horarios.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Flete operativo y equipamiento",
+      "description": "Equipos, mobiliario de oficina, suministros para empresas contratistas que operan en Las Bambas.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Mudanzas de retorno",
+      "description": "Cuando termina el contrato, retorno del mobiliario a Cusco, Abancay o ciudad de origen.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Embalaje robusto",
+      "description": "Crítico en tramos afirmados con vibración. Embalaje industrial reforzado para electrónicos.",
+      "href": "/servicio-de-embalaje-cusco/"
+    },
+    {
+      "title": "Almacenaje en Cusco",
+      "description": "Mientras rotas de Las Bambas, guardamos tus pertenencias en Cusco. Mensual.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    },
+    {
+      "title": "Rutas vecinas a Las Bambas",
+      "description": "También operamos Cusco ↔ Tambobamba, Haquira, Mara, Coyllurqui para familias del entorno minero.",
+      "href": "/mudanzas-cusco-tambobamba/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales por viaje ida Cusco → Challhuahuacho. Ruta exige 2 días de operativo y pernocte del chofer. Para servicio corporativo recurrente, cotización con tarifa plana. Precios pendientes de confirmación final.",
+    "rows": [
+      {
+        "label": "Taxi-carga / mini mudanza",
+        "price": "S/ 1400 – S/ 2200",
+        "notes": "Unidad 1 t si el destino lo permite"
+      },
+      {
+        "label": "Habitación / mono-ambiente",
+        "price": "S/ 2200 – S/ 3200",
+        "notes": "Unidad 2 t"
+      },
+      {
+        "label": "Departamento 1-3 ambientes",
+        "price": "S/ 3200 – S/ 4800",
+        "notes": "Unidad 4 t"
+      },
+      {
+        "label": "Casa familiar completa",
+        "price": "S/ 4800 – S/ 7000",
+        "notes": "2 viajes con unidad 4 t o combinado"
+      },
+      {
+        "label": "Flete corporativo / contratista",
+        "price": "Cotización formal",
+        "notes": "Tarifa plana por movimiento con contratos marco"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Cuánto tiempo toma la mudanza Cusco ↔ Challhuahuacho?",
+      "a": "El viaje en carretera es de 10-12 horas. Con carga en origen y descarga en destino, planificamos operativo de 2-3 días: día 1 carga y viaje a Abancay (pernocte), día 2 viaje Abancay-Challhuahuacho y descarga. Para mudanzas pequeñas con unidad de 2 t, puede ser 2 días ajustados."
+    },
+    {
+      "q": "¿Trabajan con empresas contratistas de Las Bambas (MMG)?",
+      "a": "Sí, tenemos experiencia con varios contratistas del proyecto. Emitimos factura electrónica con RUC, cumplimos con requisitos de HSE básicos (EPP, SOAT, revisión técnica vigente), y podemos firmar contratos marco para servicios recurrentes. Solicita propuesta por WhatsApp."
+    },
+    {
+      "q": "¿Necesito gestionar permisos de acceso al campamento?",
+      "a": "Si tu destino final está dentro del área operativa de MMG o de un contratista, tú (o tu empresa) gestionas el pase del vehículo y del personal de transporte. Nosotros te enviamos los datos del camión, placa, chofer y auxiliar para que los tramites. También podemos coordinar con seguridad del proyecto si nos das el contacto."
+    },
+    {
+      "q": "¿Cómo manejan las vibraciones del camino afirmado?",
+      "a": "Con embalaje más robusto que en mudanzas urbanas: doble cartón, burbuja antiestática para electrónicos, fajas internas dentro del camión para evitar desplazamientos. Coordinamos ritmo de conducción suave en el tramo afirmado. Para mudanzas con equipos de alto valor recomendamos embalaje industrial (servicio adicional)."
+    },
+    {
+      "q": "¿Atienden mudanzas de retorno (de Challhuahuacho hacia Cusco o Lima)?",
+      "a": "Sí, muchos trabajadores al terminar contrato retornan el mobiliario a Cusco o su ciudad de origen. Nosotros cotizamos la ruta hasta Cusco (o punto de transbordo). Para destinos fuera de nuestra cobertura (Lima, Arequipa) coordinamos con operadores especializados. No atendemos Cusco-Lima directamente."
+    },
+    {
+      "q": "¿Pueden hacer la mudanza en temporada de lluvias?",
+      "a": "Sí pero con más cuidado. En diciembre-marzo el tramo Tambobamba-Challhuahuacho tiene riesgo de cierre temporal por huaicos. Coordinamos con 3-5 días de anticipación, revisamos reporte Provías y contactos locales. Si hay alerta reprogramamos sin costo."
+    }
+  ],
+
+  "ctaMessage": "Hola, necesito mudanza Cusco ↔ Challhuahuacho (Las Bambas). Origen: [dirección]. Destino: [dirección o campamento]. Empresa/contratista: [nombre si aplica]. Volumen: [descripción]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza a Challhuahuacho o Las Bambas?",
+  "ctaSubtitle": "Ruta especializada con experiencia en operación minera. Coordinamos pases, cotización formal y factura electrónica."
+}

@@ -1,0 +1,137 @@
+{
+  "slug": "cusco-colquemarca",
+  "origin": "Cusco",
+  "destination": "Colquemarca",
+  "bidirectional": true,
+  "status": "active",
+  "province": "Chumbivilcas",
+  "region": "Cusco",
+  "distanceKm": 340,
+  "durationHours": "8-9",
+  "roadType": "PE-3S hasta Sicuani / desvío Yauri + ruta afirmada a Chumbivilcas",
+  "altitudeMsnm": 3840,
+
+  "metaTitle": "Mudanzas Cusco Colquemarca | Chumbivilcas | Expresos Ñan",
+  "metaDescription": "Mudanzas Cusco ↔ Colquemarca: 340 km, 8-9 h vía Sicuani/Yauri. Provincia de Chumbivilcas. Flota 2 y 4 t. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+
+  "coordinates": {
+    "origin": { "lat": -13.5319, "lng": -71.9675 },
+    "destination": { "lat": -14.3667, "lng": -72.0833 }
+  },
+
+  "heroEyebrow": "Ruta activa · Chumbivilcas, Cusco",
+  "heroTitle": "Mudanzas Cusco ↔ Colquemarca",
+  "heroSubtitle": "Distrito alto-andino de Chumbivilcas, sur del departamento. Servicio activo vía Sicuani y corredor hacia Santo Tomás.",
+  "heroImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+  "heroImageAlt": "Camión de mudanzas en ruta Cusco a Colquemarca, Chumbivilcas",
+
+  "description": [
+    "<strong>Colquemarca</strong> es un distrito de la provincia de <strong>Chumbivilcas (Cusco)</strong>, en el sur alto-andino del departamento. Está a una distancia aproximada de <strong>340 km de Cusco ciudad</strong>, con un viaje de <strong>8-9 horas</strong>. A diferencia de las rutas a Cotabambas (que van vía Abancay, Apurímac), la ruta a Colquemarca se hace por el corredor <strong>Cusco-Sicuani-Yauri-Santo Tomás</strong>, pasando por tramos de puna con altitudes superiores a 4000 msnm.",
+    "Expresos Ñan opera esta ruta con <strong>frecuencia moderada</strong>. Los perfiles típicos: <strong>familias de la zona</strong> que se trasladan a Cusco por estudios o trabajo y viceversa; <strong>docentes y personal de salud</strong> asignados a puestos rurales; <strong>comerciantes</strong> de productos agropecuarios (lana, queso, carne) que requieren flete hacia Cusco; y <strong>fletes institucionales</strong> de mobiliario y equipamiento para municipios y colegios.",
+    "Trabajamos con la <strong>unidad de 4 toneladas</strong> para mudanzas completas y con la <strong>unidad de 2 toneladas</strong> para cargas menores. El tramo afirmado final (desde el desvío en Yauri hacia Colquemarca) exige unidad con neumáticos adecuados y chofer con experiencia en alta puna. Operativo de <strong>2 días</strong> con pernocte en Sicuani o Yauri.",
+    "Colquemarca es conocida por su <strong>identidad cultural fuerte</strong> (corrida de toros andina \"Yawar Fiesta\", tradiciones de la sierra sur de Cusco) y por ser una zona de <strong>ganadería tradicional</strong>. Muchas de nuestras mudanzas son de familias que mantienen vínculos permanentes entre Colquemarca y Cusco ciudad, moviendo pertenencias entre una y otra según época agrícola o estudios de los hijos."
+  ],
+
+  "intermediateStops": ["Sicuani", "Yauri (Espinar — de paso)", "Santo Tomás"],
+  "relevantIndustries": [
+    "Ganadería alto-andina",
+    "Agricultura de subsistencia",
+    "Sector público (UGEL, Municipalidad)",
+    "Comercio regional"
+  ],
+  "temporadaCritica": "Diciembre-marzo: tramos afirmados con barro y riesgo de bloqueos. Junio-agosto: riesgo de heladas y nevadas en pasos de altura.",
+
+  "challenges": "La ruta a Colquemarca es <strong>exigente por la altitud y el tramo afirmado</strong>. Puntos críticos: <strong>(1) Altitud</strong> — pasos de hasta 4200-4400 msnm en la puna. Chofer y personal aclimatados, unidad con buena potencia. <strong>(2) Tramos afirmados</strong> — desde el desvío a Santo Tomás el camino es en su mayoría afirmado, con polvo en seco y barro en lluvia. <strong>(3) Clima extremo</strong> — heladas intensas en invierno (puede bajar a -10 °C en madrugadas), con riesgo de congelamiento de agua en el radiador del camión. Salimos con mantas térmicas, agua caliente y anticongelante. <strong>(4) Acceso a comunidades</strong> — muchas mudanzas son a comunidades rurales con caminos angostos. Pedimos referencia clara y GPS si está disponible. <strong>NO atendemos la ruta vía Espinar</strong> como destino, pero pasamos cerca; si tu mudanza es a Espinar, no es servicio activo. <strong>Tip clave:</strong> para mudanzas a Colquemarca en invierno, preferimos salir temprano y pernoctar la primera noche en Sicuani para cruzar los pasos de altura con luz del día.",
+
+  "services": [
+    {
+      "title": "Mudanzas familiares",
+      "description": "Familias que mantienen vivienda entre Colquemarca y Cusco.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Mudanzas de docentes y personal de salud",
+      "description": "Asignaciones UGEL Chumbivilcas o Red de Salud. Factura electrónica.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Flete ganadero y de productos agropecuarios",
+      "description": "Mobiliario, equipamiento y cargas desde/hacia Colquemarca.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Embalaje reforzado",
+      "description": "Tramos afirmados con vibración. Embalaje industrial si hay carga delicada.",
+      "href": "/servicio-de-embalaje-cusco/"
+    },
+    {
+      "title": "Almacenaje en Cusco",
+      "description": "Si mantienes base en Cusco ciudad mientras trabajas en Colquemarca.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    },
+    {
+      "title": "Ruta integrada con Capacmarca",
+      "description": "Si tu mudanza cubre Colquemarca + Capacmarca, cotizamos un solo viaje.",
+      "href": "/mudanzas-cusco-capacmarca/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales por viaje ida Cusco → Colquemarca. Operativo de 2 días con pernocte en Sicuani/Yauri. Precios pendientes de confirmación final.",
+    "rows": [
+      {
+        "label": "Taxi-carga / mini mudanza",
+        "price": "S/ 1100 – S/ 1800",
+        "notes": "Unidad 1-2 t"
+      },
+      {
+        "label": "Habitación / mono-ambiente",
+        "price": "S/ 1800 – S/ 2600",
+        "notes": "Unidad 2 t"
+      },
+      {
+        "label": "Departamento 1-3 ambientes",
+        "price": "S/ 2600 – S/ 4000",
+        "notes": "Unidad 4 t"
+      },
+      {
+        "label": "Casa familiar completa",
+        "price": "S/ 4000 – S/ 5800",
+        "notes": "2 viajes con unidad 4 t"
+      },
+      {
+        "label": "Flete ganadero / agropecuario",
+        "price": "Cotización específica",
+        "notes": "Según carga y estación"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Atienden mudanzas en época de heladas (junio-agosto)?",
+      "a": "Sí. Salimos con anticongelante, mantas térmicas y agua caliente para el radiador. Preferimos cruzar los pasos de altura con luz del día. Si hay nevada fuerte, reprogramamos sin costo."
+    },
+    {
+      "q": "¿Cuánto demora el viaje?",
+      "a": "8-9 horas en carretera en condiciones normales. Operativo completo de 2 días con pernocte en Sicuani o Yauri."
+    },
+    {
+      "q": "¿Atienden comunidades rurales de Colquemarca?",
+      "a": "Sí, con coordinación previa. Pedimos referencias claras del destino (nombre de la comunidad, escuela, iglesia, puente) o coordenadas GPS."
+    },
+    {
+      "q": "¿Pasan por Espinar?",
+      "a": "Pasamos cerca (por Yauri, capital de Espinar), pero Espinar como destino no forma parte de nuestro servicio activo. Si tu mudanza es a Espinar, confirma con nosotros antes — podríamos no cotizarte y recomendarte otro operador."
+    },
+    {
+      "q": "¿Emiten factura para ganaderos y comerciantes?",
+      "a": "Sí. Factura electrónica con RUC, boleta para personas naturales. Para fletes comerciales recurrentes (productos lácteos, lana) proponemos tarifa plana."
+    }
+  ],
+
+  "ctaMessage": "Hola, necesito mudanza Cusco ↔ Colquemarca. Origen: [dirección]. Destino: [dirección / comunidad]. Volumen: [descripción]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza o flete a Colquemarca?",
+  "ctaSubtitle": "Ruta activa al sur alto-andino de Cusco, con coordinación previa y flota preparada para puna."
+}

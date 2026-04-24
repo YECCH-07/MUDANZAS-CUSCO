@@ -1,0 +1,95 @@
+{
+  "slug": "arequipa-cusco",
+  "origin": "Arequipa",
+  "destination": "Cusco",
+  "bidirectional": true,
+  "status": "coming-soon",
+  "province": "Cusco",
+  "region": "Cusco",
+  "distanceKm": 521,
+  "durationHours": "10-11",
+  "roadType": "PE-34A / PE-3S — Panamericana Sur y corredor Puno-Juliaca-Cusco",
+  "altitudeMsnm": 3399,
+
+  "metaTitle": "Mudanzas Arequipa Cusco | Próximamente | Expresos Ñan",
+  "metaDescription": "Mudanzas Arequipa ↔ Cusco: ruta próximamente disponible. 521 km, 10-11 h. Déjanos tus datos y te avisamos cuando abra. Pre-registro sin costo.",
+  "ogImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+
+  "coordinates": {
+    "origin": { "lat": -16.409, "lng": -71.5375 },
+    "destination": { "lat": -13.5319, "lng": -71.9675 }
+  },
+
+  "heroEyebrow": "Próximamente · desde Arequipa",
+  "heroTitle": "Mudanzas Arequipa → Cusco",
+  "heroSubtitle": "Ruta próximamente disponible desde Arequipa hacia Cusco. Para familias, estudiantes y profesionales arequipeños que se trasladan a la ciudad imperial.",
+  "heroImage": "/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg",
+  "heroImageAlt": "Ruta Arequipa a Cusco — próximamente disponible",
+
+  "description": [
+    "La ruta <strong>Arequipa → Cusco</strong> es el sentido inverso de la ruta Cusco → Arequipa. Tenemos una landing dedicada en este sentido porque muchas búsquedas y necesidades reales vienen desde Arequipa: estudiantes que se van a UNSAAC, funcionarios que son trasladados a Cusco, profesionales en turismo que abren oficina en Cusco, y familias arequipeñas con segunda residencia en el Valle Sagrado.",
+    "En Expresos Ñan <strong>estamos preparando esta ruta como servicio activo bidireccional</strong>. Si dejas tus datos en el formulario de pre-registro, te avisamos cuando confirmemos fecha de apertura y cotización cerrada.",
+    "Por la <strong>altitud del destino</strong> (Cusco a 3399 msnm desde Arequipa a 2335 msnm) el viaje implica un cambio importante para pasajeros y para algunos equipos electrónicos sensibles. Cuando abramos la ruta, nuestra recomendación será embalaje anti-vibración para electrónicos y aclimatación planificada para mascotas si viajan con la familia.",
+    "Si tu mudanza es urgente y no puede esperar la apertura de esta ruta, busca operadores especializados en larga distancia. Para rutas <strong>que sí atendemos hoy desde Cusco</strong>, revisa nuestra página de cobertura."
+  ],
+
+  "intermediateStops": ["Juliaca", "Puno (paso)", "Sicuani", "Cusco"],
+  "relevantIndustries": [
+    "Educación (UNSAAC)",
+    "Turismo",
+    "Comercio y servicios profesionales",
+    "Familias con segunda residencia"
+  ],
+
+  "services": [
+    {
+      "title": "Pre-registro de interés",
+      "description": "Déjanos tus datos con origen en Arequipa. Te avisamos cuando abramos.",
+      "href": "#pre-registro"
+    },
+    {
+      "title": "Mudanzas dentro de Cusco metropolitano",
+      "description": "Si ya llegaste a Cusco, te ayudamos con la mudanza final dentro de la ciudad.",
+      "href": "/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/"
+    },
+    {
+      "title": "Almacenaje en Cusco",
+      "description": "Si tu mobiliario llega antes que tú, lo guardamos en depósito vigilado.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    },
+    {
+      "title": "Mudanzas al Valle Sagrado",
+      "description": "Si tu destino final es Urubamba, Pisac u Ollantaytambo, te llevamos desde Cusco.",
+      "href": "/mudanza-provincia/"
+    }
+  ],
+
+  "alternativeRoutes": ["cusco-sicuani", "cusco-abancay"],
+
+  "faqs": [
+    {
+      "q": "¿Por qué hay una página separada para Arequipa → Cusco si la ruta es la misma?",
+      "a": "Porque el cliente que busca \"mudanza Arequipa Cusco\" tiene una necesidad distinta al que busca \"mudanza Cusco Arequipa\": origen distinto, punto de coordinación distinto, y muchas veces forma de pago distinta. Mantenemos landings separadas para servir mejor a ambos perfiles."
+    },
+    {
+      "q": "¿Cuándo abrirán esta ruta?",
+      "a": "Durante 2026. La fecha se confirmará por WhatsApp y en esta misma página. Si dejas tu pre-registro, te avisamos al momento exacto de apertura."
+    },
+    {
+      "q": "¿Tienen oficina en Arequipa?",
+      "a": "No tenemos oficina física en Arequipa — nuestro centro operativo es Cusco. Cuando abramos la ruta, coordinamos carga en origen (Arequipa) con visita de nuestro equipo un día antes para embalaje y carga eficiente."
+    },
+    {
+      "q": "¿Van a hacer la misma tarifa en ambos sentidos?",
+      "a": "Probablemente sí, la distancia y tiempo son los mismos. Puede haber pequeñas diferencias por logística de retorno del camión."
+    },
+    {
+      "q": "¿Aceptan pre-registro de empresas (mudanzas corporativas)?",
+      "a": "Sí. Si eres empresa con múltiples traslados proyectados Arequipa-Cusco, escríbenos por WhatsApp con proyección y podemos trabajar contrato marco para cuando abramos la ruta."
+    }
+  ],
+
+  "ctaMessage": "Hola, me interesa la ruta Arequipa → Cusco cuando esté disponible. Origen en Arequipa: [dirección o distrito]. Fecha tentativa: [fecha]. Volumen: [descripción]. ¿Me pueden pre-registrar?",
+  "ctaTitle": "¿Vienes de Arequipa a Cusco?",
+  "ctaSubtitle": "Ruta próximamente disponible. Déjanos tus datos y te avisamos en cuanto abramos."
+}
