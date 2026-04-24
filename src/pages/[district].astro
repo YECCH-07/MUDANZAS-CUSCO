@@ -1,0 +1,35 @@
+---
+/*
+ * Ruta dinámica que genera las 8 landings de distritos metropolitanos.
+ * Patrón SEO: la URL final es `/mudanzas-[slug]/` (ej. /mudanzas-wanchaq/).
+ *
+ * El parámetro [district] matchea el slug COMPLETO incluyendo el prefijo
+ * "mudanzas-", así preservamos las URLs SEO-críticas sin crear 8 archivos .astro.
+ */
+import { getCollection } from 'astro:content';
+import DistrictLayout from '@layouts/DistrictLayout.astro';
+import type { CollectionEntry } from 'astro:content';
+
+export async function getStaticPaths() {
+  const all = await getCollection('districts');
+  return all.map((entry) => {
+    const nearby = entry.data.nearbyDistricts
+      .map((slug) => all.find((e) => e.data.slug === slug))
+      .filter((e): e is CollectionEntry<'districts'> => e !== undefined);
+
+    return {
+      params: { district: `mudanzas-${entry.data.slug}` },
+      props: { entry, nearby },
+    };
+  });
+}
+
+interface Props {
+  entry: CollectionEntry<'districts'>;
+  nearby: CollectionEntry<'districts'>[];
+}
+
+const { entry, nearby } = Astro.props as Props;
+---
+
+<DistrictLayout district={entry.data} nearby={nearby} />

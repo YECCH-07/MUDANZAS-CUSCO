@@ -1,0 +1,122 @@
+{
+  "slug": "wanchaq",
+  "name": "Wanchaq",
+  "province": "Cusco",
+  "region": "Cusco",
+  "metaTitle": "Mudanzas en Wanchaq, Cusco | Expresos Ñan",
+  "metaDescription": "Mudanzas profesionales en Wanchaq: zona UNSAAC, Av. La Cultura, Av. Tullumayo, Real Plaza. Servicio rápido para estudiantes y familias. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg",
+
+  "coordinates": { "lat": -13.5286, "lng": -71.9697 },
+
+  "heroEyebrow": "Wanchaq",
+  "heroTitle": "Mudanzas en Wanchaq — Zona UNSAAC y comercial",
+  "heroSubtitle": "Uno de los distritos más densamente poblados de Cusco metropolitano. Atendemos estudiantes, profesionales jóvenes y familias con servicio rápido y precios claros.",
+  "heroImage": "/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png",
+  "heroImageAlt": "Mudanza en Wanchaq, Cusco",
+
+  "description": [
+    "<strong>Wanchaq</strong> es el distrito más dinámico de Cusco metropolitano. Concentra la mayor densidad poblacional del área urbana, acoge a la <strong>Universidad Nacional San Antonio Abad del Cusco (UNSAAC)</strong> y es sede de los centros comerciales más importantes (Real Plaza, Paseo de las Flores). Esto hace que la demanda de mudanzas aquí sea constante durante todo el año.",
+    "Atendemos tres perfiles principales en Wanchaq. <strong>Estudiantes UNSAAC</strong> que cambian de pensión al empezar cada semestre — mudanzas pequeñas, rápidas, de bajo costo. <strong>Familias jóvenes</strong> en departamentos cerca de Av. La Cultura o Av. Tullumayo — mudanzas medianas con armado y desarme de muebles. <strong>Oficinas y profesionales</strong> en zona comercial — mudanzas empresariales con desmontaje de equipos.",
+    "La logística en Wanchaq está definida por el <strong>tráfico denso</strong>, especialmente en las avenidas principales durante las horas pico (7:30-9:00, 12:30-14:00 y 17:30-19:30). Evitamos esos horarios para carga y descarga cuando es posible. La Av. La Cultura, siendo la arteria principal, tiene buen acceso para todas nuestras unidades (1, 2 y 4 t); las calles internas de urbanizaciones modernas (Santa Mónica, Los Pinos, Pachacútec) también permiten unidades grandes sin problema.",
+    "Particularmente estamos familiarizados con las mudanzas <strong>entre Wanchaq y San Sebastián</strong> — una de las rutas internas más frecuentes del área metropolitana. Muchas familias cusqueñas crecen en Wanchaq y luego se mudan a las urbanizaciones nuevas de San Sebastián cuando aumenta la familia. También la ruta inversa: profesionales jóvenes vuelven a Wanchaq por su proximidad al trabajo."
+  ],
+
+  "mainStreets": [
+    "Av. de la Cultura",
+    "Av. Tullumayo",
+    "Av. Pardo",
+    "Av. Diagonal Angamos",
+    "Av. Pachacútec",
+    "Av. Los Incas",
+    "Calle Santa Mónica"
+  ],
+
+  "landmarks": [
+    "UNSAAC",
+    "Real Plaza Cusco",
+    "Paseo de las Flores",
+    "Plaza Túpac Amaru",
+    "Estadio Garcilaso",
+    "Coliseo Cerrado de Wanchaq",
+    "Mercado de Wanchaq"
+  ],
+
+  "challenges": "El desafío principal en Wanchaq es el <strong>tráfico vehicular</strong>. Av. La Cultura y Av. Tullumayo se congestionan en horarios punta, así que coordinamos las cargas y descargas en horarios valle (9:30-12:00 y 14:30-17:00) siempre que el cliente lo permita. Algunas urbanizaciones tienen portón con control de acceso — avísanos con anticipación para coordinar ingreso con la portería o administración. En zona UNSAAC las pensiones suelen estar en segundos y terceros pisos sin ascensor, así que para mudanzas grandes llevamos personal extra para cargar escaleras. <strong>Tip clave:</strong> si tu pensión está cerca de la universidad y es época de exámenes o matrículas, hay saturación de camiones de mudanza — agenda con al menos 2-3 días de anticipación.",
+
+  "services": [
+    {
+      "title": "Mudanzas para estudiantes UNSAAC",
+      "description": "Servicio específico para cambio de pensión con unidades pequeñas y precios económicos.",
+      "href": "/mudanzas-estudiantes-cusco/"
+    },
+    {
+      "title": "Mudanzas residenciales familiares",
+      "description": "Departamentos y casas en urbanizaciones Santa Mónica, Los Pinos, Pachacútec.",
+      "href": "/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/"
+    },
+    {
+      "title": "Mudanzas de oficina",
+      "description": "Oficinas en zona comercial (Av. La Cultura, Av. Tullumayo, Real Plaza).",
+      "href": "/mudanzas-de-o/"
+    },
+    {
+      "title": "Flete y carga",
+      "description": "Entregas de electrodomésticos desde Real Plaza o traslado de muebles Marketplace.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Armado y desarmado",
+      "description": "Muebles de IKEA, Sodimac o Promart recién comprados en los centros comerciales cercanos.",
+      "href": "/armado-y-desarmado-de-muebles-cusco/"
+    },
+    {
+      "title": "Almacenaje temporal",
+      "description": "Ideal si regresas a provincia durante vacaciones académicas.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales dentro de Wanchaq. Para mudanzas a/desde otros distritos, se ajusta por distancia.",
+    "rows": [
+      { "label": "Cuarto / pensión UNSAAC", "price": "S/ 80 – S/ 200", "notes": "Unidad 1 t" },
+      { "label": "Departamento 2 ambientes", "price": "S/ 300 – S/ 500", "notes": "Unidad 2 t" },
+      {
+        "label": "Casa o departamento 3+ ambientes",
+        "price": "S/ 500 – S/ 900",
+        "notes": "Unidad 2-4 t"
+      },
+      {
+        "label": "Oficina pequeña (zona comercial)",
+        "price": "S/ 800 – S/ 1500",
+        "notes": "Fin de semana recomendado"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Cuánto cuesta mudar un cuarto cerca de la UNSAAC?",
+      "a": "Entre S/ 80 y S/ 200 según volumen. Un cuarto de pensión con pocas cajas y muebles básicos (cama, escritorio, ropero pequeño) suele ir entre S/ 100 y S/ 150. Incluye camión, chofer y 1 ayudante."
+    },
+    {
+      "q": "¿Tienen disponibilidad en época de exámenes o fin de semestre?",
+      "a": "Sí pero hay saturación. En las dos semanas antes del inicio de semestre y las dos después del fin, recomendamos coordinar con 3-4 días de anticipación. Si es una mudanza simple y tenemos hueco, podemos llegar el mismo día."
+    },
+    {
+      "q": "¿Pueden acceder a las urbanizaciones cerradas?",
+      "a": "Sí, solo necesitamos que avises a la portería o administración el día acordado. Llevamos identificación del equipo y placa del vehículo. En urbanizaciones grandes (Santa Mónica, Los Pinos) tenemos experiencia y sabemos el protocolo."
+    },
+    {
+      "q": "¿Qué unidad me recomiendan para Wanchaq?",
+      "a": "Para cuarto de pensión, unidad de 1 tonelada. Para departamento de 2 ambientes, unidad de 2 toneladas. Para casas familiares, 4 toneladas. Las calles de Wanchaq permiten acceso con todas las unidades salvo callejuelas internas de urbanizaciones antiguas."
+    }
+  ],
+
+  "nearbyDistricts": ["cusco-centro", "san-sebastian", "santiago"],
+
+  "ctaMessage": "Hola, necesito mudanza en Wanchaq. Origen: [dirección]. Destino: [dirección]. Tipo de mudanza: [cuarto UNSAAC / departamento / oficina].",
+  "ctaTitle": "¿Mudanza en Wanchaq?",
+  "ctaSubtitle": "Conocemos el tráfico, las urbanizaciones y las pensiones cerca de la UNSAAC. Te cotizamos en minutos."
+}

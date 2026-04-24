@@ -1,0 +1,121 @@
+{
+  "slug": "poroy",
+  "name": "Poroy",
+  "province": "Cusco",
+  "region": "Cusco",
+  "metaTitle": "Mudanzas en Poroy, Cusco | Expresos Ñan",
+  "metaDescription": "Mudanzas en Poroy, Cusco: zona residencial al oeste, cerca del paso al Valle Sagrado. Casas de campo, quintas y acceso al tren Machupicchu. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png",
+
+  "coordinates": { "lat": -13.4842, "lng": -72.0411 },
+
+  "heroEyebrow": "Poroy",
+  "heroTitle": "Mudanzas en Poroy, Cusco",
+  "heroSubtitle": "Distrito al oeste de Cusco, con quintas residenciales, estación de tren a Machupicchu y acceso al corredor del Valle Sagrado. Mudanzas familiares de alto estándar.",
+  "heroImage": "/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png",
+  "heroImageAlt": "Mudanza residencial en Poroy, Cusco",
+
+  "description": [
+    "<strong>Poroy</strong> es un distrito pequeño pero de <strong>alta demanda residencial</strong>. Ubicado al oeste de Cusco, en el altiplano que se eleva hacia el Valle Sagrado, concentra quintas, casas de campo y residencias de familias cusqueñas de clase media y media-alta que buscan tranquilidad y naturaleza sin alejarse demasiado del centro laboral.",
+    "También tiene una <strong>relevancia turística importante</strong>: la Estación de Poroy es uno de los puntos de embarque del tren a Machupicchu operado por PerúRail. Esto genera flujo turístico estacional y ha impulsado la construcción de hospedajes, restaurantes y servicios en la zona cercana a la estación.",
+    "Las mudanzas en Poroy suelen ser de <strong>viviendas completas</strong> — casas familiares con jardines, piscinas y mucho mobiliario. Raramente son cuartos pequeños o mini-departamentos. Esto determina la unidad: casi siempre vamos con la de 4 toneladas o hacemos dos viajes con la de 2 toneladas. El embalaje profesional es frecuente aquí porque las familias suelen tener vajilla fina, obras de arte y electrónicos de alta gama.",
+    "Atendemos dos rutas principales: <strong>Cusco Centro/Wanchaq ↔ Poroy</strong> (familias que se mudan a casa de campo en el altiplano) y <strong>Poroy ↔ Valle Sagrado</strong> (cuando hay traslado a Chinchero, Urubamba u Ollantaytambo). La Carretera Cusco-Chinchero-Urubamba pasa por Poroy, lo que convierte el distrito en una base logística natural para quienes se mudan al Valle."
+  ],
+
+  "mainStreets": [
+    "Carretera Cusco-Chinchero-Urubamba",
+    "Av. Principal de Poroy",
+    "Calle Estación de Poroy",
+    "Calle La Florida"
+  ],
+
+  "landmarks": [
+    "Estación de Tren Poroy (PerúRail)",
+    "Plaza de Poroy",
+    "Iglesia de Poroy",
+    "Mirador del valle del Huatanay",
+    "Quintas residenciales del altiplano"
+  ],
+
+  "challenges": "Poroy tiene <strong>altitud mayor que Cusco</strong> (alrededor de 3700 msnm) y un microclima más frío. Esto no afecta al camión pero sí al equipo, especialmente en las mañanas de invierno (mayo-agosto). Las calles principales son anchas y asfaltadas, pero algunas quintas tienen <strong>accesos privados con portón</strong> y caminos internos rurales. Para viviendas con jardín extenso y pórtico alejado de la calle, el traslado de la carga desde el camión hasta la puerta puede tomar tiempo — lo contemplamos en la cotización. La zona cerca de la estación de tren se anima en horarios de salida/llegada de trenes turísticos (5:00-8:00 y 16:00-19:00), evitamos cargar en esos horarios. <strong>Tip clave:</strong> si tu casa en Poroy tiene pozo, parrilla o piscina en el jardín, avísanos si hay que mover mobiliario de exterior — requiere embalaje especial para que no se dañe con polvo del traslado.",
+
+  "services": [
+    {
+      "title": "Mudanzas residenciales premium",
+      "description": "Casas familiares con jardín, vajilla fina, obras de arte y electrónicos delicados.",
+      "href": "/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/"
+    },
+    {
+      "title": "Embalaje profesional",
+      "description": "Crítico para piezas delicadas y de valor. Materiales específicos para arte y vajilla.",
+      "href": "/servicio-de-embalaje-cusco/"
+    },
+    {
+      "title": "Mudanzas al Valle Sagrado",
+      "description": "Poroy como punto de partida hacia Chinchero, Urubamba, Ollantaytambo.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Flete y carga",
+      "description": "Traslado de mobiliario exterior, artesanía y piezas grandes.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Armado y desarmado",
+      "description": "Muebles de madera de quintas tradicionales — los desarmamos con cuidado.",
+      "href": "/armado-y-desarmado-de-muebles-cusco/"
+    },
+    {
+      "title": "Almacenaje temporal",
+      "description": "Ideal si remodelas la casa de campo y necesitas guardar mobiliario meses.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales entre Poroy y Cusco metropolitano. Casas de campo suelen requerir embalaje profesional (servicio adicional).",
+    "rows": [
+      {
+        "label": "Departamento pequeño en zona cercana al centro de Poroy",
+        "price": "S/ 250 – S/ 450",
+        "notes": "Unidad 1-2 t"
+      },
+      { "label": "Casa familiar media", "price": "S/ 600 – S/ 1100", "notes": "Unidad 2-4 t" },
+      {
+        "label": "Casa de campo / quinta completa",
+        "price": "S/ 1000 – S/ 2000",
+        "notes": "Unidad 4 t, con embalaje"
+      },
+      {
+        "label": "Mudanza Poroy ↔ Valle Sagrado (Urubamba, Chinchero)",
+        "price": "Cotización integrada",
+        "notes": "Según distancia exacta"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Acceden a las quintas con portón privado?",
+      "a": "Sí, solo necesitamos que el propietario o encargado nos abra el día pactado. Llevamos identificación del equipo y el chofer comunica antes de llegar. Si hay camino interno largo, llevamos carritos plegables para trasladar la carga del camión a la casa."
+    },
+    {
+      "q": "¿Hacen mudanzas con embalaje especial para arte y vajilla fina?",
+      "a": "Sí. Para obras de arte, cuadros al óleo, cerámica, cristalería y porcelana usamos papel kraft, burbuja antistática, cajas doble fondo y malla de madera para piezas grandes. Se cotiza como servicio adicional."
+    },
+    {
+      "q": "¿Tiene sentido contratar mudanza si voy de Poroy a Urubamba?",
+      "a": "Sí, mucho sentido. Desde Poroy ya estás en la ruta hacia el Valle Sagrado, así que ahorras el tramo desde Cusco Centro. Cotizamos un viaje directo y sale más económico que una mudanza desde Cusco."
+    },
+    {
+      "q": "¿Cómo afecta la altitud al equipo de mudanza?",
+      "a": "Poroy está a ~3700 msnm. Nuestro equipo está acostumbrado a trabajar a esa altura. Solo ajustamos el ritmo en días muy fríos de invierno para proteger la salud del personal. No hay recargo por altitud."
+    }
+  ],
+
+  "nearbyDistricts": ["cusco-centro", "santiago", "wanchaq"],
+
+  "ctaMessage": "Hola, necesito mudanza en Poroy. Origen: [dirección]. Destino: [dirección]. Tipo de vivienda: [quinta / departamento / casa]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza en Poroy o a una quinta?",
+  "ctaSubtitle": "Conocemos la zona, las quintas y el acceso al Valle Sagrado. Cotizamos con embalaje incluido si lo necesitas."
+}

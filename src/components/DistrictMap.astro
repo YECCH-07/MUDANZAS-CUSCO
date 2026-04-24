@@ -1,0 +1,85 @@
+---
+/*
+ * Mapa de un distrito usando Leaflet + OpenStreetMap.
+ * Cero API keys, cero costo. Se carga solo en páginas que importan este
+ * componente (Vite hace code splitting automático).
+ *
+ * La CSS de Leaflet se importa localmente; el marker icon default de Leaflet
+ * suele romperse en bundles — lo parcheamos con un marker simple en SVG.
+ */
+import 'leaflet/dist/leaflet.css';
+
+interface Props {
+  lat: number;
+  lng: number;
+  name: string;
+  zoom?: number;
+  class?: string;
+}
+
+const { lat, lng, name, zoom = 14, class: className = '' } = Astro.props;
+---
+
+<div
+  class:list={['overflow-hidden rounded-2xl border border-gray-200', className]}
+  data-lat={lat}
+  data-lng={lng}
+  data-name={name}
+  data-zoom={zoom}
+>
+  <div id="district-map" class="h-80 w-full md:h-96" role="img" aria-label={`Mapa de ${name}`}>
+  </div>
+</div>
+
+<script>
+  import L from 'leaflet';
+
+  const container = document.querySelector<HTMLElement>('[data-lat]');
+  const mapEl = document.getElementById('district-map');
+  if (container && mapEl) {
+    const lat = parseFloat(container.dataset.lat ?? '0');
+    const lng = parseFloat(container.dataset.lng ?? '0');
+    const name = container.dataset.name ?? '';
+    const zoom = parseInt(container.dataset.zoom ?? '14', 10);
+
+    const map = L.map(mapEl, {
+      center: [lat, lng],
+      zoom,
+      scrollWheelZoom: false,
+    });
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>',
+      maxZoom: 18,
+    }).addTo(map);
+
+    // Marker circular con acento del sitio en vez del icono default (que se rompe en bundles).
+    const markerHtml = `
+      <div style="
+        width: 32px;
+        height: 32px;
+        background: #d72638;
+        border: 3px solid #ffffff;
+        border-radius: 50%;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.35);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      ">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="#ffffff">
+          <path d="M12 2C7.03 2 3 6.03 3 11c0 5.25 7.5 11 9 11s9-5.75 9-11c0-4.97-4.03-9-9-9zm0 12a3 3 0 110-6 3 3 0 010 6z"/>
+        </svg>
+      </div>
+    `;
+    const icon = L.divIcon({
+      html: markerHtml,
+      className: '',
+      iconSize: [32, 32],
+      iconAnchor: [16, 16],
+    });
+    L.marker([lat, lng], { icon })
+      .addTo(map)
+      .bindPopup(`<strong>Mudanzas en ${name}</strong><br>Cotiza por WhatsApp.`);
+  }
+</script>

@@ -1,0 +1,125 @@
+{
+  "slug": "santiago",
+  "name": "Santiago",
+  "province": "Cusco",
+  "region": "Cusco",
+  "metaTitle": "Mudanzas en Santiago, Cusco | Expresos Ñan",
+  "metaDescription": "Mudanzas en Santiago, Cusco: zona popular, Mercado San Pedro, Almudena. Calles mixtas residenciales y comerciales. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png",
+
+  "coordinates": { "lat": -13.5217, "lng": -71.9847 },
+
+  "heroEyebrow": "Santiago",
+  "heroTitle": "Mudanzas en Santiago, Cusco",
+  "heroSubtitle": "Distrito popular con mezcla residencial y comercial. Cercano al Mercado San Pedro, Almudena y zona de Belén. Atendemos familias, comerciantes y pequeños negocios.",
+  "heroImage": "/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png",
+  "heroImageAlt": "Mudanza en Santiago, Cusco",
+
+  "description": [
+    "<strong>Santiago</strong> es uno de los distritos con más historia cusqueña viva. Su nombre viene del apóstol patrón y conserva templos coloniales como el de Santiago Apóstol y el de Almudena. Hoy es un distrito <strong>popular y comercial</strong>, con fuerte presencia de comerciantes, artesanos y familias que han vivido en la zona durante generaciones.",
+    "La gran particularidad logística de Santiago es la <strong>proximidad al Mercado Central de San Pedro</strong> — uno de los mercados más importantes del sur del Perú. Muchos comerciantes tienen sus puestos en el mercado y sus viviendas en las calles aledañas. Por eso atendemos muchas mudanzas que combinan traslado de pertenencias residenciales con mercadería comercial.",
+    "El distrito tiene <strong>geografía accidentada</strong>: calles con pendiente pronunciada, sobre todo en la zona alta de Almudena y Belén. Esto requiere destreza en maniobras y a veces uso de la unidad más pequeña para acceder. También hay zonas más planas cerca del mercado y de la Plaza de Santiago donde las unidades de 2 y 4 toneladas circulan sin problema.",
+    "Frecuentemente atendemos mudanzas <strong>Santiago ↔ Cusco Centro</strong> y <strong>Santiago ↔ Wanchaq</strong>, porque muchos residentes de Santiago trabajan en el centro turístico o en zona comercial de Wanchaq. También recibimos traslados desde Santiago hacia los distritos en expansión (San Sebastián, San Jerónimo) cuando las familias buscan vivienda con más espacio."
+  ],
+
+  "mainStreets": [
+    "Av. Ejército",
+    "Av. Antonio Lorena",
+    "Calle Almudena",
+    "Calle Belén",
+    "Calle Apurímac",
+    "Pasaje Santa Clara",
+    "Av. Centenario"
+  ],
+
+  "landmarks": [
+    "Mercado Central de San Pedro",
+    "Iglesia de Santiago Apóstol",
+    "Templo de Almudena",
+    "Estación de trenes San Pedro",
+    "Plaza de Santiago",
+    "Hospital Antonio Lorena"
+  ],
+
+  "challenges": "Santiago tiene dos desafíos principales. <strong>Primero, la pendiente</strong>: las calles en zona de Almudena y Belén tienen subidas pronunciadas que limitan el uso de la unidad de 4 toneladas. Preferimos unidades de 1 o 2 t en estas zonas. <strong>Segundo, el tráfico comercial</strong> en las calles cercanas al Mercado San Pedro — especialmente en las mañanas (5:00-10:00) cuando llega la mercadería al mercado. Evitamos ese horario para cargar/descargar y preferimos jornada de tarde. Las calles Almudena y Belén tienen tramos estrechos donde el camión necesita maniobras lentas. <strong>Tip clave:</strong> si tu mudanza incluye pertenencias de puesto del mercado, avísanos — coordinamos con horario de cierre del mercado para tener acceso más tranquilo a las zonas de carga.",
+
+  "services": [
+    {
+      "title": "Mudanzas residenciales",
+      "description": "Familias tradicionales y nuevas que se mudan dentro o fuera de Santiago.",
+      "href": "/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/"
+    },
+    {
+      "title": "Flete comercial",
+      "description": "Traslado de mercadería desde/hacia el Mercado San Pedro. Servicio recurrente con descuento.",
+      "href": "/flete-comercial-cusco/"
+    },
+    {
+      "title": "Flete y carga puntual",
+      "description": "Entregas de muebles o electrodomésticos a viviendas de la zona.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Embalaje profesional",
+      "description": "Para mudanzas con vajilla, cerámica o artesanía (comerciantes del mercado suelen tener mucho).",
+      "href": "/servicio-de-embalaje-cusco/"
+    },
+    {
+      "title": "Almacenaje temporal",
+      "description": "Si remodelan la vivienda o el puesto, guardamos pertenencias o mercadería por días/meses.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    },
+    {
+      "title": "Armado y desarmado",
+      "description": "Roperos, camas, mesones de trabajo para comerciantes.",
+      "href": "/armado-y-desarmado-de-muebles-cusco/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales dentro de Santiago o con distritos cercanos (Cusco Centro, Wanchaq).",
+    "rows": [
+      {
+        "label": "Cuarto / mini-departamento",
+        "price": "S/ 120 – S/ 250",
+        "notes": "Unidad 1 t por pendientes"
+      },
+      { "label": "Departamento 2 ambientes", "price": "S/ 300 – S/ 500", "notes": "Unidad 1-2 t" },
+      {
+        "label": "Casa completa en zona plana",
+        "price": "S/ 600 – S/ 1000",
+        "notes": "Unidad 2-4 t"
+      },
+      {
+        "label": "Flete comercial desde Mercado San Pedro",
+        "price": "Desde S/ 100",
+        "notes": "Cotiza por ruta y volumen"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Acceden a las calles con pendiente en Almudena y Belén?",
+      "a": "Sí, con unidad de 1 o 2 toneladas. La unidad de 4 t no la recomendamos para pendientes pronunciadas por seguridad. Si tu mudanza es grande, hacemos 2 viajes con la unidad de 2 t."
+    },
+    {
+      "q": "¿Hacen flete comercial desde o hacia el Mercado San Pedro?",
+      "a": "Sí, y tenemos experiencia. Coordinamos preferentemente después del cierre del mercado (18:00 en adelante) para tener acceso más tranquilo. Para comerciantes con movimiento frecuente, revisamos nuestro plan de flete comercial con descuento por frecuencia."
+    },
+    {
+      "q": "¿Atienden la zona cerca de la estación de trenes San Pedro?",
+      "a": "Sí. La zona de la estación y las calles aledañas (Apurímac, Santa Clara) tienen acceso aceptable para nuestras unidades. Coordinamos evitar los horarios de salida de trenes a Machupicchu (temprano en la mañana) si la mudanza requiere carga prolongada."
+    },
+    {
+      "q": "¿Cuánto demora una mudanza desde Santiago al Centro Histórico?",
+      "a": "El traslado es de 5-15 minutos según tráfico. La mudanza completa para un departamento de 2 ambientes se resuelve en 4-6 horas, sumando carga, transporte y descarga. Si el destino es calle peatonal en el centro, puede tomar 2-3 horas más por carga en tramos."
+    }
+  ],
+
+  "nearbyDistricts": ["cusco-centro", "wanchaq", "san-sebastian"],
+
+  "ctaMessage": "Hola, necesito mudanza en Santiago. Origen: [dirección]. Destino: [dirección]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza en Santiago?",
+  "ctaSubtitle": "Conocemos las pendientes, el mercado y las calles estrechas. Te cotizamos con el precio exacto."
+}

@@ -1,0 +1,122 @@
+{
+  "slug": "san-sebastian",
+  "name": "San Sebastián",
+  "province": "Cusco",
+  "region": "Cusco",
+  "metaTitle": "Mudanzas en San Sebastián, Cusco | Expresos Ñan",
+  "metaDescription": "Mudanzas en San Sebastián, Cusco: zona residencial moderna en crecimiento. Urbanizaciones nuevas, Av. de la Cultura, Parque Industrial. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg",
+
+  "coordinates": { "lat": -13.5285, "lng": -71.9389 },
+
+  "heroEyebrow": "San Sebastián",
+  "heroTitle": "Mudanzas en San Sebastián, Cusco",
+  "heroSubtitle": "El distrito residencial en mayor expansión de Cusco metropolitano. Urbanizaciones modernas, acceso amplio y alta demanda de mudanzas familiares.",
+  "heroImage": "/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg",
+  "heroImageAlt": "Mudanza residencial en San Sebastián, Cusco",
+
+  "description": [
+    "<strong>San Sebastián</strong> es el distrito que más ha crecido en Cusco en la última década. Su extensión territorial, la construcción constante de nuevas urbanizaciones y la proximidad al centro y al aeropuerto lo han convertido en el destino preferido de familias cusqueñas que buscan <strong>espacio, tranquilidad y acceso moderno</strong>.",
+    "Atendemos mudanzas aquí prácticamente a diario. La mayoría son <strong>mudanzas desde Wanchaq o Cusco Centro hacia San Sebastián</strong> — familias que crecen, compran su primer departamento o casa y migran a urbanizaciones como Larapa, Tankarpata, Huancaro, Villa San Blas o las de la zona de Ttio. También recibimos mudanzas desde provincias hacia San Sebastián, cuando profesionales se trasladan a Cusco por trabajo.",
+    "La <strong>infraestructura vial</strong> de San Sebastián es la más moderna del área metropolitana. Av. de la Cultura (continuación desde Wanchaq), Av. Tomasa Tito Condemayta, Av. 28 de Julio y las vías internas de las urbanizaciones permiten acceso sin restricciones para nuestras unidades de 1, 2 y 4 toneladas. Esto significa que las mudanzas aquí suelen resolverse más rápido y con menos complicaciones que en el centro histórico.",
+    "En San Sebastián también tenemos el <strong>Parque Industrial</strong>, lo que genera demanda de mudanzas empresariales: oficinas de empresas mineras, constructoras, consultoras de ingeniería y startups tecnológicas. Para esos casos aplicamos nuestro servicio de mudanzas de oficina con coordinación en fines de semana y factura electrónica con RUC."
+  ],
+
+  "mainStreets": [
+    "Av. de la Cultura",
+    "Av. Tomasa Tito Condemayta",
+    "Av. 28 de Julio",
+    "Av. Los Libertadores",
+    "Calle Cusipata",
+    "Urbanización Larapa",
+    "Urbanización Huancaro",
+    "Urbanización Ttio"
+  ],
+
+  "landmarks": [
+    "Parque Industrial",
+    "Iglesia de San Sebastián (templo colonial)",
+    "Plaza de San Sebastián",
+    "Hospital Regional del Cusco",
+    "Mercado de San Sebastián",
+    "Urbanización Larapa (zona residencial alta)"
+  ],
+
+  "challenges": "San Sebastián es un distrito <strong>amable para las mudanzas</strong>: calles anchas, sin restricciones de acceso y con estacionamiento disponible en la mayoría de urbanizaciones. El desafío principal es que algunas urbanizaciones tienen <strong>portón con control</strong> — avísanos con anticipación para coordinar el ingreso con la administración. Otra consideración: las urbanizaciones más alejadas (zona alta de Larapa, Tankarpata) están a unos minutos más del centro, lo que agrega tiempo de traslado pero no complica la mudanza. En horarios punta, la Av. de la Cultura entre Wanchaq y San Sebastián se congestiona — preferimos coordinar en horarios valle cuando es posible.",
+
+  "services": [
+    {
+      "title": "Mudanzas residenciales familiares",
+      "description": "El servicio más solicitado en San Sebastián: familias que se mudan a urbanizaciones modernas.",
+      "href": "/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/"
+    },
+    {
+      "title": "Mudanzas de oficina",
+      "description": "Empresas en Parque Industrial y zona comercial de la Av. de la Cultura.",
+      "href": "/mudanzas-de-o/"
+    },
+    {
+      "title": "Flete y carga",
+      "description": "Traslado de electrodomésticos y muebles desde centros comerciales hacia urbanizaciones.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Armado de muebles",
+      "description": "Muebles nuevos comprados para la casa nueva. Llegamos con herramientas completas.",
+      "href": "/armado-y-desarmado-de-muebles-cusco/"
+    },
+    {
+      "title": "Embalaje profesional",
+      "description": "Para mudanzas familiares completas que incluyen vajilla, electrónicos y obras de arte.",
+      "href": "/servicio-de-embalaje-cusco/"
+    },
+    {
+      "title": "Almacenaje temporal",
+      "description": "Si la casa nueva está en obra o remodelación, guardamos tu mobiliario el tiempo necesario.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales dentro de San Sebastián o desde/hacia distritos cercanos (Wanchaq, Cusco Centro).",
+    "rows": [
+      { "label": "Departamento 1 ambiente", "price": "S/ 200 – S/ 400", "notes": "Unidad 1-2 t" },
+      { "label": "Departamento 2-3 ambientes", "price": "S/ 400 – S/ 700", "notes": "Unidad 2 t" },
+      {
+        "label": "Casa familiar completa",
+        "price": "S/ 700 – S/ 1300",
+        "notes": "Unidad 4 t o 2 viajes"
+      },
+      {
+        "label": "Oficina en Parque Industrial",
+        "price": "Cotización formal",
+        "notes": "Según número de estaciones"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Llegan a urbanizaciones como Larapa o Tankarpata?",
+      "a": "Sí, atendemos todas las urbanizaciones de San Sebastián sin restricciones. Para las más alejadas (Larapa alta, Tankarpata) agregamos unos minutos al cálculo de tiempo pero no hay recargo adicional."
+    },
+    {
+      "q": "¿Cuánto cuesta una mudanza Wanchaq ↔ San Sebastián?",
+      "a": "Es una de las rutas internas más frecuentes. Para un departamento de 2 ambientes la tarifa ronda S/ 400-600. Para una casa completa entre S/ 800 y S/ 1300 según volumen. La cotización exacta la definimos por WhatsApp en minutos."
+    },
+    {
+      "q": "¿Atienden empresas del Parque Industrial?",
+      "a": "Sí, con nuestro servicio de mudanzas de oficina. Coordinamos fin de semana, emitimos factura electrónica con RUC y firmamos NDA si hay documentación sensible."
+    },
+    {
+      "q": "¿Necesito estar presente en la casa nueva al momento de la entrega?",
+      "a": "Sí, idealmente. Alguien de tu confianza debe indicar dónde va cada caja y mueble. Si no puedes, envíanos un plano de la nueva casa con las ubicaciones y nos encargamos."
+    }
+  ],
+
+  "nearbyDistricts": ["wanchaq", "san-jeronimo", "santiago"],
+
+  "ctaMessage": "Hola, necesito mudanza en San Sebastián. Origen: [dirección]. Destino: [dirección]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza en San Sebastián?",
+  "ctaSubtitle": "Conocemos cada urbanización y cada acceso. Te cotizamos en minutos por WhatsApp."
+}

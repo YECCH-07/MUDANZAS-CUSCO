@@ -1,0 +1,111 @@
+{
+  "slug": "saylla",
+  "name": "Saylla",
+  "province": "Cusco",
+  "region": "Cusco",
+  "metaTitle": "Mudanzas en Saylla, Cusco | Expresos Ñan",
+  "metaDescription": "Mudanzas en Saylla, Cusco: distrito sur, entrada al corredor Urcos. Zona rural y periurbana, famosa por los chicharrones. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg",
+
+  "coordinates": { "lat": -13.5764, "lng": -71.8311 },
+
+  "heroEyebrow": "Saylla",
+  "heroTitle": "Mudanzas en Saylla, Cusco",
+  "heroSubtitle": "Distrito sur-este de Cusco, entrada al corredor hacia Oropesa y Urcos. Zona rural y periurbana con demanda creciente de mudanzas familiares.",
+  "heroImage": "/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg",
+  "heroImageAlt": "Mudanza en Saylla, Cusco",
+
+  "description": [
+    "<strong>Saylla</strong> es un distrito pequeño del área metropolitana de Cusco, ubicado al sur-este, en la ruta hacia Urcos. Aunque su población es menor que otros distritos urbanos, tiene <strong>identidad propia</strong> y es conocido por los <em>chicharrones</em> — sus restaurantes atraen cada fin de semana a familias cusqueñas que vienen a comer.",
+    "En los últimos años, Saylla ha recibido <strong>inversión residencial</strong>: urbanizaciones nuevas, viviendas unifamiliares y algunos emprendimientos agroindustriales. Esto ha elevado la demanda de mudanzas desde el centro de Cusco hacia Saylla, sobre todo de familias que buscan <strong>espacio y tranquilidad rural</strong> sin alejarse demasiado del centro laboral.",
+    "La logística aquí está definida por dos cosas: la <strong>Carretera Cusco-Urcos</strong> como arteria principal (bien asfaltada, sin problemas de acceso para nuestras unidades) y las <strong>calles rurales internas</strong> en zonas alejadas del eje principal. Durante la temporada de lluvias (enero-marzo) algunas calles menores se vuelven barrosas, así que coordinamos con unidad pequeña si tu destino es en zona no pavimentada.",
+    "Saylla también es paso obligado para mudanzas que van de Cusco hacia el <strong>corredor de Quispicanchi</strong> (Oropesa, Urcos, Andahuaylillas, Lucre) y hacia Paucartambo. Si tu mudanza es en realidad a una de estas localidades del Valle Sagrado profundo, pasamos por Saylla y coordinamos todo el traslado en un solo servicio."
+  ],
+
+  "mainStreets": ["Carretera Cusco-Urcos", "Av. Principal de Saylla", "Calle Plaza de Saylla"],
+
+  "landmarks": [
+    "Plaza de Saylla",
+    "Restaurantes de chicharrones tradicionales",
+    "Zona agrícola del valle del Huatanay",
+    "Iglesia de Saylla"
+  ],
+
+  "challenges": "Saylla es un distrito <strong>amable para mudanzas</strong> gracias a su arteria principal bien asfaltada. El desafío está en las <strong>zonas alejadas del eje central</strong>: caminos rurales, a veces con pendiente, que en época de lluvia se deterioran. Para esas zonas usamos la unidad de 1 tonelada preferentemente. Otro tema a coordinar es el horario: Saylla se llena los fines de semana por turismo gastronómico (chicharronerías), lo que genera tráfico atípico los sábados y domingos al mediodía. Preferimos programar mudanzas en días de semana o fines de semana temprano. <strong>Tip clave:</strong> como Saylla es puerta de entrada al corredor sur, si tu mudanza continúa hacia Oropesa o Urcos, cotizamos el servicio completo en un solo viaje y sale más económico.",
+
+  "services": [
+    {
+      "title": "Mudanzas residenciales",
+      "description": "Familias que se mudan a urbanizaciones nuevas de Saylla o vuelven al centro desde aquí.",
+      "href": "/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/"
+    },
+    {
+      "title": "Mudanzas al corredor sur",
+      "description": "Saylla como paso hacia Oropesa, Urcos, Andahuaylillas. Servicio integrado.",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Flete y carga",
+      "description": "Traslado de insumos agroindustriales o mercadería entre Saylla y centros comerciales.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Embalaje profesional",
+      "description": "Para mudanzas familiares que incluyen electrónicos, vajilla y objetos frágiles.",
+      "href": "/servicio-de-embalaje-cusco/"
+    },
+    {
+      "title": "Armado y desarmado",
+      "description": "Muebles para casa nueva o remodelada.",
+      "href": "/armado-y-desarmado-de-muebles-cusco/"
+    },
+    {
+      "title": "Almacenaje temporal",
+      "description": "Si construyes o remodelas en Saylla, guardamos tu mobiliario el tiempo necesario.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales entre Saylla y Cusco metropolitano (Wanchaq, Centro, San Jerónimo).",
+    "rows": [
+      {
+        "label": "Cuarto / departamento pequeño",
+        "price": "S/ 180 – S/ 350",
+        "notes": "Unidad 1 t"
+      },
+      { "label": "Departamento 2-3 ambientes", "price": "S/ 400 – S/ 700", "notes": "Unidad 2 t" },
+      { "label": "Casa familiar completa", "price": "S/ 700 – S/ 1200", "notes": "Unidad 4 t" },
+      {
+        "label": "Mudanza combinada Saylla + corredor sur",
+        "price": "Cotización integrada",
+        "notes": "Saylla + Oropesa/Urcos en un viaje"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Atienden caminos rurales y zonas no pavimentadas?",
+      "a": "Sí, con unidad de 1 tonelada. En temporada de lluvias preferimos coordinar con 1-2 días de flexibilidad por si hay que reprogramar por clima."
+    },
+    {
+      "q": "¿Cuánto toma una mudanza desde Wanchaq a Saylla?",
+      "a": "Traslado 25-35 minutos. Mudanza completa para un departamento de 2 ambientes: 5-7 horas."
+    },
+    {
+      "q": "¿Si mi destino es Oropesa o Urcos pero vivo en Saylla, conviene?",
+      "a": "Conviene muchísimo. Cotizamos el servicio integrado: carga en Saylla, traslado a Oropesa o Urcos, descarga allá. Un solo viaje y menor costo total que contratar servicios por separado."
+    },
+    {
+      "q": "¿Trabajan fines de semana en Saylla?",
+      "a": "Sí, pero preferimos evitar sábado y domingo de 11:00 a 16:00 por el tráfico turístico de las chicharronerías. Temprano en la mañana o después de las 17:00 no hay problema."
+    }
+  ],
+
+  "nearbyDistricts": ["san-jeronimo", "san-sebastian", "wanchaq"],
+
+  "ctaMessage": "Hola, necesito mudanza en Saylla. Origen: [dirección]. Destino: [dirección]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza en Saylla?",
+  "ctaSubtitle": "Conocemos cada calle y el acceso al corredor sur. Cotizamos con precio integrado si sigues hacia provincia."
+}

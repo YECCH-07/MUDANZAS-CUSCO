@@ -1,0 +1,118 @@
+{
+  "slug": "ccorca",
+  "name": "Ccorca",
+  "province": "Cusco",
+  "region": "Cusco",
+  "metaTitle": "Mudanzas en Ccorca, Cusco | Expresos Ñan",
+  "metaDescription": "Mudanzas en Ccorca, Cusco: distrito rural al suroeste del área metropolitana. Coordinación previa para caminos de acceso. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg",
+
+  "coordinates": { "lat": -13.5667, "lng": -72.15 },
+
+  "heroEyebrow": "Ccorca",
+  "heroTitle": "Mudanzas en Ccorca, Cusco",
+  "heroSubtitle": "Distrito rural al suroeste del área metropolitana, con comunidades campesinas tradicionales. Servicio con coordinación previa de acceso por caminos afirmados.",
+  "heroImage": "/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg",
+  "heroImageAlt": "Mudanza en Ccorca, Cusco",
+
+  "description": [
+    "<strong>Ccorca</strong> es el distrito más rural y menos poblado del área metropolitana de Cusco. Ubicado al suroeste, conserva <strong>comunidades campesinas tradicionales</strong>, agricultura de subsistencia y paisajes andinos. Atendemos mudanzas aquí con menor frecuencia que en otros distritos — pero cuando surgen, son casos que requieren <strong>planificación específica</strong> por el acceso.",
+    "Los casos más comunes: familias del distrito que se mudan a Cusco metropolitano en busca de trabajo o educación superior; profesionales que se trasladan temporalmente a Ccorca por proyectos sociales, ONGs o proyectos educativos; y, ocasionalmente, fletes de materiales de construcción o insumos agrícolas hacia las comunidades.",
+    "La geografía de Ccorca es <strong>montañosa</strong>, con caminos afirmados (no todos asfaltados) que conectan las comunidades con la ciudad. En época de lluvias (enero-marzo) estos caminos pueden complicarse por el barro, así que siempre consultamos el pronóstico antes de confirmar una fecha. Preferimos trabajar con la <strong>unidad de 1 tonelada o 2 toneladas</strong> — la de 4 t puede no pasar en ciertos caminos estrechos.",
+    "Si tu mudanza es hacia o desde Ccorca, <strong>avísanos con al menos 3-4 días de anticipación</strong>. Esto nos permite planificar la ruta, consultar con comuneros sobre el estado del camino y tener holgura por si hay que reprogramar por clima. Es el único de los distritos metropolitanos donde pedimos más tiempo de antelación."
+  ],
+
+  "mainStreets": [
+    "Carretera Cusco-Ccorca (afirmada)",
+    "Caminos rurales hacia comunidades",
+    "Plaza de Ccorca"
+  ],
+
+  "landmarks": [
+    "Plaza de Ccorca",
+    "Iglesia de Ccorca",
+    "Comunidades campesinas de la zona",
+    "Paisajes andinos del valle alto"
+  ],
+
+  "challenges": "Ccorca es el distrito metropolitano <strong>más desafiante</strong> para una empresa de mudanzas. Los caminos son en su mayoría <strong>afirmados, no asfaltados</strong>. En temporada de lluvias algunos tramos se cierran temporalmente o requieren vehículo con tracción alta (fuera de nuestro catálogo estándar). Las comunidades pueden estar a varios kilómetros de la carretera principal, con accesos internos difíciles. Por todo esto: (1) siempre preferimos unidades pequeñas (1 o 2 toneladas); (2) coordinamos fechas fuera de temporada lluviosa cuando es posible; (3) aclaramos en la cotización el estado del camino y posibles contingencias; (4) para mudanzas grandes a comunidades alejadas, podemos coordinar con transporte local de apoyo (camionetas 4x4). <strong>Tip clave:</strong> muchas comunidades no tienen nombre oficial de calle. Necesitamos referencias claras (al lado de la escuela, frente a la iglesia, antes del puente) y, idealmente, un punto GPS.",
+
+  "services": [
+    {
+      "title": "Mudanzas rurales y de comunidades",
+      "description": "Familias que se mudan entre Ccorca y el área metropolitana de Cusco.",
+      "href": "/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/"
+    },
+    {
+      "title": "Flete de materiales",
+      "description": "Materiales de construcción, insumos agrícolas o mobiliario básico hacia comunidades.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Almacenaje temporal en Cusco",
+      "description": "Si vas a trabajar temporalmente en Ccorca (proyecto ONG, docencia), guardamos pertenencias en Cusco.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    },
+    {
+      "title": "Embalaje robusto",
+      "description": "Importante para mudanzas por caminos afirmados donde la vibración es mayor.",
+      "href": "/servicio-de-embalaje-cusco/"
+    },
+    {
+      "title": "Armado y desarmado",
+      "description": "Si llevas muebles desarmados a comunidades, el armado lo hacemos al llegar.",
+      "href": "/armado-y-desarmado-de-muebles-cusco/"
+    },
+    {
+      "title": "Mudanzas a provincia cercana",
+      "description": "Si tu mudanza sigue hacia Paruro u otra provincia del sur, coordinamos ruta integrada.",
+      "href": "/mudanza-provincia/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales considerando el estado del camino y la distancia a la comunidad específica. Cotización exacta requiere detalles del destino.",
+    "rows": [
+      {
+        "label": "Mudanza pequeña a pueblo de Ccorca cercano al eje",
+        "price": "S/ 250 – S/ 450",
+        "notes": "Unidad 1 t"
+      },
+      {
+        "label": "Mudanza mediana con acceso por camino afirmado",
+        "price": "S/ 500 – S/ 900",
+        "notes": "Unidad 2 t, según distancia"
+      },
+      {
+        "label": "Flete de materiales a comunidad alejada",
+        "price": "Cotización específica",
+        "notes": "Depende de acceso y volumen"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Atienden comunidades rurales alejadas del eje principal?",
+      "a": "Sí, pero con coordinación previa. Necesitamos saber el estado del camino, si hay puentes o tramos difíciles, y si la comunidad tiene acceso para nuestra unidad de 1 o 2 toneladas. Si el acceso requiere vehículo 4x4, coordinamos con operadores locales."
+    },
+    {
+      "q": "¿Trabajan en temporada de lluvias?",
+      "a": "Sí pero con más cuidado. Consultamos el pronóstico y el estado del camino días antes. Si hay alto riesgo de que el camino se cierre, reprogramamos sin costo. Siempre preferimos trabajar en temporada seca (abril-noviembre) si el cliente tiene flexibilidad."
+    },
+    {
+      "q": "¿Cuánto cuesta una mudanza entre Ccorca y Cusco metropolitano?",
+      "a": "Depende del destino dentro de Ccorca. Si es el centro del distrito, entre S/ 250 y S/ 500. Si es a una comunidad alejada con camino difícil, entre S/ 500 y S/ 900 o más. Siempre cotizamos con precio cerrado antes de salir."
+    },
+    {
+      "q": "¿Puedo indicarles el punto con GPS en vez de dirección?",
+      "a": "Sí, y lo recomendamos. Muchas comunidades no tienen dirección formal. Comparte la ubicación por WhatsApp (coordenadas o punto en Google Maps) y así llegamos sin perdernos."
+    }
+  ],
+
+  "nearbyDistricts": ["santiago", "cusco-centro", "poroy"],
+
+  "ctaMessage": "Hola, necesito mudanza en Ccorca. Destino: [comunidad / punto GPS si es posible]. Origen: [dirección]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza en Ccorca o comunidad rural?",
+  "ctaSubtitle": "Coordinamos el acceso, consultamos el camino y te damos precio cerrado. Avísanos con 3-4 días de anticipación."
+}

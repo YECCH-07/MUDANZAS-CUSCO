@@ -1,0 +1,116 @@
+{
+  "slug": "san-jeronimo",
+  "name": "San Jerónimo",
+  "province": "Cusco",
+  "region": "Cusco",
+  "metaTitle": "Mudanzas en San Jerónimo, Cusco | Expresos Ñan",
+  "metaDescription": "Mudanzas en San Jerónimo, Cusco: zona residencial en expansión, cerca del aeropuerto. Atendemos urbanizaciones nuevas y rutas hacia el sur. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg",
+
+  "coordinates": { "lat": -13.5631, "lng": -71.8881 },
+
+  "heroEyebrow": "San Jerónimo",
+  "heroTitle": "Mudanzas en San Jerónimo, Cusco",
+  "heroSubtitle": "Zona residencial en expansión al sur-este de Cusco, cerca del aeropuerto y del corredor hacia Urcos. Mudanzas familiares, traslados a/desde provincias y fletes comerciales.",
+  "heroImage": "/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg",
+  "heroImageAlt": "Mudanza en San Jerónimo, Cusco",
+
+  "description": [
+    "<strong>San Jerónimo</strong> es el distrito que marca la transición entre el área urbana de Cusco y el corredor hacia el sur (Saylla, Oropesa, Urcos). Tiene una mezcla interesante: por un lado, urbanizaciones residenciales modernas con familias jóvenes; por otro, zonas agrícolas tradicionales; y en el medio, el <strong>Aeropuerto Internacional Alejandro Velasco Astete</strong> que genera mucho movimiento económico y logístico.",
+    "La cercanía al aeropuerto (unos 10 minutos) hace que atendamos con frecuencia a <strong>profesionales que se mudan temporalmente</strong> a Cusco por proyectos de consultoría, docentes visitantes de universidades y personal de empresas mineras con base en el centro. Para estos casos hacemos mudanzas express con llegada y partida coordinada con el vuelo.",
+    "También recibimos muchas mudanzas desde <strong>provincias</strong>: cuando una familia de Sicuani, Abancay o de la zona de Apurímac decide mudarse definitivamente a Cusco, San Jerónimo suele ser el destino por su combinación de precios más accesibles que Wanchaq y mejor infraestructura que distritos más alejados.",
+    "La <strong>Av. de la Cultura</strong> se extiende desde Wanchaq hasta San Jerónimo y es la arteria principal. Funciona bien para todas nuestras unidades — solo hay que prever horarios de tráfico punta al inicio y final de la jornada. Las urbanizaciones nuevas (Parque Industrial, zona residencial cercana a la UNSAAC Campus) tienen calles anchas y acceso sin restricciones."
+  ],
+
+  "mainStreets": [
+    "Av. de la Cultura",
+    "Av. Vilcabamba",
+    "Carretera Cusco-Urcos",
+    "Av. Ramón Castilla",
+    "Av. Collasuyo",
+    "Calle Cusipata"
+  ],
+
+  "landmarks": [
+    "Aeropuerto Internacional Alejandro Velasco Astete",
+    "Templo de San Jerónimo (histórico)",
+    "Plaza de San Jerónimo",
+    "Mercado de San Jerónimo",
+    "UNSAAC Campus San Jerónimo",
+    "Puente Pumaqchupan"
+  ],
+
+  "challenges": "San Jerónimo es un distrito con <strong>acceso vehicular amplio</strong> y sin restricciones para nuestras unidades. Los dos puntos a considerar son: (1) la <strong>distancia al centro</strong> — algunas mudanzas desde/hacia el Centro Histórico pueden implicar 30-40 min de traslado solo de ida por tráfico en horas punta; (2) algunas zonas aún tienen <strong>caminos rurales</strong> en las periferias — en época de lluvias (enero-marzo) estos caminos se vuelven barrosos, así que coordinamos con unidad pequeña si es necesario. Para mudanzas que involucren el Aeropuerto (personal que llega o sale por avión), podemos coordinar con precisión el horario de vuelo. <strong>Tip clave:</strong> si tu destino final está en provincia y sales desde San Jerónimo, conviene combinar la mudanza con transporte inter-provincial directo desde aquí para ahorrar tiempo.",
+
+  "services": [
+    {
+      "title": "Mudanzas residenciales",
+      "description": "Urbanizaciones residenciales modernas de San Jerónimo, Parque Industrial, zona UNSAAC Campus.",
+      "href": "/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/"
+    },
+    {
+      "title": "Mudanzas desde/hacia provincia",
+      "description": "Transición entre Cusco metropolitano y corredor sur (Sicuani, Abancay).",
+      "href": "/mudanza-provincia/"
+    },
+    {
+      "title": "Flete y carga",
+      "description": "Incluye retiro de equipaje extra-grande del aeropuerto o traslado de mercadería.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Mudanzas de oficina",
+      "description": "Empresas y consultorías con base en Cusco metropolitano sur.",
+      "href": "/mudanzas-de-o/"
+    },
+    {
+      "title": "Armado y desarmado",
+      "description": "Muebles nuevos para viviendas en urbanizaciones recién habitadas.",
+      "href": "/armado-y-desarmado-de-muebles-cusco/"
+    },
+    {
+      "title": "Almacenaje temporal",
+      "description": "Profesionales en misión corta en Cusco que necesitan guardar pertenencias al volver a su ciudad base.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales dentro de San Jerónimo o rutas cortas con Wanchaq/San Sebastián.",
+    "rows": [
+      { "label": "Departamento 1 ambiente", "price": "S/ 200 – S/ 400", "notes": "Unidad 1-2 t" },
+      { "label": "Departamento 2-3 ambientes", "price": "S/ 400 – S/ 700", "notes": "Unidad 2 t" },
+      { "label": "Casa familiar completa", "price": "S/ 700 – S/ 1200", "notes": "Unidad 4 t" },
+      {
+        "label": "Mudanza con llegada/salida por aeropuerto",
+        "price": "Cotización según horario",
+        "notes": "Coordinamos con hora del vuelo"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Pueden coordinar una mudanza con la llegada/salida de mi vuelo?",
+      "a": "Sí. Si llegas al aeropuerto de Cusco con mudanza en maletas grandes, recogemos en terminal y entregamos en tu nueva dirección. Si sales a otra ciudad y dejas pertenencias, podemos guardar en almacenaje o llevarlas a un destino de confianza."
+    },
+    {
+      "q": "¿Cuánto toma una mudanza entre Cusco Centro y San Jerónimo?",
+      "a": "El traslado en sí es de 20-30 minutos (según tráfico). La mudanza completa (carga, transporte, descarga, armado) para un departamento de 2 ambientes se resuelve en 5-7 horas."
+    },
+    {
+      "q": "¿Atienden las urbanizaciones nuevas de la zona del Parque Industrial?",
+      "a": "Sí, todas. Las calles de las urbanizaciones modernas en esa zona son anchas y permiten nuestras unidades de 2 y 4 toneladas sin problema."
+    },
+    {
+      "q": "¿Tienen experiencia con mudanzas desde provincias del sur a San Jerónimo?",
+      "a": "Sí, es una de las rutas más frecuentes. Familias que llegan de Abancay, Sicuani o Andahuaylas (Apurímac) suelen elegir San Jerónimo por su costo-calidad. Cotizamos la mudanza completa ida desde la provincia de origen."
+    }
+  ],
+
+  "nearbyDistricts": ["san-sebastian", "saylla", "wanchaq"],
+
+  "ctaMessage": "Hola, necesito mudanza en San Jerónimo. Origen: [dirección]. Destino: [dirección]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza en San Jerónimo?",
+  "ctaSubtitle": "Sea residencial, empresarial o con llegada por aeropuerto — tenemos el servicio."
+}

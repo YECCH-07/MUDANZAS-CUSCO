@@ -1,0 +1,293 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+import ServiceCard from '@components/ServiceCard.astro';
+import WhatsAppButton from '@components/WhatsAppButton.astro';
+import DistrictMap from '@components/DistrictMap.astro';
+import SchemaFAQ from '@components/schema/SchemaFAQ.astro';
+import { SITE } from '@lib/site';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  district: CollectionEntry<'districts'>['data'];
+  nearby: CollectionEntry<'districts'>[];
+}
+
+const { district, nearby } = Astro.props;
+const pageUrl = `${SITE.url}/mudanzas-${district.slug}/`;
+
+const movingCompanySchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MovingCompany',
+  name: `Mudanzas en ${district.name} — ${SITE.name}`,
+  description: district.metaDescription,
+  url: pageUrl,
+  provider: { '@id': `${SITE.url}/#localbusiness` },
+  areaServed: {
+    '@type': 'City',
+    name: `${district.name}, ${district.province}, ${district.region}, Perú`,
+    geo: {
+      '@type': 'GeoCoordinates',
+      latitude: district.coordinates.lat,
+      longitude: district.coordinates.lng,
+    },
+  },
+};
+---
+
+<BaseLayout
+  title={district.metaTitle}
+  description={district.metaDescription}
+  ogImage={district.ogImage}
+  whatsappMessage={district.ctaMessage}
+>
+  <Fragment slot="head">
+    <script type="application/ld+json" set:html={JSON.stringify(movingCompanySchema)} is:inline />
+    <SchemaFAQ faqs={district.faqs} />
+  </Fragment>
+
+  <Hero
+    eyebrow={district.heroEyebrow}
+    title={district.heroTitle}
+    subtitle={district.heroSubtitle}
+    image={district.heroImage}
+    imageAlt={district.heroImageAlt}
+    whatsappMessage={district.ctaMessage}
+    secondaryCta={{ label: 'Ver cobertura completa', href: '/cobertura/' }}
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs
+        items={[
+          { label: 'Inicio', href: '/' },
+          { label: 'Cobertura', href: '/cobertura/' },
+          { label: `Mudanzas ${district.name}` },
+        ]}
+      />
+    </Container>
+  </Section>
+
+  {/* Mapa + info rápida */}
+  <Section background="white" spacing="md">
+    <Container>
+      <div class="grid gap-6 lg:grid-cols-[1.4fr_1fr]">
+        <DistrictMap
+          lat={district.coordinates.lat}
+          lng={district.coordinates.lng}
+          name={district.name}
+        />
+        <aside class="rounded-2xl border border-gray-200 bg-gray-50 p-6">
+          <h2 class="font-heading mb-4 text-xl font-bold">Información rápida</h2>
+          <dl class="space-y-3 text-sm">
+            <div>
+              <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">Distrito</dt>
+              <dd class="mt-1 font-bold">{district.name}</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">Provincia</dt>
+              <dd class="mt-1">{district.province}, {district.region}</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">
+                Calles principales
+              </dt>
+              <dd class="mt-1">{district.mainStreets.join(', ')}</dd>
+            </div>
+            <div>
+              <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">
+                Puntos de referencia
+              </dt>
+              <dd class="mt-1">{district.landmarks.join(' · ')}</dd>
+            </div>
+          </dl>
+          <div class="mt-5">
+            <WhatsAppButton
+              variant="inline"
+              size="md"
+              class="w-full"
+              message={district.ctaMessage}
+              label={`Cotizar en ${district.name}`}
+            />
+          </div>
+        </aside>
+      </div>
+    </Container>
+  </Section>
+
+  {/* Descripción larga */}
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <h2 class="font-heading mb-4 text-2xl font-bold md:text-3xl">
+        Mudanzas en {district.name}: lo que tienes que saber
+      </h2>
+      <div class="prose-content space-y-4 text-base leading-relaxed text-gray-700 md:text-lg">
+        {district.description.map((para) => <p set:html={para} />)}
+      </div>
+    </Container>
+  </Section>
+
+  {/* Particularidades logísticas */}
+  <Section background="gray" spacing="md">
+    <Container size="narrow">
+      <h2 class="font-heading mb-4 text-2xl font-bold md:text-3xl">
+        Particularidades de trabajar en {district.name}
+      </h2>
+      <div
+        class="border-primary rounded-2xl border-l-4 bg-white p-6 text-base leading-relaxed text-gray-700"
+      >
+        <p set:html={district.challenges} />
+      </div>
+    </Container>
+  </Section>
+
+  {/* Servicios disponibles en el distrito */}
+  <Section background="white" spacing="md">
+    <Container>
+      <div class="mb-8 max-w-2xl">
+        <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">Servicios</p>
+        <h2 class="font-heading text-2xl font-bold md:text-3xl">
+          Servicios disponibles en {district.name}
+        </h2>
+      </div>
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {
+          district.services.map((s) => (
+            <article class="flex h-full flex-col rounded-2xl border border-gray-100 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+              <h3 class="font-heading mb-2 text-lg font-bold">
+                <a href={s.href} class="hover:text-primary">
+                  {s.title}
+                </a>
+              </h3>
+              <p class="mb-3 flex-1 text-sm text-gray-700">{s.description}</p>
+              <a
+                href={s.href}
+                class="text-primary hover:text-primary-dark mt-auto inline-flex items-center gap-1 text-sm font-bold"
+              >
+                Ver más
+                <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                  <path
+                    fill-rule="evenodd"
+                    d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </a>
+            </article>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {/* Tabla de precios */}
+  {
+    district.priceTable && (
+      <Section background="gray" spacing="md">
+        <Container size="narrow">
+          <h2 class="font-heading mb-2 text-2xl font-bold md:text-3xl">
+            Precios referenciales en {district.name}
+          </h2>
+          {district.priceTable.note && (
+            <p class="mb-6 text-sm text-gray-600">{district.priceTable.note}</p>
+          )}
+          <div class="overflow-x-auto rounded-2xl border border-gray-200 bg-white">
+            <table class="w-full text-left">
+              <thead class="bg-gray-50 text-sm font-bold">
+                <tr>
+                  <th class="px-4 py-3">Tipo de mudanza</th>
+                  <th class="px-4 py-3">Precio referencial</th>
+                  <th class="hidden px-4 py-3 md:table-cell">Observaciones</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                {district.priceTable.rows.map((row) => (
+                  <tr class="text-sm">
+                    <td class="px-4 py-3 font-bold">{row.label}</td>
+                    <td class="text-primary px-4 py-3 font-bold">{row.price}</td>
+                    <td class="hidden px-4 py-3 text-gray-600 md:table-cell">{row.notes}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  {/* FAQs */}
+  <Section background="white" spacing="lg">
+    <Container size="narrow">
+      <h2 class="font-heading mb-8 text-2xl font-bold md:text-3xl">
+        Preguntas frecuentes sobre {district.name}
+      </h2>
+      <div class="space-y-3">
+        {
+          district.faqs.map((faq) => (
+            <details class="group rounded-xl border border-gray-200 bg-white">
+              <summary class="hover:text-primary flex cursor-pointer list-none items-center justify-between p-5 font-bold [&::-webkit-details-marker]:hidden">
+                <span>{faq.q}</span>
+                <svg
+                  class="h-5 w-5 shrink-0 transition-transform group-open:rotate-180"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </summary>
+              <div class="border-t border-gray-100 px-5 py-4 text-sm leading-relaxed text-gray-700">
+                <p set:html={faq.a} />
+              </div>
+            </details>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  {/* Distritos cercanos */}
+  {
+    nearby.length > 0 && (
+      <Section background="gray" spacing="lg">
+        <Container>
+          <div class="mb-8">
+            <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+              Cobertura ampliada
+            </p>
+            <h2 class="font-heading text-2xl font-bold md:text-3xl">
+              Otros distritos que atendemos cerca de {district.name}
+            </h2>
+          </div>
+          <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-4">
+            {nearby.map((n) => (
+              <ServiceCard
+                title={n.data.name}
+                description={n.data.heroSubtitle}
+                href={`/mudanzas-${n.data.slug}/`}
+                image={n.data.heroImage}
+                imageAlt={`Mudanzas en ${n.data.name}`}
+                cta="Ver distrito"
+              />
+            ))}
+          </div>
+        </Container>
+      </Section>
+    )
+  }
+
+  <CTASection
+    title={district.ctaTitle}
+    whatsappMessage={district.ctaMessage}
+    {...district.ctaSubtitle !== undefined ? { subtitle: district.ctaSubtitle } : {}}
+  />
+</BaseLayout>

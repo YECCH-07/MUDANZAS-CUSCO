@@ -1,0 +1,134 @@
+{
+  "slug": "cusco-centro",
+  "name": "Cusco Centro Histórico",
+  "province": "Cusco",
+  "region": "Cusco",
+  "metaTitle": "Mudanzas en Cusco Centro Histórico | Expresos Ñan",
+  "metaDescription": "Mudanzas en el Centro Histórico de Cusco: zona UNESCO con calles peatonales y angostas. Unidades adaptadas, carga por tramos cuando hace falta. Cotiza al 925 671 052.",
+  "ogImage": "/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg",
+
+  "coordinates": { "lat": -13.5163, "lng": -71.9785 },
+
+  "heroEyebrow": "Cusco Centro",
+  "heroTitle": "Mudanzas en Cusco Centro Histórico",
+  "heroSubtitle": "Zona UNESCO con calles empedradas, peatonales y accesos restringidos. Trabajamos con unidades adaptadas y carga por tramos cuando la calle no permite camión.",
+  "heroImage": "/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg",
+  "heroImageAlt": "Mudanza en el Centro Histórico de Cusco",
+
+  "description": [
+    "El <strong>Centro Histórico de Cusco</strong> es el distrito más desafiante y a la vez más recompensante para una empresa de mudanzas. Declarado Patrimonio Cultural de la Humanidad por la UNESCO en 1983, conserva calles estrechas, empedradas y peatonalizadas que son un paisaje hermoso para el visitante pero un rompecabezas para un camión cargado de muebles.",
+    "En Expresos Ñan llevamos años atendiendo mudanzas en esta zona, por lo que <strong>conocemos cada calle y sus limitaciones</strong>. Sabemos que a San Blas solo se puede subir por ciertas vías, que en la cuadra 4 de Triunfo hay horarios de carga, que en Santa Catalina y Hatun Rumiyoc el camión no entra y tenemos que bajar la carga en tramos con carritos. Esa experiencia marca la diferencia entre una mudanza resuelta en el día y una que se complica hasta la noche.",
+    "Nuestro servicio aquí se apoya en las <strong>unidades de 1 y 2 toneladas</strong> — la de 4 t normalmente no pasa en las zonas más estrechas. Cuando el acceso es muy restringido, dejamos el camión en un punto cercano autorizado y movemos la carga en varios tramos con personal adicional. Esta modalidad lleva más tiempo pero evita daños a muebles y a las propias estructuras coloniales.",
+    "Atendemos con frecuencia a <strong>hoteles boutique, restaurantes, tiendas de artesanía y oficinas de turismo</strong> que renuevan mobiliario o cambian de local. También mudanzas residenciales en San Blas, zona de Plateros, Ruinas, Resbalosa y Suecia. Cada tipo de cliente tiene sus requerimientos: los hoteles suelen pedir mudanza nocturna para no interrumpir el servicio, las tiendas necesitan coordinar con sus horarios de cierre."
+  ],
+
+  "mainStreets": [
+    "Av. El Sol",
+    "Plaza de Armas",
+    "Triunfo",
+    "Hatun Rumiyoc",
+    "San Blas",
+    "Saphy",
+    "Marquez",
+    "Plateros",
+    "Nueva Alta",
+    "Tigre",
+    "Cuesta San Blas"
+  ],
+
+  "landmarks": [
+    "Plaza de Armas",
+    "Catedral del Cusco",
+    "Qorikancha",
+    "Barrio de San Blas",
+    "Mercado Central de San Pedro",
+    "Plaza San Francisco",
+    "Plaza Regocijo"
+  ],
+
+  "challenges": "Las calles peatonales (Loreto, Hatun Rumiyoc, parte de Plateros) no permiten acceso vehicular en ningún horario. Otras calles muy angostas (Suecia, Resbalosa, Tigre) solo admiten unidades de 1 tonelada con maniobras cuidadosas. En horarios punta turísticos (10:00-12:00 y 15:00-17:00) preferimos evitar la zona de Plaza de Armas y alrededores. Siempre coordinamos con anticipación para identificar el mejor punto de estacionamiento temporal y, si es necesario, pedir permiso de carga al municipio. Llevamos carritos plegables y mantas extra para los tramos que se deben caminar. <strong>Tip clave:</strong> si tu origen o destino es calle peatonal, avísanos en la cotización — a veces conviene cotizar un poco más alto por el tiempo adicional, pero evita sorpresas.",
+
+  "services": [
+    {
+      "title": "Mudanzas residenciales",
+      "description": "Departamentos y casas en San Blas, Ruinas, Resbalosa, Plateros y zona Plaza de Armas.",
+      "href": "/mudanzas-locales-en-cusco-expresos-nan-servicio-rapido-seguro-y-eficiente/"
+    },
+    {
+      "title": "Mudanzas de hoteles y restaurantes",
+      "description": "Renovación de mobiliario, cambio de local o cierre temporal. Servicio nocturno para no afectar operación.",
+      "href": "/mudanzas-de-o/"
+    },
+    {
+      "title": "Embalaje profesional",
+      "description": "Crítico en zona turística: muchas tiendas tienen piezas frágiles (cerámica, textiles, objetos coloniales).",
+      "href": "/servicio-de-embalaje-cusco/"
+    },
+    {
+      "title": "Almacenaje temporal",
+      "description": "Si cambias de local y el nuevo no está listo, guardamos tu inventario en depósito vigilado.",
+      "href": "/almacenaje-y-custodia-cusco/"
+    },
+    {
+      "title": "Flete y carga puntual",
+      "description": "Traslado de una pieza específica o mercadería entre tiendas y almacenes.",
+      "href": "/servicio-de-flete-cusco/"
+    },
+    {
+      "title": "Armado y desarmado",
+      "description": "Muebles de madera coloniales con uniones frágiles — los desarmamos con fotos paso a paso.",
+      "href": "/armado-y-desarmado-de-muebles-cusco/"
+    }
+  ],
+
+  "priceTable": {
+    "note": "Precios referenciales dentro del Centro Histórico. En zonas con acceso muy restringido puede aplicar recargo por tiempo adicional de carga en tramos.",
+    "rows": [
+      { "label": "Cuarto / mini-departamento", "price": "S/ 150 – S/ 300", "notes": "Unidad 1 t" },
+      {
+        "label": "Departamento 2 ambientes",
+        "price": "S/ 350 – S/ 600",
+        "notes": "Puede requerir carga en tramos"
+      },
+      {
+        "label": "Casa o local comercial mediano",
+        "price": "S/ 700 – S/ 1200",
+        "notes": "Con coordinación previa de acceso"
+      },
+      {
+        "label": "Mudanza de hotel boutique / restaurante",
+        "price": "Cotización a medida",
+        "notes": "Recomendado servicio nocturno"
+      }
+    ]
+  },
+
+  "faqs": [
+    {
+      "q": "¿Atienden calles peatonales como Hatun Rumiyoc o Loreto?",
+      "a": "Sí. En estas calles el camión no entra, pero llegamos hasta el punto accesible más cercano y trasladamos la carga en tramos con carritos y personal adicional. Toma más tiempo pero es viable, y lo incluimos en la cotización sin sorpresas."
+    },
+    {
+      "q": "¿Cuánto tiempo toma una mudanza en el Centro Histórico?",
+      "a": "Si el acceso es directo y la unidad puede estacionar cerca, entre 4 y 8 horas para un departamento de 2 ambientes. En calles con carga por tramos, súmale 2-4 horas. En zonas peatonales puras puede ser una jornada completa."
+    },
+    {
+      "q": "¿Hacen mudanzas nocturnas para hoteles y restaurantes?",
+      "a": "Sí, es incluso lo que recomendamos para negocios en el Centro. Movernos de noche (22:00-06:00) evita el tráfico turístico, libera acceso a calles y no interrumpe la operación del establecimiento al día siguiente."
+    },
+    {
+      "q": "¿Necesito permisos del municipio para el camión?",
+      "a": "Para ciertas calles del centro histórico sí — especialmente si vas a cargar en zonas con restricción horaria. Lo coordinamos con la Municipalidad de Cusco o Dircetur como parte del servicio cuando se requiere. Esto se incluye en la cotización si aplica."
+    },
+    {
+      "q": "¿Pueden trabajar en la Plaza de Armas directamente?",
+      "a": "Para entrega o recojo puntual sí, en horarios de menor afluencia (temprano en la mañana o en la noche). Para mudanzas prolongadas en esa zona preferimos que la carga/descarga se haga fuera de la plaza y trasladamos la carga a pie o con carritos."
+    }
+  ],
+
+  "nearbyDistricts": ["santiago", "wanchaq", "san-sebastian"],
+
+  "ctaMessage": "Hola, necesito mudanza en Cusco Centro Histórico. Origen: [calle/zona]. Destino: [calle/zona]. ¿Me pueden cotizar?",
+  "ctaTitle": "¿Mudanza en el Centro Histórico?",
+  "ctaSubtitle": "Tenemos experiencia con calles complicadas. Cotizamos con el precio cerrado y sin sorpresas."
+}
