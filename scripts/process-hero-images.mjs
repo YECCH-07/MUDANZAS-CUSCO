@@ -21,17 +21,27 @@ const PORTADA_DIR = resolve(IMG_ROOT, 'FOTOGRAFIAS DE PORTADA');
 const OUT = resolve(ROOT, 'public', 'hero');
 
 /*
- * source puede ser una ruta relativa al directorio /imagenes/ o el nombre de
- * archivo dentro de FOTOGRAFIAS DE PORTADA (resolución automática).
+ * source es ruta relativa al directorio /imagenes/. Seleccionamos imágenes
+ * con ratio 3:2 (1500×1000) — proporción natural para hero con overlay,
+ * evita recortes agresivos que sí ocurrían con las panorámicas 3:1.
+ * Fuente: imágenes del equipo real de Expreso Ñan (Nueva carpeta).
  */
 const IMAGES = [
   {
-    // Home: Plaza de Armas del Cusco con personal — identidad local inequívoca.
-    sourceRel: 'camion-de-mudanza---cusco-servicio-de-flete----foto-de-portada2.jpg',
+    // Home: equipo completo con herramientas — transmite profesionalismo y escala.
+    sourceRel: 'FOTOGRAFIAS/Nueva carpeta/PERSONAL-EFICIENTE-PARA-CARGAS-Y-MUDANZAS-CUSCO.jpg',
     slug: 'home-hero',
   },
-  { sourceRel: 'FOTOGRAFIAS DE PORTADA/QUIENES-SOMOS.jpg', slug: 'about-hero' },
-  { sourceRel: 'FOTOGRAFIAS DE PORTADA/SERVICIOS.jpg', slug: 'services-hero' },
+  {
+    // About: equipo casual en la calle — humaniza la empresa.
+    sourceRel: 'FOTOGRAFIAS/Nueva carpeta/PERSONAL-DE-MUDANZAS-CUSCO.jpg',
+    slug: 'about-hero',
+  },
+  {
+    // Services hub: mudanza real en acción dentro de un departamento.
+    sourceRel: 'FOTOGRAFIAS/Nueva carpeta/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg',
+    slug: 'services-hero',
+  },
 ];
 
 const WIDTHS = [
