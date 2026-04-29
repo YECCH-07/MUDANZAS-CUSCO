@@ -1,0 +1,35 @@
+---
+/*
+ * Datalist HTML5 con todas las localidades de cobertura para autocompletar
+ * inputs de origen/destino en cotizaciones.
+ *
+ * Uso: incluir <CoverageDatalist /> una vez en la página, y poner
+ * `list="coverage-list"` en cada input que deba autocompletar.
+ */
+import { ALL_ZONES } from '@lib/coverage';
+
+// Aplanar todas las localidades + provincia para mostrar en la sugerencia.
+const options = ALL_ZONES.flatMap((z) =>
+  z.localities.map((l) => ({
+    name: l.name,
+    detail: `${l.province}, ${l.region}`,
+  })),
+);
+// Eliminar duplicados por nombre (algunas zonas comparten provincias).
+const seen = new Set<string>();
+const dedup = options.filter((o) => {
+  if (seen.has(o.name)) return false;
+  seen.add(o.name);
+  return true;
+});
+---
+
+<datalist id="coverage-list">
+  {dedup.map((o) => <option value={o.name}>{o.detail}</option>)}
+  {/* Sugerencias adicionales fuera del catálogo de cobertura. */}
+  <option value="Cusco">Capital regional</option>
+  <option value="Lima">Capital del Perú (servicio especial)</option>
+  <option value="Arequipa">Capital de Arequipa (próximamente)</option>
+  <option value="Juliaca">Capital de San Román, Puno (próximamente)</option>
+  <option value="Puno">Capital de Puno (próximamente)</option>
+</datalist>

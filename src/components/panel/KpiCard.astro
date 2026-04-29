@@ -1,0 +1,128 @@
+---
+/*
+ * Tarjeta KPI con icono, valor grande y label tipográfico fuerte.
+ * Variantes de color: primary (carmesí), success (verde), danger (rojo),
+ * warning (ámbar), info (azul) y neutral (gris). Cada una se traduce a
+ * un fondo gradiente sutil + icono lleno con color sólido.
+ *
+ * Acepta opcionalmente `delta` para mostrar el cambio vs período anterior
+ * y `sparkline` (slot) para inyectar una mini-gráfica.
+ */
+interface Props {
+  label: string;
+  value: string;
+  variant?: 'primary' | 'success' | 'danger' | 'warning' | 'info' | 'neutral';
+  iconHref?: string; // SVG path d= (ver components/panel/icons.ts)
+  /** Delta opcional vs periodo anterior (ej. "+12% vs ayer"). */
+  delta?: string;
+  /** Color del delta — verde si subió y es bueno (income), rojo si bajó. */
+  deltaTone?: 'positive' | 'negative' | 'neutral';
+  href?: string;
+}
+
+const {
+  label,
+  value,
+  variant = 'neutral',
+  iconHref,
+  delta,
+  deltaTone = 'neutral',
+  href,
+} = Astro.props;
+
+const variantStyles: Record<
+  NonNullable<Props['variant']>,
+  { bg: string; iconBg: string; iconColor: string; valueColor: string }
+> = {
+  primary: {
+    bg: 'bg-gradient-to-br from-primary-50 to-white',
+    iconBg: 'bg-primary-100',
+    iconColor: 'text-primary-600',
+    valueColor: 'text-primary-700',
+  },
+  success: {
+    bg: 'bg-gradient-to-br from-green-50 to-white',
+    iconBg: 'bg-green-100',
+    iconColor: 'text-green-700',
+    valueColor: 'text-green-700',
+  },
+  danger: {
+    bg: 'bg-gradient-to-br from-red-50 to-white',
+    iconBg: 'bg-red-100',
+    iconColor: 'text-red-700',
+    valueColor: 'text-red-700',
+  },
+  warning: {
+    bg: 'bg-gradient-to-br from-amber-50 to-white',
+    iconBg: 'bg-amber-100',
+    iconColor: 'text-amber-700',
+    valueColor: 'text-amber-700',
+  },
+  info: {
+    bg: 'bg-gradient-to-br from-blue-50 to-white',
+    iconBg: 'bg-blue-100',
+    iconColor: 'text-blue-700',
+    valueColor: 'text-blue-700',
+  },
+  neutral: {
+    bg: 'bg-white',
+    iconBg: 'bg-gray-100',
+    iconColor: 'text-gray-700',
+    valueColor: 'text-gray-900',
+  },
+};
+
+const v = variantStyles[variant];
+const Tag = href ? 'a' : 'div';
+const deltaColor =
+  deltaTone === 'positive'
+    ? 'text-green-700'
+    : deltaTone === 'negative'
+      ? 'text-red-700'
+      : 'text-gray-500';
+---
+
+<Tag
+  href={href}
+  class:list={[
+    'panel-lift relative flex flex-col overflow-hidden rounded-2xl border border-gray-200 p-4 sm:p-5',
+    v.bg,
+    href && 'cursor-pointer',
+  ]}
+>
+  <div class="flex items-start justify-between gap-3">
+    <div class="min-w-0 flex-1">
+      <p
+        class:list={[
+          'text-2xl leading-tight font-bold tracking-tight tabular-nums sm:text-3xl',
+          v.valueColor,
+        ]}
+      >
+        {value}
+      </p>
+      <p class="mt-1 text-[10px] font-bold tracking-wider text-gray-600 uppercase sm:text-xs">
+        {label}
+      </p>
+      {delta && <p class:list={['mt-2 text-xs font-bold', deltaColor]}>{delta}</p>}
+    </div>
+    {
+      iconHref && (
+        <div class:list={['shrink-0 rounded-xl p-2.5', v.iconBg]}>
+          <svg
+            class:list={['h-5 w-5 sm:h-6 sm:w-6', v.iconColor]}
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <path d={iconHref} />
+          </svg>
+        </div>
+      )
+    }
+  </div>
+  <slot name="sparkline" />
+</Tag>

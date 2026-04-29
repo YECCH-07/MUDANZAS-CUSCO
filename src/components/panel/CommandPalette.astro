@@ -1,0 +1,165 @@
+---
+/*
+ * Ctrl+K / Cmd+K command palette. Modal que busca contra /api/panel/search.
+ *
+ * Inyecta el modal cerrado en el DOM. Se abre con teclado o con un botón.
+ * Sin frameworks: vanilla JS + IIFE.
+ *
+ * Uso: incluir <CommandPalette /> dentro del layout del panel.
+ */
+---
+
+<div
+  class="pointer-events-none fixed inset-0 z-50 hidden items-start justify-center bg-black/40 p-4 pt-[15vh]"
+  data-cmdk-root
+  aria-hidden="true"
+>
+  <div class="pointer-events-auto w-full max-w-xl rounded-2xl bg-white shadow-2xl">
+    <input
+      type="text"
+      placeholder="Buscar clientes, cotizaciones, unidades…"
+      class="w-full rounded-t-2xl border-b border-gray-200 px-4 py-3 text-sm focus:outline-none"
+      data-cmdk-input
+      autocomplete="off"
+      spellcheck="false"
+    />
+    <div class="max-h-[50vh] overflow-y-auto p-2 text-sm" data-cmdk-results>
+      <p class="px-3 py-6 text-center text-xs text-gray-500" data-cmdk-empty>
+        Escribe al menos 2 caracteres. Ctrl+K para abrir, Esc para cerrar.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    const root = document.querySelector('[data-cmdk-root]');
+    if (!root) return;
+    const input = root.querySelector('[data-cmdk-input]');
+    const list = root.querySelector('[data-cmdk-results]');
+    const empty = root.querySelector('[data-cmdk-empty]');
+    let timer = null;
+    let activeIdx = 0;
+
+    function open() {
+      root.classList.remove('hidden');
+      root.classList.add('flex');
+      root.setAttribute('aria-hidden', 'false');
+      setTimeout(() => input && input.focus(), 30);
+    }
+    function close() {
+      root.classList.add('hidden');
+      root.classList.remove('flex');
+      root.setAttribute('aria-hidden', 'true');
+      if (input) input.value = '';
+      list.innerHTML = '';
+      list.appendChild(empty);
+      empty.classList.remove('hidden');
+    }
+    function navTo(href) {
+      window.location.href = href;
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        open();
+      } else if (e.key === 'Escape') {
+        close();
+      }
+    });
+
+    root.addEventListener('click', (e) => {
+      if (e.target === root) close();
+    });
+
+    function render(items) {
+      list.innerHTML = '';
+      if (!items || items.length === 0) {
+        empty.textContent = 'Sin resultados.';
+        list.appendChild(empty);
+        return;
+      }
+      empty.classList.add('hidden');
+      activeIdx = 0;
+      items.forEach((item, i) => {
+        const a = document.createElement('a');
+        a.href = item.href;
+        a.className =
+          'block rounded px-3 py-2 hover:bg-gray-100 ' + (i === activeIdx ? 'bg-gray-100' : '');
+        a.dataset.cmdkItem = String(i);
+        a.innerHTML =
+          '<div class="flex items-center justify-between gap-3">' +
+          '<div class="min-w-0 flex-1">' +
+          '<p class="font-bold truncate">' +
+          escapeHtml(item.label) +
+          '</p>' +
+          (item.sub
+            ? '<p class="text-xs text-gray-500 truncate">' + escapeHtml(item.sub) + '</p>'
+            : '') +
+          '</div>' +
+          '<span class="rounded-full bg-gray-100 px-2 py-0.5 text-[10px] font-bold text-gray-600 capitalize">' +
+          escapeHtml(item.kind) +
+          '</span>' +
+          '</div>';
+        list.appendChild(a);
+      });
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(
+        /[&<>"']/g,
+        (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
+      );
+    }
+
+    if (input) {
+      input.addEventListener('input', () => {
+        clearTimeout(timer);
+        const q = input.value.trim();
+        if (q.length < 2) {
+          empty.textContent = 'Escribe al menos 2 caracteres.';
+          empty.classList.remove('hidden');
+          list.innerHTML = '';
+          list.appendChild(empty);
+          return;
+        }
+        timer = setTimeout(() => {
+          fetch('/api/panel/search/?q=' + encodeURIComponent(q))
+            .then((r) => r.json())
+            .then((data) => render(data.results || []))
+            .catch(() => {
+              empty.textContent = 'Error de búsqueda.';
+              empty.classList.remove('hidden');
+            });
+        }, 200);
+      });
+
+      input.addEventListener('keydown', (e) => {
+        const items = list.querySelectorAll('[data-cmdk-item]');
+        if (e.key === 'ArrowDown') {
+          e.preventDefault();
+          if (items.length === 0) return;
+          activeIdx = Math.min(activeIdx + 1, items.length - 1);
+          updateActive(items);
+        } else if (e.key === 'ArrowUp') {
+          e.preventDefault();
+          if (items.length === 0) return;
+          activeIdx = Math.max(activeIdx - 1, 0);
+          updateActive(items);
+        } else if (e.key === 'Enter') {
+          e.preventDefault();
+          const target = items[activeIdx];
+          if (target) navTo(target.getAttribute('href'));
+        }
+      });
+    }
+
+    function updateActive(items) {
+      items.forEach((el, i) => {
+        if (i === activeIdx) el.classList.add('bg-gray-100');
+        else el.classList.remove('bg-gray-100');
+      });
+    }
+  })();
+</script>

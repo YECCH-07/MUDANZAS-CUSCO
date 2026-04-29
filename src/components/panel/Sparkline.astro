@@ -1,0 +1,67 @@
+---
+/*
+ * Mini-gráfica de línea sin librerías. Recibe array de números y dibuja
+ * SVG inline con polyline. Optimizado para mostrar tendencia de los
+ * últimos 7-14 días en un KpiCard.
+ */
+interface Props {
+  data: number[];
+  width?: number;
+  height?: number;
+  stroke?: string; // color CSS válido
+  fillBelow?: boolean;
+}
+
+const { data, width = 120, height = 32, stroke = 'currentColor', fillBelow = true } = Astro.props;
+
+function buildPath(): { line: string; area: string } | null {
+  if (data.length < 2) return null;
+  const max = Math.max(...data, 1);
+  const min = Math.min(...data, 0);
+  const range = max - min || 1;
+  const stepX = width / (data.length - 1);
+  const points = data.map((v, i) => {
+    const x = i * stepX;
+    const y = height - ((v - min) / range) * (height - 4) - 2;
+    return [x, y] as const;
+  });
+  const line = points
+    .map(([x, y], i) => `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`)
+    .join(' ');
+  const last = points[points.length - 1];
+  const first = points[0];
+  if (!last || !first) return null;
+  const area = `${line} L${last[0].toFixed(1)},${height} L${first[0].toFixed(1)},${height} Z`;
+  return { line, area };
+}
+
+const paths = buildPath();
+const gradId = `sparkgrad-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+{
+  paths && (
+    <svg
+      class="mt-3 w-full"
+      viewBox={`0 0 ${width} ${height}`}
+      preserveAspectRatio="none"
+      aria-hidden="true"
+    >
+      <defs>
+        <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color={stroke} stop-opacity="0.2" />
+          <stop offset="100%" stop-color={stroke} stop-opacity="0" />
+        </linearGradient>
+      </defs>
+      {fillBelow && <path d={paths.area} fill={`url(#${gradId})`} />}
+      <path
+        d={paths.line}
+        fill="none"
+        stroke={stroke}
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  )
+}

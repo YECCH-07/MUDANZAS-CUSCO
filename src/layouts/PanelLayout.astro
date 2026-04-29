@@ -1,0 +1,46 @@
+---
+/*
+ * Layout minimal para rutas del panel interno. Sin header/footer del sitio
+ * público. No indexable (noindex). Se puede envolver después en layouts más
+ * específicos por rol (conductor mobile-first, admin con sidebar).
+ */
+import '@/styles/global.css';
+import { SITE } from '@lib/site';
+
+interface Props {
+  title: string;
+  bodyClass?: string;
+}
+
+const { title, bodyClass = '' } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/png" href={SITE.logo.icon} />
+    <link rel="manifest" href="/panel/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/panel/icon-192.png" />
+    <title>{title} · {SITE.name} · Panel</title>
+    <meta name="theme-color" content="#D72638" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/panel/sw.js', { scope: '/panel/' })
+            .catch((err) => console.warn('[panel] SW register failed:', err));
+        });
+      }
+    </script>
+  </head>
+  <body class:list={['text-dark min-h-screen bg-gray-50 font-sans antialiased', bodyClass]}>
+    <slot />
+  </body>
+</html>

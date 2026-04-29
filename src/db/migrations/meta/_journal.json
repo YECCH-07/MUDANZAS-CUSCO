@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1777063140353,
+      "tag": "0000_military_dracula",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1777086543360,
+      "tag": "0001_lethal_tombstone",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1777093116524,
+      "tag": "0002_next_doctor_octopus",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1777380000000,
+      "tag": "0003_includes_igv",
+      "breakpoints": true
+    }
+  ]
+}

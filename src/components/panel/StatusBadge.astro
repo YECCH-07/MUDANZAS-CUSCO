@@ -1,0 +1,88 @@
+---
+/*
+ * Badge de estado. Mapea cada estado del dominio a una variante visual
+ * consistente entre cotizaciones, jobs y recibos.
+ */
+type Tone = 'gray' | 'blue' | 'green' | 'amber' | 'red' | 'primary' | 'purple';
+
+interface Props {
+  /** Texto del estado tal como viene del enum. */
+  status: string;
+  /** Override del label visible (por defecto se traduce). */
+  label?: string;
+  /** Override del tono (por defecto se infiere de `status`). */
+  tone?: Tone;
+  size?: 'sm' | 'md';
+}
+
+const TRANSLATIONS: Record<string, { label: string; tone: Tone }> = {
+  // Cotizaciones
+  draft: { label: 'Borrador', tone: 'gray' },
+  sent: { label: 'Enviada', tone: 'blue' },
+  accepted: { label: 'Aceptada', tone: 'green' },
+  rejected: { label: 'Rechazada', tone: 'red' },
+  expired: { label: 'Vencida', tone: 'amber' },
+  canceled: { label: 'Cancelada', tone: 'gray' },
+
+  // Jobs
+  scheduled: { label: 'Programado', tone: 'blue' },
+  in_progress: { label: 'En curso', tone: 'amber' },
+  completed: { label: 'Completado', tone: 'primary' },
+
+  // Trips
+  active: { label: 'Activo', tone: 'amber' },
+  closed: { label: 'Cerrado', tone: 'gray' },
+
+  // Generic
+  income: { label: 'Ingreso', tone: 'green' },
+  expense: { label: 'Gasto', tone: 'red' },
+  trip: { label: 'Viaje', tone: 'primary' },
+};
+
+const { status, label, tone, size = 'sm' } = Astro.props;
+const lookup = TRANSLATIONS[status] ?? { label: status, tone: 'gray' as Tone };
+const finalLabel = label ?? lookup.label;
+const finalTone = tone ?? lookup.tone;
+
+const toneClasses: Record<Tone, string> = {
+  gray: 'bg-gray-100 text-gray-700 border-gray-200',
+  blue: 'bg-blue-50 text-blue-800 border-blue-200',
+  green: 'bg-green-50 text-green-800 border-green-200',
+  amber: 'bg-amber-50 text-amber-800 border-amber-200',
+  red: 'bg-red-50 text-red-800 border-red-200',
+  primary: 'bg-primary-50 text-primary-700 border-primary-200',
+  purple: 'bg-purple-50 text-purple-800 border-purple-200',
+};
+
+const sizeClasses = {
+  sm: 'px-2 py-0.5 text-[10px]',
+  md: 'px-2.5 py-1 text-xs',
+};
+---
+
+<span
+  class:list={[
+    'inline-flex items-center gap-1 rounded-full border font-bold tracking-wide whitespace-nowrap',
+    toneClasses[finalTone],
+    sizeClasses[size],
+  ]}
+>
+  <span
+    class:list={[
+      'inline-block h-1.5 w-1.5 rounded-full',
+      finalTone === 'primary'
+        ? 'bg-primary-500'
+        : finalTone === 'green'
+          ? 'bg-green-500'
+          : finalTone === 'red'
+            ? 'bg-red-500'
+            : finalTone === 'amber'
+              ? 'bg-amber-500'
+              : finalTone === 'blue'
+                ? 'bg-blue-500'
+                : finalTone === 'purple'
+                  ? 'bg-purple-500'
+                  : 'bg-gray-400',
+    ]}></span>
+  {finalLabel}
+</span>

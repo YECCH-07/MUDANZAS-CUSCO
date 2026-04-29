@@ -1,0 +1,259 @@
+---
+/*
+ * Uploader de fotos contra B2 vía presigned URL (no pasa por el servidor).
+ *
+ * Uso:
+ *   <PhotoUploader name="photo_key" scope="fotos" prefix="entry-items" />
+ *
+ * El input de archivo es `type=file` con `capture="environment"` para abrir la
+ * cámara trasera en móvil. Al seleccionar:
+ *   1. JS pide presigned URL al servidor.
+ *   2. Sube el blob directo al bucket.
+ *   3. Escribe el objectKey recibido en un <input type="hidden" name={name}>
+ *      para que el form principal lo envíe.
+ *
+ * Estados visibles: vacío / subiendo (barra progress) / listo (chip con nombre
+ * truncado + botón quitar) / error.
+ *
+ * Sin JS funciona sin foto (campo queda vacío). En servidor, si el campo es
+ * obligatorio por umbral de categoría, el backend rechaza con photo-required.
+ */
+
+interface Props {
+  /** Nombre del hidden input que guarda el objectKey resultante. */
+  name: string;
+  /** Bucket destino: fotos operativas o docs legales. */
+  scope: 'fotos' | 'docs';
+  /** Subcarpeta dentro del bucket (entry-items, pre-trip, unit-docs, etc.). */
+  prefix: string;
+  /** Texto del botón. */
+  label?: string;
+  /** Si es true, acepta PDFs además de imágenes (scope=docs). */
+  allowPdf?: boolean;
+  class?: string;
+}
+
+const {
+  name,
+  scope,
+  prefix,
+  label = 'Adjuntar foto',
+  allowPdf = false,
+  class: className = '',
+} = Astro.props;
+
+const accept = allowPdf ? 'image/*,application/pdf' : 'image/*';
+
+// uid único por instancia para ligar labels/inputs si hay varios en la misma página
+const uid = Math.random().toString(36).slice(2, 9);
+---
+
+<div class:list={['photo-uploader', className]} data-uploader-root data-uid={uid}>
+  <input type="hidden" name={name} data-object-key-input />
+
+  <label
+    for={`file-${uid}`}
+    class="hover:border-primary focus-within:border-primary flex cursor-pointer items-center gap-3 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-3 py-2 text-sm transition-colors"
+    data-trigger-label
+  >
+    <svg
+      class="text-primary h-5 w-5 shrink-0"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      aria-hidden="true"
+    >
+      <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+      <circle cx="8.5" cy="10.5" r="1.5"></circle>
+      <path d="M21 15l-5-5L5 21"></path>
+    </svg>
+    <span class="font-bold" data-trigger-text>{label}</span>
+    <input
+      type="file"
+      id={`file-${uid}`}
+      accept={accept}
+      capture="environment"
+      class="sr-only"
+      data-file-input
+    />
+  </label>
+
+  <div class="mt-1 hidden text-xs" data-status></div>
+  <div
+    class="mt-1 hidden h-1 w-full overflow-hidden rounded bg-gray-200"
+    data-progress-wrap
+    aria-hidden="true"
+  >
+    <div class="bg-primary h-full w-0 transition-all" data-progress-bar></div>
+  </div>
+
+  <div
+    class="mt-2 hidden items-center justify-between rounded-lg bg-green-50 p-2 text-xs text-green-800"
+    data-success
+  >
+    <span data-success-name>—</span>
+    <button
+      type="button"
+      class="ml-2 text-red-600 hover:underline"
+      data-clear-btn
+      aria-label="Quitar archivo"
+    >
+      quitar
+    </button>
+  </div>
+</div>
+
+<script is:inline define:vars={{ scope, prefix }}>
+  (function () {
+    const roots = document.querySelectorAll('[data-uploader-root]');
+    roots.forEach((root) => {
+      if (root.dataset.initialized === '1') return;
+      root.dataset.initialized = '1';
+
+      const input = root.querySelector('[data-file-input]');
+      const keyInput = root.querySelector('[data-object-key-input]');
+      const status = root.querySelector('[data-status]');
+      const progWrap = root.querySelector('[data-progress-wrap]');
+      const progBar = root.querySelector('[data-progress-bar]');
+      const success = root.querySelector('[data-success]');
+      const successName = root.querySelector('[data-success-name]');
+      const clearBtn = root.querySelector('[data-clear-btn]');
+      const triggerText = root.querySelector('[data-trigger-text]');
+      const triggerLabel = root.querySelector('[data-trigger-label]');
+      const originalLabel = triggerText ? triggerText.textContent : 'Adjuntar foto';
+
+      function showStatus(msg, kind) {
+        if (!status) return;
+        status.textContent = msg;
+        status.classList.remove('hidden', 'text-red-600', 'text-gray-500');
+        status.classList.add(kind === 'error' ? 'text-red-600' : 'text-gray-500');
+      }
+      function hideStatus() {
+        if (status) status.classList.add('hidden');
+      }
+      function setProgress(pct) {
+        if (!progWrap || !progBar) return;
+        progWrap.classList.remove('hidden');
+        progBar.style.width = pct + '%';
+      }
+      function hideProgress() {
+        if (progWrap) progWrap.classList.add('hidden');
+      }
+      function setSuccess(fileName) {
+        if (!success) return;
+        success.classList.remove('hidden');
+        success.classList.add('flex');
+        if (successName) successName.textContent = fileName;
+        if (triggerText) triggerText.textContent = 'Cambiar foto';
+        if (triggerLabel) triggerLabel.classList.add('opacity-60');
+      }
+      function resetUI() {
+        if (keyInput) keyInput.value = '';
+        if (input) input.value = '';
+        if (success) {
+          success.classList.add('hidden');
+          success.classList.remove('flex');
+        }
+        hideProgress();
+        hideStatus();
+        if (triggerText) triggerText.textContent = originalLabel;
+        if (triggerLabel) triggerLabel.classList.remove('opacity-60');
+      }
+
+      if (clearBtn) {
+        clearBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          resetUI();
+        });
+      }
+
+      if (input) {
+        input.addEventListener('change', async () => {
+          const file = input.files && input.files[0];
+          if (!file) return;
+
+          // Límite cliente (5 MB fotos, 15 MB docs). El servidor también valida.
+          const maxBytes = scope === 'docs' ? 15 * 1024 * 1024 : 5 * 1024 * 1024;
+          if (file.size > maxBytes) {
+            showStatus(
+              'Archivo muy grande (máx ' + Math.round(maxBytes / 1024 / 1024) + ' MB)',
+              'error',
+            );
+            input.value = '';
+            return;
+          }
+
+          showStatus('Preparando subida…');
+          setProgress(5);
+
+          try {
+            // 1. Pedir presigned URL al servidor.
+            const res = await fetch('/api/panel/upload-url/', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                scope: scope,
+                contentType: file.type || 'application/octet-stream',
+                size: file.size,
+                prefix: prefix,
+              }),
+            });
+            if (!res.ok) {
+              const data = await res.json().catch(() => ({}));
+              if (data.error === 'storage-not-configured') {
+                showStatus('Storage no configurado. Contacta al admin.', 'error');
+              } else {
+                showStatus('No se pudo iniciar la subida: ' + (data.error || res.status), 'error');
+              }
+              hideProgress();
+              input.value = '';
+              return;
+            }
+            const data = await res.json();
+
+            // 2. Subir a B2 con PUT directo.
+            showStatus('Subiendo…');
+            setProgress(30);
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('PUT', data.uploadUrl, true);
+            if (data.headers) {
+              Object.keys(data.headers).forEach((h) => xhr.setRequestHeader(h, data.headers[h]));
+            }
+            xhr.upload.onprogress = (e) => {
+              if (e.lengthComputable) {
+                setProgress(30 + (e.loaded / e.total) * 65);
+              }
+            };
+            xhr.onload = () => {
+              if (xhr.status >= 200 && xhr.status < 300) {
+                setProgress(100);
+                if (keyInput) keyInput.value = data.objectKey;
+                setTimeout(hideProgress, 300);
+                hideStatus();
+                setSuccess(file.name.length > 40 ? file.name.slice(0, 37) + '…' : file.name);
+              } else {
+                showStatus('Error subiendo a storage (' + xhr.status + ')', 'error');
+                hideProgress();
+                input.value = '';
+              }
+            };
+            xhr.onerror = () => {
+              showStatus('Error de red al subir.', 'error');
+              hideProgress();
+              input.value = '';
+            };
+            xhr.send(file);
+          } catch (err) {
+            showStatus('Error inesperado: ' + (err && err.message ? err.message : err), 'error');
+            hideProgress();
+            input.value = '';
+          }
+        });
+      }
+    });
+  })();
+</script>

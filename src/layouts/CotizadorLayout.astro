@@ -1,0 +1,169 @@
+---
+/*
+ * Layout para /panel/cotizador/** (rol cotizador + superadmin).
+ * Sidebar simple con navegación propia. Reutiliza estilos del AdminLayout.
+ */
+import '@/styles/global.css';
+import { SITE } from '@lib/site';
+import CommandPalette from '@components/panel/CommandPalette.astro';
+
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+const user = Astro.locals.user;
+if (!user) throw new Error('CotizadorLayout requires auth');
+
+const nav = [
+  { label: 'Inicio', href: '/panel/cotizador/' },
+  { label: 'Nueva cotización', href: '/panel/cotizador/nueva/' },
+  { label: 'Pipeline (Kanban)', href: '/panel/cotizador/kanban/' },
+  { label: 'Cotizaciones', href: '/panel/cotizador/listado/' },
+  { label: 'Trabajos', href: '/panel/cotizador/trabajos/' },
+  { label: 'Recibos', href: '/panel/cotizador/recibos/' },
+  { label: 'Clientes', href: '/panel/cotizador/clientes/' },
+  { label: 'Plantillas', href: '/panel/cotizador/plantillas/' },
+];
+
+function isActive(href: string): boolean {
+  if (href === '/panel/cotizador/') return Astro.url.pathname === href;
+  return Astro.url.pathname.startsWith(href);
+}
+---
+
+<!doctype html>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" type="image/png" href={SITE.logo.icon} />
+    <link rel="manifest" href="/panel/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/panel/icon-192.png" />
+    <title>{title} · {SITE.name} · Cotizador</title>
+    <meta name="theme-color" content="#D72638" />
+    <script is:inline>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker
+            .register('/panel/sw.js', { scope: '/panel/' })
+            .catch((err) => console.warn('[panel] SW register failed:', err));
+        });
+      }
+    </script>
+  </head>
+  <body class="text-dark min-h-screen bg-gray-50 font-sans antialiased">
+    <div class="flex min-h-screen flex-col md:flex-row">
+      <aside
+        class="hidden w-60 shrink-0 border-r border-gray-200 bg-white md:flex md:flex-col"
+        aria-label="Navegación"
+      >
+        <div class="border-b border-gray-100 px-5 py-4">
+          <a href="/panel/cotizador/" class="flex items-center gap-3">
+            <img
+              src={SITE.logo.icon}
+              alt="Expresos Ñan"
+              width="40"
+              height="40"
+              class="h-10 w-10 shrink-0 object-contain"
+            />
+            <div>
+              <p class="text-primary text-[10px] leading-none font-bold tracking-wider uppercase">
+                Expresos Ñan
+              </p>
+              <p class="font-heading text-base leading-tight font-bold">Cotizaciones</p>
+            </div>
+          </a>
+        </div>
+        <nav class="flex-1 space-y-1 p-3">
+          {
+            nav.map((item) => {
+              const active = isActive(item.href);
+              return (
+                <a
+                  href={item.href}
+                  class:list={[
+                    'group relative block rounded-lg px-3 py-2 text-sm font-bold transition-all',
+                    active
+                      ? 'from-primary-50 text-primary-700 shadow-brand-sm bg-gradient-to-r to-white'
+                      : 'text-gray-700 hover:bg-gray-100',
+                  ]}
+                  aria-current={active ? 'page' : undefined}
+                >
+                  {active && (
+                    <span
+                      class="bg-primary-600 absolute top-1/2 left-0 h-6 w-1 -translate-y-1/2 rounded-r-full"
+                      aria-hidden="true"
+                    />
+                  )}
+                  {item.label}
+                </a>
+              );
+            })
+          }
+        </nav>
+        <div class="border-t border-gray-100 p-4 text-sm">
+          <p class="font-bold">{user.fullName}</p>
+          <p class="text-xs text-gray-500">{user.role}</p>
+          <a
+            href="/api/panel/logout/"
+            class="mt-3 block rounded-full border border-gray-300 px-3 py-1.5 text-center text-xs font-bold hover:bg-gray-100"
+          >
+            Cerrar sesión
+          </a>
+        </div>
+      </aside>
+
+      <header
+        class="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3 md:hidden"
+      >
+        <a href="/panel/cotizador/" class="flex items-center gap-2">
+          <img
+            src={SITE.logo.icon}
+            alt="Expresos Ñan"
+            width="32"
+            height="32"
+            class="h-8 w-8 shrink-0 object-contain"
+          />
+          <p class="font-heading text-sm leading-tight font-bold">Cotizador</p>
+        </a>
+        <a
+          href="/api/panel/logout/"
+          class="rounded-full border border-gray-300 px-3 py-1.5 text-xs font-bold hover:bg-gray-100"
+        >
+          Salir
+        </a>
+      </header>
+
+      <main class="flex-1 pb-24 md:pb-0">
+        <div class="mx-auto max-w-5xl p-4 md:p-8">
+          <slot />
+        </div>
+      </main>
+
+      <nav
+        class="fixed right-0 bottom-0 left-0 z-10 border-t border-gray-200 bg-white md:hidden"
+        aria-label="Navegación móvil"
+      >
+        <ul class="grid grid-cols-4 text-[10px]">
+          {
+            nav.slice(0, 4).map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  class:list={[
+                    'flex flex-col items-center gap-1 px-1 py-2 font-bold',
+                    isActive(item.href) ? 'text-primary' : 'text-gray-600',
+                  ]}
+                >
+                  {item.label}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </nav>
+    </div>
+    <CommandPalette />
+  </body>
+</html>
