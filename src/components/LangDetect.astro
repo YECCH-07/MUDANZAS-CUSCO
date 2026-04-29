@@ -1,0 +1,30 @@
+---
+/*
+ * Auto-redirect según idioma del navegador (opción C — modo agresivo).
+ *
+ * Lógica del script inline (se ejecuta antes del primer paint):
+ *  1. Si el usuario ya eligió manualmente un idioma → respetar (localStorage).
+ *  2. Si la página actual NO tiene equivalente EN → no hacer nada (mantener ES).
+ *  3. Si navigator.language NO empieza con "en" → mantener ES.
+ *  4. Si pasa todo lo anterior → redirigir a la URL EN equivalente.
+ *
+ * El componente sólo se renderiza en páginas ES (cuando `enAlternate` existe);
+ * en páginas EN no carga nada.
+ *
+ * El LanguageSwitcher escribe localStorage cuando el usuario cambia manualmente,
+ * para que la elección manual gane sobre la auto-detección en futuros pageviews.
+ *
+ * El script se inyecta vía set:html para evitar que ESLint/Prettier intenten
+ * parsearlo como JS de Astro (es código de runtime del navegador, no del build).
+ */
+import { getAlternateUrl } from '@lib/alternate-urls';
+
+const currentPath = Astro.url.pathname;
+const enAlternate = getAlternateUrl(currentPath, 'en');
+
+const script = enAlternate
+  ? `(()=>{try{if(localStorage.getItem('lang_choice'))return;var l=(navigator.language||(navigator.languages&&navigator.languages[0])||'').toLowerCase();if(!l.indexOf||l.indexOf('en')!==0)return;localStorage.setItem('lang_choice','en-auto');location.replace(${JSON.stringify(enAlternate)}+location.search+location.hash);}catch(e){}})();`
+  : '';
+---
+
+{enAlternate && <script is:inline set:html={script} />}

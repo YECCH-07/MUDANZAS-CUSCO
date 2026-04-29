@@ -12,9 +12,29 @@ const label = targetLang === 'en' ? 'English' : 'Español';
 <a
   href={targetPath}
   hreflang={targetLang}
+  data-lang-switch={targetLang}
   class="text-primary-700 hover:bg-primary-50 inline-flex items-center gap-1 rounded-full border border-white bg-white px-3 py-1.5 text-sm font-bold shadow-sm transition-all hover:scale-105 hover:shadow-md focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
   aria-label={`Switch language to ${label}`}
 >
   <span aria-hidden="true">{targetLang === 'en' ? 'EN' : 'ES'}</span>
   <span class="sr-only">{label}</span>
 </a>
+
+<script is:inline>
+  // Memoriza la elección manual del usuario para que LangDetect respete su
+  // preferencia y no auto-redirija en futuros pageviews.
+  document.addEventListener(
+    'click',
+    (e) => {
+      const target = /** @type {HTMLElement | null} */ (e.target);
+      const link = target?.closest('[data-lang-switch]');
+      if (!link) return;
+      try {
+        localStorage.setItem('lang_choice', link.getAttribute('data-lang-switch') || '');
+      } catch {
+        /* localStorage bloqueado — fallback silencioso */
+      }
+    },
+    true,
+  );
+</script>

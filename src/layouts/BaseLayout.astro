@@ -3,6 +3,7 @@ import '@/styles/global.css';
 import Header from '@components/Header.astro';
 import Footer from '@components/Footer.astro';
 import WhatsAppButton from '@components/WhatsAppButton.astro';
+import LangDetect from '@components/LangDetect.astro';
 import SchemaLocalBusiness from '@components/schema/SchemaLocalBusiness.astro';
 import { SITE } from '@lib/site';
 import { getLangFromUrl } from '@/i18n/config';
@@ -49,6 +50,12 @@ const alternateEn = lang === 'en' ? path : getAlternateUrl(path, 'en');
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {
+      /* Auto-redirect a EN si el navegador es EN y existe equivalente. Va lo más arriba
+        posible para que el redirect ocurra antes de cargar CSS/JS pesados. Sólo
+        renderiza algo en páginas ES con equivalente EN — no-op en /en/**. */
+    }
+    {lang === 'es' && <LangDetect />}
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/png" href={SITE.logo.icon} />
     <link rel="apple-touch-icon" href={SITE.logo.icon} />
