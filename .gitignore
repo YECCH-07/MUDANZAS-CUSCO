@@ -37,3 +37,9 @@ imagenes/
 audits/
 pa11y-report.html
 lighthouse-*.html
+
+# Panel interno — base de datos local SQLite y artefactos
+data/
+*.db
+*.db-wal
+*.db-shm
