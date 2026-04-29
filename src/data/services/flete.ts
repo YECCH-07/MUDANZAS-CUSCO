@@ -5,14 +5,14 @@ export const flete: ServiceData = {
   metaTitle: 'Servicio de Flete y Carga en Cusco | Expresos Ñan',
   metaDescription:
     'Servicio de flete en Cusco: transporte de mercadería, muebles, electrodomésticos y carga general. Unidades de 1, 2 y 4 toneladas. Local y provincial. Cotiza al 925 671 052.',
-  ogImage: '/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png',
+  ogImage: '/wp-content/uploads/2024/05/PERSONAL-DE-MUDANZAS-CUSCO.jpg',
 
   hero: {
     eyebrow: 'Flete y carga',
     title: 'Servicio de Flete y Carga en Cusco',
     subtitle:
       'Transporte de muebles individuales, electrodomésticos, mercadería comercial y carga general. Servicio express local y a provincias del sur.',
-    image: '/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png',
+    image: '/wp-content/uploads/2024/05/PERSONAL-DE-MUDANZAS-CUSCO.jpg',
     imageAlt: 'Servicio de flete y carga en Cusco — Expreso Ñan',
     whatsappMessage:
       'Hola, necesito flete para [descripción de la carga]. Origen: [dirección]. Destino: [dirección]. ¿Me pueden cotizar?',
@@ -90,7 +90,7 @@ export const flete: ServiceData = {
       alt: 'Unidad de 2 toneladas para flete en Cusco',
     },
     {
-      src: '/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png',
+      src: '/wp-content/uploads/2024/05/PERSONAL-DE-MUDANZAS-CUSCO.jpg',
       alt: 'Servicio de flete con Expreso Ñan',
     },
     {

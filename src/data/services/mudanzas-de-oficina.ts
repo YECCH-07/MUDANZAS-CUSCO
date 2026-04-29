@@ -146,7 +146,7 @@ export const mudanzasDeOficina: ServiceData = {
       title: 'Servicio de embalaje',
       description: 'Embalaje profesional antistático para equipos electrónicos.',
       href: '/servicio-de-embalaje-cusco/',
-      image: '/wp-content/uploads/2024/05/EMBALAJE-CUSCO.png',
+      image: '/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg',
     },
     {
       title: 'Armado y desarmado de muebles',
@@ -158,7 +158,7 @@ export const mudanzasDeOficina: ServiceData = {
       title: 'Almacenaje temporal',
       description: 'Si la nueva oficina no está lista, guardamos tus equipos en depósito vigilado.',
       href: '/almacenaje-y-custodia-cusco/',
-      image: '/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png',
+      image: '/wp-content/uploads/2024/05/COSAS-DE-LOS-CLIENTES-CUSCO-MUDANZAS.jpg',
     },
   ],
 

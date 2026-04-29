@@ -128,7 +128,7 @@ export const fleteComercial: ServiceData = {
       title: 'Flete y carga puntual',
       description: 'Si tu necesidad es de una vez, este es el servicio correcto.',
       href: '/servicio-de-flete-cusco/',
-      image: '/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png',
+      image: '/wp-content/uploads/2024/05/PERSONAL-DE-MUDANZAS-CUSCO.jpg',
     },
     {
       title: 'Ruta Cusco ↔ Sicuani',

@@ -86,7 +86,7 @@ export const embalaje: ServiceData = {
 
   gallery: [
     {
-      src: '/wp-content/uploads/2024/05/EMBALAJE-CUSCO.png',
+      src: '/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg',
       alt: 'Materiales de embalaje profesional Expreso Ñan',
     },
     {
@@ -94,7 +94,7 @@ export const embalaje: ServiceData = {
       alt: 'Proceso de embalaje de caja en Cusco',
     },
     {
-      src: '/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png',
+      src: '/wp-content/uploads/2024/05/COSAS-DE-LOS-CLIENTES-CUSCO-MUDANZAS.jpg',
       alt: 'Embalaje personalizado en Cusco',
     },
     {
@@ -143,7 +143,7 @@ export const embalaje: ServiceData = {
       title: 'Almacenaje',
       description: 'Si guardas pertenencias, el embalaje es clave para evitar daños.',
       href: '/almacenaje-y-custodia-cusco/',
-      image: '/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png',
+      image: '/wp-content/uploads/2024/05/COSAS-DE-LOS-CLIENTES-CUSCO-MUDANZAS.jpg',
     },
   ],
 

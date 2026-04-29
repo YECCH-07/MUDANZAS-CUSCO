@@ -149,7 +149,7 @@ export const mudanzasLocales: ServiceData = {
       title: 'Servicio de embalaje',
       description: 'Embalaje profesional de vajilla, electrónicos y obras de arte.',
       href: '/servicio-de-embalaje-cusco/',
-      image: '/wp-content/uploads/2024/05/EMBALAJE-CUSCO.png',
+      image: '/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg',
     },
     {
       title: 'Armado y desarmado',
@@ -161,7 +161,7 @@ export const mudanzasLocales: ServiceData = {
       title: 'Almacenaje y custodia',
       description: 'Guarda tus cosas temporalmente durante la mudanza o remodelación.',
       href: '/almacenaje-y-custodia-cusco/',
-      image: '/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png',
+      image: '/wp-content/uploads/2024/05/COSAS-DE-LOS-CLIENTES-CUSCO-MUDANZAS.jpg',
     },
   ],
 

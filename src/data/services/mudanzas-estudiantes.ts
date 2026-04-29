@@ -94,7 +94,7 @@ export const mudanzasEstudiantes: ServiceData = {
       alt: 'Desarmado de cama antes de mudanza',
     },
     {
-      src: '/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png',
+      src: '/wp-content/uploads/2024/05/COSAS-DE-LOS-CLIENTES-CUSCO-MUDANZAS.jpg',
       alt: 'Mudanza personalizada para estudiantes',
     },
   ],
@@ -137,7 +137,7 @@ export const mudanzasEstudiantes: ServiceData = {
       title: 'Almacenaje temporal',
       description: 'Guarda tus cosas durante las vacaciones si vuelves a provincia por un tiempo.',
       href: '/almacenaje-y-custodia-cusco/',
-      image: '/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png',
+      image: '/wp-content/uploads/2024/05/COSAS-DE-LOS-CLIENTES-CUSCO-MUDANZAS.jpg',
     },
     {
       title: 'Cusco ↔ Sicuani',
