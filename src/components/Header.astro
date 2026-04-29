@@ -21,7 +21,7 @@ const homeHref = lang === 'es' ? '/' : '/en/';
 */
 }
 <header
-  class="site-header sticky top-0 z-30 w-full border-b border-gray-100 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80"
+  class="site-header sticky top-0 z-30 w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80"
   data-site-header
 >
   <Container as="nav" size="wide" class="flex items-center justify-between gap-6 py-4">
@@ -216,9 +216,22 @@ const homeHref = lang === 'es' ? '/' : '/en/';
       </details>
     </div>
   </Container>
+
+  {/* Franja branded debajo del header — refuerza presencia de marca sin saturar */}
+  <div class="brand-strip h-1 w-full" aria-hidden="true"></div>
 </header>
 
 <style>
+  /* Franja carmesí debajo del header. Gradient suave para profundidad. */
+  .brand-strip {
+    background-image: linear-gradient(
+      90deg,
+      var(--color-primary-700) 0%,
+      var(--color-primary-600) 50%,
+      var(--color-primary-700) 100%
+    );
+  }
+
   /* Sombra que aparece al hacer scroll: refuerza separación sin saturar. */
   .site-header[data-scrolled] {
     box-shadow:
