@@ -39,7 +39,8 @@ pa11y-report.html
 lighthouse-*.html
 
 # Panel interno — base de datos local SQLite y artefactos
-data/
+# Anclado a la raíz para no atrapar src/data/ (datos de servicios, sí versionados)
+/data/
 *.db
 *.db-wal
 *.db-shm

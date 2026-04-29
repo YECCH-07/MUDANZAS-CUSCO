@@ -5,15 +5,15 @@ export const embalaje: ServiceData = {
   metaTitle: 'Servicio de Embalaje Profesional en Cusco | Expresos Ñan',
   metaDescription:
     'Embalaje profesional en Cusco: vajilla, electrónicos, obras de arte y mudanzas completas. Materiales incluidos (cajas, burbuja, film). Cotiza al 925 671 052.',
-  ogImage: '/wp-content/uploads/2024/05/EMBALAJE-CUSCO.png',
+  ogImage: '/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg',
 
   hero: {
     eyebrow: 'Embalaje profesional',
     title: 'Servicio de Embalaje y Empaque en Cusco',
     subtitle:
       'Embalamos tu casa u oficina con materiales de calidad: cajas resistentes, plástico burbuja, film y mantas. Servicio a domicilio o solo suministro de materiales.',
-    image: '/wp-content/uploads/2024/05/EMBALAJE-CUSCO.png',
-    imageAlt: 'Servicio de embalaje profesional en Cusco — Expreso Ñan',
+    image: '/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg',
+    imageAlt: 'Equipo de Expreso Ñan embalando muebles y enseres en Cusco',
     whatsappMessage:
       'Hola, necesito servicio de embalaje. ¿Qué cubren los materiales y cuál es la tarifa?',
   },
