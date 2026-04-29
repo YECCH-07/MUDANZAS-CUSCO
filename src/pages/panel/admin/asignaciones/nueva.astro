@@ -1,0 +1,181 @@
+---
+export const prerender = false;
+
+import AdminLayout from '@layouts/AdminLayout.astro';
+import { db } from '@db/client';
+import { users, units, driverAssignments } from '@db/schema';
+import { and, eq, isNull } from 'drizzle-orm';
+
+const conductores = await db
+  .select({ id: users.id, fullName: users.fullName, email: users.email })
+  .from(users)
+  .where(and(eq(users.role, 'conductor'), eq(users.active, true)))
+  .all();
+
+// Unidades activas; marcamos si ya tienen un conductor asignado vigente.
+const allUnits = await db
+  .select({
+    id: units.id,
+    plate: units.plate,
+    tonnage: units.tonnage,
+    alias: units.alias,
+    active: units.active,
+  })
+  .from(units)
+  .where(eq(units.active, true))
+  .all();
+
+const vigentes = await db
+  .select({ unitId: driverAssignments.unitId })
+  .from(driverAssignments)
+  .where(isNull(driverAssignments.endsAt))
+  .all();
+const asignadas = new Set(vigentes.map((v) => v.unitId));
+
+const prefillUnit = Astro.url.searchParams.get('unit') ?? '';
+const prefillDriver = Astro.url.searchParams.get('driver') ?? '';
+
+const error = Astro.url.searchParams.get('error');
+const errorMessage =
+  error === 'invalid'
+    ? 'Datos inválidos.'
+    : error === 'unit-busy'
+      ? 'Esa unidad ya tiene un conductor asignado vigente. Cierra la asignación anterior primero.'
+      : error === 'driver-missing'
+        ? 'El conductor seleccionado no existe o no está activo.'
+        : error === 'unit-missing'
+          ? 'La unidad seleccionada no existe o está inactiva.'
+          : null;
+
+const today = new Date().toISOString().slice(0, 10);
+---
+
+<AdminLayout title="Nueva asignación">
+  <header class="mb-6">
+    <nav class="mb-2 text-sm">
+      <a href="/panel/admin/asignaciones/" class="text-gray-500 hover:text-gray-700"
+        >← Asignaciones</a
+      >
+    </nav>
+    <h1 class="font-heading text-2xl font-bold">Nueva asignación</h1>
+    <p class="mt-1 text-sm text-gray-600">
+      Asigna un conductor a una unidad. Una unidad solo puede tener una asignación vigente a la vez.
+    </p>
+  </header>
+
+  {
+    conductores.length === 0 && (
+      <div
+        class="mb-4 rounded-2xl border-l-4 border-amber-500 bg-amber-50 p-4 text-sm text-amber-800"
+        role="alert"
+      >
+        <p class="font-bold">No hay conductores activos.</p>
+        <p class="mt-1">
+          Primero{' '}
+          <a href="/panel/admin/usuarios/nuevo/" class="font-bold underline">
+            crea un usuario con rol conductor
+          </a>
+          .
+        </p>
+      </div>
+    )
+  }
+  {
+    allUnits.length === 0 && (
+      <div
+        class="mb-4 rounded-2xl border-l-4 border-amber-500 bg-amber-50 p-4 text-sm text-amber-800"
+        role="alert"
+      >
+        <p class="font-bold">No hay unidades activas.</p>
+        <p class="mt-1">
+          Primero{' '}
+          <a href="/panel/admin/unidades/nueva/" class="font-bold underline">
+            registra una unidad
+          </a>
+          .
+        </p>
+      </div>
+    )
+  }
+
+  <form
+    method="POST"
+    action="/api/panel/assignments/"
+    class="max-w-2xl space-y-4 rounded-2xl border border-gray-200 bg-white p-6"
+  >
+    {
+      errorMessage && (
+        <div
+          class="rounded-lg border-l-4 border-red-500 bg-red-50 p-3 text-sm text-red-800"
+          role="alert"
+        >
+          {errorMessage}
+        </div>
+      )
+    }
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Conductor *</span>
+      <select
+        name="user_id"
+        required
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+      >
+        <option value="">— Selecciona conductor —</option>
+        {
+          conductores.map((c) => (
+            <option value={c.id} selected={c.id === prefillDriver}>
+              {c.fullName} ({c.email})
+            </option>
+          ))
+        }
+      </select>
+    </label>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Unidad *</span>
+      <select
+        name="unit_id"
+        required
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+      >
+        <option value="">— Selecciona unidad —</option>
+        {
+          allUnits.map((u) => (
+            <option value={u.id} selected={u.id === prefillUnit} disabled={asignadas.has(u.id)}>
+              {u.plate} ({u.tonnage} t){u.alias ? ` · ${u.alias}` : ''}
+              {asignadas.has(u.id) ? ' — ya asignada' : ''}
+            </option>
+          ))
+        }
+      </select>
+    </label>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Fecha de inicio *</span>
+      <input
+        type="date"
+        name="starts_at"
+        required
+        value={today}
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      />
+    </label>
+
+    <div class="flex gap-3 pt-2">
+      <button
+        type="submit"
+        class="bg-primary hover:bg-primary-dark rounded-full px-6 py-2 text-sm font-bold text-white"
+        disabled={conductores.length === 0 || allUnits.length === 0}
+      >
+        Crear asignación
+      </button>
+      <a
+        href="/panel/admin/asignaciones/"
+        class="rounded-full border border-gray-300 px-6 py-2 text-sm font-bold hover:bg-gray-100"
+      >
+        Cancelar
+      </a>
+    </div>
+  </form>
+</AdminLayout>

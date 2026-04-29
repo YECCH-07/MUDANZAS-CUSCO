@@ -1,0 +1,160 @@
+---
+export const prerender = false;
+
+import AdminLayout from '@layouts/AdminLayout.astro';
+import { db } from '@db/client';
+import { auditLog, users } from '@db/schema';
+import { desc, eq, like, and, gte, lte } from 'drizzle-orm';
+
+const action = (Astro.url.searchParams.get('action') ?? '').trim();
+const userId = (Astro.url.searchParams.get('user') ?? '').trim();
+const fromParam = (Astro.url.searchParams.get('from') ?? '').trim();
+const toParam = (Astro.url.searchParams.get('to') ?? '').trim();
+
+const conditions: ReturnType<typeof and>[] = [];
+if (action) conditions.push(like(auditLog.action, `${action}%`));
+if (userId) conditions.push(eq(auditLog.userId, userId));
+if (fromParam) conditions.push(gte(auditLog.at, fromParam + 'T00:00:00.000Z'));
+if (toParam) conditions.push(lte(auditLog.at, toParam + 'T23:59:59.999Z'));
+
+const rows = await db
+  .select({
+    id: auditLog.id,
+    userId: auditLog.userId,
+    action: auditLog.action,
+    target: auditLog.target,
+    diffJson: auditLog.diffJson,
+    ip: auditLog.ip,
+    at: auditLog.at,
+    actorName: users.fullName,
+    actorEmail: users.email,
+  })
+  .from(auditLog)
+  .leftJoin(users, eq(users.id, auditLog.userId))
+  .where(conditions.length > 0 ? and(...conditions) : undefined)
+  .orderBy(desc(auditLog.at))
+  .limit(200)
+  .all();
+
+const usersList = await db
+  .select({ id: users.id, fullName: users.fullName, email: users.email })
+  .from(users)
+  .all();
+---
+
+<AdminLayout title="Audit log">
+  <header class="mb-6">
+    <h1 class="font-heading text-2xl font-bold md:text-3xl">Audit log</h1>
+    <p class="mt-1 text-sm text-gray-600">Últimas {rows.length} mutaciones registradas.</p>
+  </header>
+
+  <form
+    method="GET"
+    class="mb-4 flex flex-wrap items-end gap-3 rounded-2xl border border-gray-200 bg-white p-4"
+  >
+    <label class="block">
+      <span class="mb-1 block text-xs font-bold tracking-wider text-gray-500 uppercase"
+        >Acción (prefijo)</span
+      >
+      <input
+        type="text"
+        name="action"
+        value={action}
+        placeholder="quote, user, daily_entry…"
+        class="rounded-lg border border-gray-300 px-3 py-2 text-sm"
+      />
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-xs font-bold tracking-wider text-gray-500 uppercase"
+        >Usuario</span
+      >
+      <select name="user" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm">
+        <option value="">— todos —</option>
+        {
+          usersList.map((u) => (
+            <option value={u.id} selected={u.id === userId}>
+              {u.fullName} ({u.email})
+            </option>
+          ))
+        }
+      </select>
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-xs font-bold tracking-wider text-gray-500 uppercase">Desde</span>
+      <input
+        type="date"
+        name="from"
+        value={fromParam}
+        class="rounded-lg border border-gray-300 px-3 py-2 text-sm"
+      />
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-xs font-bold tracking-wider text-gray-500 uppercase">Hasta</span>
+      <input
+        type="date"
+        name="to"
+        value={toParam}
+        class="rounded-lg border border-gray-300 px-3 py-2 text-sm"
+      />
+    </label>
+    <button
+      class="bg-primary hover:bg-primary-dark rounded-full px-5 py-2 text-sm font-bold text-white"
+    >
+      Filtrar
+    </button>
+    <a
+      href="/panel/admin/audit/"
+      class="rounded-full border border-gray-300 px-5 py-2 text-sm font-bold hover:bg-gray-100"
+    >
+      Limpiar
+    </a>
+  </form>
+
+  {
+    rows.length === 0 ? (
+      <div class="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-600">
+        Sin registros con esos filtros.
+      </div>
+    ) : (
+      <div class="overflow-x-auto rounded-2xl border border-gray-200 bg-white">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-gray-50 text-xs font-bold tracking-wider uppercase">
+            <tr>
+              <th class="px-4 py-3">Cuándo</th>
+              <th class="px-4 py-3">Usuario</th>
+              <th class="px-4 py-3">Acción</th>
+              <th class="px-4 py-3">Target</th>
+              <th class="px-4 py-3">IP</th>
+              <th class="px-4 py-3">Diff</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            {rows.map((r) => (
+              <tr class="text-xs">
+                <td class="px-4 py-2 whitespace-nowrap">{r.at?.replace('T', ' ').slice(0, 19)}</td>
+                <td class="px-4 py-2">
+                  {r.actorName ?? <span class="text-gray-400">— sistema —</span>}
+                </td>
+                <td class="px-4 py-2 font-mono">{r.action}</td>
+                <td class="px-4 py-2 font-mono text-gray-600">{r.target ?? '—'}</td>
+                <td class="px-4 py-2 font-mono text-gray-500">{r.ip ?? '—'}</td>
+                <td class="px-4 py-2 text-gray-700">
+                  {r.diffJson ? (
+                    <details>
+                      <summary class="text-primary cursor-pointer">ver</summary>
+                      <pre class="mt-1 max-w-md overflow-x-auto rounded bg-gray-50 p-2 text-[10px]">
+                        {r.diffJson}
+                      </pre>
+                    </details>
+                  ) : (
+                    '—'
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+</AdminLayout>

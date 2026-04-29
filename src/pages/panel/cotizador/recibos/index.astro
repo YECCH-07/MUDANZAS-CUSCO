@@ -1,0 +1,99 @@
+---
+export const prerender = false;
+
+import CotizadorLayout from '@layouts/CotizadorLayout.astro';
+import { db } from '@db/client';
+import { receipts, customers } from '@db/schema';
+import { desc, eq } from 'drizzle-orm';
+
+const rows = await db
+  .select({
+    id: receipts.id,
+    number: receipts.number,
+    totalCents: receipts.totalCents,
+    paymentMethod: receipts.paymentMethod,
+    issuedAt: receipts.issuedAt,
+    voidedAt: receipts.voidedAt,
+    customerName: customers.name,
+    requiresSunat: receipts.requiresSunatInvoice,
+  })
+  .from(receipts)
+  .innerJoin(customers, eq(customers.id, receipts.customerId))
+  .orderBy(desc(receipts.issuedAt))
+  .limit(200)
+  .all();
+
+const fmt = (c: number | null | undefined): string =>
+  `S/ ${((c ?? 0) / 100).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+---
+
+<CotizadorLayout title="Recibos emitidos">
+  <header class="mb-6">
+    <h1 class="font-heading text-2xl font-bold md:text-3xl">Recibos emitidos</h1>
+    <p class="mt-1 text-sm text-gray-600">{rows.length} recibo(s).</p>
+  </header>
+
+  {
+    rows.length === 0 ? (
+      <div class="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-600">
+        Sin recibos emitidos aún.
+      </div>
+    ) : (
+      <div class="overflow-x-auto rounded-2xl border border-gray-200 bg-white">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-gray-50 text-xs font-bold tracking-wider uppercase">
+            <tr>
+              <th class="px-4 py-3">Número</th>
+              <th class="px-4 py-3">Cliente</th>
+              <th class="px-4 py-3">Total</th>
+              <th class="px-4 py-3">Pago</th>
+              <th class="px-4 py-3">SUNAT?</th>
+              <th class="px-4 py-3">Fecha</th>
+              <th class="px-4 py-3">Estado</th>
+              <th class="px-4 py-3" />
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            {rows.map((r) => (
+              <tr class:list={[r.voidedAt && 'bg-red-50']}>
+                <td class="px-4 py-3 font-mono text-xs font-bold">{r.number}</td>
+                <td class="px-4 py-3">{r.customerName}</td>
+                <td class="px-4 py-3 font-bold">{fmt(r.totalCents)}</td>
+                <td class="px-4 py-3 text-xs">{r.paymentMethod}</td>
+                <td class="px-4 py-3 text-xs">
+                  {r.requiresSunat ? (
+                    <span class="inline-block rounded-full bg-amber-100 px-2 py-0.5 font-bold text-amber-800">
+                      sí
+                    </span>
+                  ) : (
+                    <span class="text-gray-400">—</span>
+                  )}
+                </td>
+                <td class="px-4 py-3 text-xs">{r.issuedAt.slice(0, 10)}</td>
+                <td class="px-4 py-3 text-xs">
+                  {r.voidedAt ? (
+                    <span class="inline-block rounded-full bg-red-100 px-2 py-0.5 font-bold text-red-800">
+                      Anulado
+                    </span>
+                  ) : (
+                    <span class="inline-block rounded-full bg-green-100 px-2 py-0.5 font-bold text-green-800">
+                      Válido
+                    </span>
+                  )}
+                </td>
+                <td class="px-4 py-3 text-right">
+                  <a
+                    href={`/panel/cotizador/recibos/${r.id}/`}
+                    class="text-primary text-xs font-bold hover:underline"
+                  >
+                    Abrir →
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+</CotizadorLayout>

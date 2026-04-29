@@ -1,0 +1,169 @@
+---
+export const prerender = false;
+import CotizadorLayout from '@layouts/CotizadorLayout.astro';
+
+const error = Astro.url.searchParams.get('error');
+---
+
+<CotizadorLayout title="Nueva plantilla">
+  <header class="mb-6">
+    <nav class="mb-2 text-sm">
+      <a href="/panel/cotizador/plantillas/" class="text-gray-500 hover:text-gray-700"
+        >← Plantillas</a
+      >
+    </nav>
+    <h1 class="font-heading text-2xl font-bold">Nueva plantilla</h1>
+    <p class="mt-1 text-sm text-gray-600">
+      Define valores por defecto para un tipo de servicio recurrente. Al crear una cotización podrás
+      "Usar plantilla" para pre-llenar todos los campos.
+    </p>
+  </header>
+
+  <form
+    method="POST"
+    action="/api/panel/quote-templates/"
+    class="max-w-2xl space-y-4 rounded-2xl border border-gray-200 bg-white p-6"
+  >
+    {
+      error && (
+        <div class="rounded-lg border-l-4 border-red-500 bg-red-50 p-3 text-sm text-red-800">
+          Error: {error}
+        </div>
+      )
+    }
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Nombre de la plantilla *</span>
+      <input
+        type="text"
+        name="name"
+        required
+        minlength="3"
+        maxlength="120"
+        placeholder="Ej. Depto 2 amb Wanchaq → San Jerónimo"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      />
+    </label>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Tipo de servicio *</span>
+      <select
+        name="service_type"
+        required
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+      >
+        <optgroup label="Mudanzas">
+          <option value="mudanza_embalaje">Mudanza Express (servicio integral)</option>
+          <option value="mudanza_personal">Mudanza Estándar (vehículo + personal)</option>
+          <option value="solo_vehiculo_personal">Vehículo + Personal de carga y descarga</option>
+        </optgroup>
+        <optgroup label="Otros servicios">
+          <option value="flete">Flete</option>
+          <option value="embalaje_solo">Embalaje profesional</option>
+          <option value="armado_desarmado">Armado y desarmado de muebles</option>
+          <option value="almacenaje">Almacenaje y custodia</option>
+          <option value="otro">Servicio personalizado</option>
+        </optgroup>
+      </select>
+    </label>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Origen sugerido</span>
+        <input
+          type="text"
+          name="origin"
+          maxlength="120"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Destino sugerido</span>
+        <input
+          type="text"
+          name="destination"
+          maxlength="120"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-4">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Volumen m³</span>
+        <input
+          type="number"
+          name="volume_m3"
+          min="0"
+          max="500"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Distancia km</span>
+        <input
+          type="number"
+          name="distance_km"
+          min="0"
+          max="9999"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Personal</span>
+        <input
+          type="number"
+          name="crew_size"
+          min="1"
+          max="20"
+          value="2"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Pisos sin asc.</span>
+        <input
+          type="number"
+          name="floors"
+          min="0"
+          max="30"
+          value="0"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+    </div>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold"
+        >Ítems del desglose (uno por línea: <code>Etiqueta | soles</code>)</span
+      >
+      <textarea
+        name="items_csv"
+        rows="6"
+        placeholder="Tarifa base | 200.00
+Volumen 8 m³ | 240.00
+Personal extra | 80.00"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 font-mono text-xs focus:ring-2 focus:outline-none"
+      ></textarea>
+      <span class="mt-1 block text-xs text-gray-500">
+        Cada línea: etiqueta visible y monto en soles (acepta decimales) separados por <code>|</code
+        >. Opcional.
+      </span>
+    </label>
+
+    <div class="flex gap-3 pt-2">
+      <button
+        type="submit"
+        class="bg-primary hover:bg-primary-dark rounded-full px-6 py-2 text-sm font-bold text-white"
+      >
+        Crear plantilla
+      </button>
+      <a
+        href="/panel/cotizador/plantillas/"
+        class="rounded-full border border-gray-300 px-6 py-2 text-sm font-bold hover:bg-gray-100"
+      >
+        Cancelar
+      </a>
+    </div>
+  </form>
+</CotizadorLayout>

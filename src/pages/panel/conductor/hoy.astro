@@ -1,0 +1,809 @@
+---
+export const prerender = false;
+
+import PanelLayout from '@layouts/PanelLayout.astro';
+import { getActiveAssignments, getPreTripCheck, getDailyEntry } from '@lib/panel/conductor';
+import { todayLimaISO } from '@lib/panel/lima-date';
+import { db } from '@db/client';
+import { dailyEntries, trips, entryItems, expenseCategories } from '@db/schema';
+import { asc, desc, eq } from 'drizzle-orm';
+import { ulid } from '@lib/auth/ulid';
+import { isStorageConfigured } from '@lib/panel/storage';
+import PhotoUploader from '@components/panel/PhotoUploader.astro';
+
+const storageReady = isStorageConfigured();
+
+const user = Astro.locals.user!;
+
+const entryDate = todayLimaISO();
+const assignments = await getActiveAssignments(user.id);
+
+if (assignments.length === 0) {
+  // redirige al pre-trip para mostrar el mensaje de "sin asignación"
+  return Astro.redirect('/panel/conductor/pre-trip/');
+}
+
+const unitParam = Astro.url.searchParams.get('unit');
+const selected = assignments.find((a) => a.unitId === unitParam) ?? assignments[0]!;
+
+// ¿Pre-trip del día?
+const preTrip = await getPreTripCheck(selected.unitId, entryDate);
+if (!preTrip) {
+  return Astro.redirect(`/panel/conductor/pre-trip/?unit=${selected.unitId}`);
+}
+if (preTrip.blocker) {
+  return Astro.redirect(`/panel/conductor/pre-trip/?unit=${selected.unitId}`);
+}
+
+// Crear daily_entry si no existe (server-side idempotente, evita un extra
+// redirect para el conductor).
+let entry = await getDailyEntry(user.id, selected.unitId, entryDate);
+if (!entry) {
+  const newId = ulid();
+  const now = new Date().toISOString();
+  await db.insert(dailyEntries).values({
+    id: newId,
+    unitId: selected.unitId,
+    driverId: user.id,
+    entryDate,
+    odometerStartKm: null,
+    odometerEndKm: null,
+    preTripCheckId: preTrip.id,
+    closedAt: null,
+    notes: null,
+    createdAt: now,
+    updatedAt: now,
+  });
+  entry = await getDailyEntry(user.id, selected.unitId, entryDate);
+}
+if (!entry) throw new Error('daily_entry ensure failed');
+
+// Traer viajes y items del día
+const allTrips = await db
+  .select()
+  .from(trips)
+  .where(eq(trips.entryId, entry.id))
+  .orderBy(desc(trips.startedAt))
+  .all();
+const activeTrip = allTrips.find((t) => t.endedAt === null) ?? null;
+
+const items = await db
+  .select({
+    id: entryItems.id,
+    tripId: entryItems.tripId,
+    kind: entryItems.kind,
+    categoryId: entryItems.categoryId,
+    amountCents: entryItems.amountCents,
+    description: entryItems.description,
+    occurredAt: entryItems.occurredAt,
+    photoKey: entryItems.photoKey,
+    categoryLabel: expenseCategories.labelEs,
+  })
+  .from(entryItems)
+  .leftJoin(expenseCategories, eq(expenseCategories.id, entryItems.categoryId))
+  .where(eq(entryItems.entryId, entry.id))
+  .orderBy(desc(entryItems.occurredAt))
+  .all();
+
+const categories = await db
+  .select()
+  .from(expenseCategories)
+  .where(eq(expenseCategories.active, true))
+  .orderBy(asc(expenseCategories.labelEs))
+  .all();
+
+// Totales
+const incomeTripsCents = allTrips.reduce((s, t) => s + t.amountCents, 0);
+const incomeExtraCents = items
+  .filter((i) => i.kind === 'income')
+  .reduce((s, i) => s + i.amountCents, 0);
+const expenseCents = items
+  .filter((i) => i.kind === 'expense')
+  .reduce((s, i) => s + i.amountCents, 0);
+const totalIncomeCents = incomeTripsCents + incomeExtraCents;
+const balanceCents = totalIncomeCents - expenseCents;
+
+const fmt = (c: number | null | undefined): string =>
+  `S/ ${((c ?? 0) / 100).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+// Error feedback from redirects
+const error = Astro.url.searchParams.get('error');
+const errorMsg =
+  error === 'km-discontinuous'
+    ? 'El kilometraje inicial no puede ser menor que el kilometraje final del día anterior.'
+    : error === 'km-end-lower'
+      ? 'El kilometraje final debe ser mayor o igual al inicial.'
+      : error === 'odometer-end-required'
+        ? 'Debes ingresar el kilometraje final antes de cerrar el día.'
+        : error === 'trip-active'
+          ? 'Ya tienes un viaje activo. Finalízalo antes de iniciar otro.'
+          : error === 'photo-required'
+            ? 'Esta categoría exige foto para ese monto. Adjúntala y reintenta.'
+            : error === 'category-invalid'
+              ? 'Categoría de gasto inválida.'
+              : error === 'day-closed'
+                ? 'El día ya está cerrado, no admite cambios.'
+                : error === 'invalid-km'
+                  ? 'Kilometraje inválido.'
+                  : error === 'closed'
+                    ? 'El día está cerrado.'
+                    : null;
+
+function tripDuration(trip: (typeof allTrips)[number]): string {
+  if (!trip.endedAt) return 'en curso';
+  const ms = new Date(trip.endedAt).getTime() - new Date(trip.startedAt).getTime();
+  const m = Math.max(0, Math.round(ms / 60000));
+  const h = Math.floor(m / 60);
+  const mm = m % 60;
+  return h > 0 ? `${h}h ${mm}m` : `${mm}m`;
+}
+---
+
+<PanelLayout title="Registro de hoy" bodyClass="pb-24">
+  <main class="mx-auto max-w-lg p-4">
+    {/* HERO branded con saludo, unidad y estado del día */}
+    <header
+      class="bg-brand-gradient panel-fade-in shadow-brand-lg -mx-4 -mt-4 mb-4 px-4 pt-5 pb-6 text-white"
+    >
+      <div class="mb-4 flex items-start justify-between gap-3">
+        <div class="min-w-0">
+          <p class="text-[10px] font-bold tracking-wider text-white/80 uppercase">
+            Registro del día
+          </p>
+          <h1 class="font-heading mt-1 truncate text-xl font-bold tracking-tight">
+            Hola, {user.fullName.split(' ')[0]}
+          </h1>
+          <p class="mt-0.5 text-xs text-white/90 capitalize">
+            {
+              new Date(entryDate + 'T00:00:00').toLocaleDateString('es-PE', {
+                weekday: 'long',
+                day: 'numeric',
+                month: 'long',
+              })
+            }
+          </p>
+        </div>
+        <a
+          href="/api/panel/logout/"
+          class="rounded-full border border-white/30 bg-white/10 px-3 py-1.5 text-[11px] font-bold backdrop-blur-sm hover:bg-white/20"
+        >
+          Salir
+        </a>
+      </div>
+
+      {/* Tarjeta de unidad asignada */}
+      <div class="rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+        <div class="flex items-center gap-3">
+          <div class="rounded-lg bg-white/20 p-2">
+            <svg
+              class="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M1 3h15v13H1z M16 8h4l3 3v5h-7V8z"></path>
+              <circle cx="5.5" cy="18.5" r="2.5"></circle>
+              <circle cx="18.5" cy="18.5" r="2.5"></circle>
+            </svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <p class="text-[10px] font-bold tracking-wider text-white/80 uppercase">
+              Unidad asignada
+            </p>
+            <p class="font-heading text-lg leading-tight font-bold">{selected.plate}</p>
+            <p class="text-xs text-white/90">
+              {selected.tonnage} toneladas{selected.alias ? ` · ${selected.alias}` : ''}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Timeline de estado del día (3 pasos) */}
+      <div
+        class="mt-4 flex items-center justify-between gap-2 text-[10px] font-bold tracking-wider uppercase"
+      >
+        <div class="flex flex-1 flex-col items-center gap-1">
+          <div
+            class="text-primary-700 flex h-7 w-7 items-center justify-center rounded-full bg-white"
+          >
+            {
+              entry.odometerStartKm !== null ? (
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <span>1</span>
+              )
+            }
+          </div>
+          <span class={entry.odometerStartKm !== null ? 'text-white' : 'text-white/60'}>Inicio</span
+          >
+        </div>
+        <div
+          class:list={[
+            'mb-4 h-0.5 flex-1',
+            entry.odometerStartKm !== null ? 'bg-white' : 'bg-white/30',
+          ]}
+        >
+        </div>
+        <div class="flex flex-1 flex-col items-center gap-1">
+          <div
+            class:list={[
+              'flex h-7 w-7 items-center justify-center rounded-full',
+              allTrips.length > 0 ? 'text-primary-700 bg-white' : 'bg-white/20 text-white',
+            ]}
+          >
+            {
+              allTrips.length > 0 ? (
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <span>2</span>
+              )
+            }
+          </div>
+          <span class={allTrips.length > 0 ? 'text-white' : 'text-white/60'}>Viajes</span>
+        </div>
+        <div class:list={['mb-4 h-0.5 flex-1', entry.closedAt ? 'bg-white' : 'bg-white/30']}></div>
+        <div class="flex flex-1 flex-col items-center gap-1">
+          <div
+            class:list={[
+              'flex h-7 w-7 items-center justify-center rounded-full',
+              entry.closedAt ? 'text-primary-700 bg-white' : 'bg-white/20 text-white',
+            ]}
+          >
+            {
+              entry.closedAt ? (
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M5 13l4 4L19 7" />
+                </svg>
+              ) : (
+                <span>3</span>
+              )
+            }
+          </div>
+          <span class={entry.closedAt ? 'text-white' : 'text-white/60'}>Cierre</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="panel-slide-up space-y-4">
+      {
+        assignments.length > 1 && (
+          <div class="rounded-lg border border-gray-200 bg-white p-3 text-sm">
+            <p class="mb-2 text-xs font-bold tracking-wider text-gray-500 uppercase">
+              Tienes varias unidades asignadas
+            </p>
+            <div class="flex flex-wrap gap-2">
+              {assignments.map((a) => (
+                <a
+                  href={`/panel/conductor/hoy/?unit=${a.unitId}`}
+                  class:list={[
+                    'rounded-full px-3 py-1 text-xs font-bold',
+                    a.unitId === selected.unitId
+                      ? 'bg-primary text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200',
+                  ]}
+                >
+                  {a.plate}
+                </a>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      {
+        errorMsg && (
+          <div
+            class="rounded-lg border-l-4 border-red-500 bg-red-50 p-3 text-sm text-red-800"
+            role="alert"
+          >
+            {errorMsg}
+          </div>
+        )
+      }
+
+      {
+        entry.closedAt && (
+          <div class="rounded-2xl border-l-4 border-gray-500 bg-gray-100 p-4 text-sm text-gray-800">
+            <p class="font-bold">Día cerrado</p>
+            <p class="mt-1 text-xs">
+              Cerrado el {entry.closedAt.slice(0, 16).replace('T', ' ')}. No admite cambios.
+            </p>
+          </div>
+        )
+      }
+
+      {/* Totales del día con tarjetas coloreadas */}
+      <section class="grid grid-cols-3 gap-2">
+        <div
+          class="shadow-brand-sm rounded-2xl border border-green-200 bg-gradient-to-br from-green-50 to-white p-3 text-center"
+        >
+          <p class="text-[10px] font-bold tracking-wider text-green-700 uppercase">Ingresos</p>
+          <p class="mt-1 text-base font-bold text-green-700 tabular-nums">
+            {fmt(totalIncomeCents)}
+          </p>
+        </div>
+        <div
+          class="shadow-brand-sm rounded-2xl border border-red-200 bg-gradient-to-br from-red-50 to-white p-3 text-center"
+        >
+          <p class="text-[10px] font-bold tracking-wider text-red-700 uppercase">Gastos</p>
+          <p class="mt-1 text-base font-bold text-red-700 tabular-nums">{fmt(expenseCents)}</p>
+        </div>
+        <div
+          class:list={[
+            'shadow-brand-sm rounded-2xl border p-3 text-center',
+            balanceCents >= 0
+              ? 'border-primary-200 from-primary-50 bg-gradient-to-br to-white'
+              : 'border-red-200 bg-gradient-to-br from-red-50 to-white',
+          ]}
+        >
+          <p
+            class:list={[
+              'text-[10px] font-bold tracking-wider uppercase',
+              balanceCents >= 0 ? 'text-primary-700' : 'text-red-700',
+            ]}
+          >
+            Balance
+          </p>
+          <p
+            class:list={[
+              'mt-1 text-base font-bold tabular-nums',
+              balanceCents >= 0 ? 'text-primary-700' : 'text-red-700',
+            ]}
+          >
+            {fmt(balanceCents)}
+          </p>
+        </div>
+      </section>
+
+      {/* Odómetro inicial */}
+      <section class="rounded-2xl border border-gray-200 bg-white p-4">
+        <h2 class="mb-2 text-xs font-bold tracking-wider text-gray-500 uppercase">Kilometraje</h2>
+
+        {
+          entry.odometerStartKm === null ? (
+            <form
+              method="POST"
+              action={`/api/panel/daily-entries/${entry.id}/odometer/`}
+              class="space-y-2"
+            >
+              <input type="hidden" name="kind" value="start" />
+              <label class="block text-sm">
+                <span class="mb-1 block font-bold">Kilometraje al iniciar el día *</span>
+                <input
+                  type="number"
+                  name="km"
+                  required
+                  min="0"
+                  inputmode="numeric"
+                  class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 text-lg focus:ring-2 focus:outline-none"
+                />
+              </label>
+              <button
+                type="submit"
+                class="bg-primary hover:bg-primary-dark w-full rounded-full py-2 text-sm font-bold text-white"
+              >
+                Guardar kilometraje inicial
+              </button>
+            </form>
+          ) : (
+            <div class="text-sm">
+              <p>
+                Inicial: <span class="font-bold">{entry.odometerStartKm} km</span>
+              </p>
+              {entry.odometerEndKm !== null && (
+                <p>
+                  Final: <span class="font-bold">{entry.odometerEndKm} km</span>
+                  <span class="ml-2 text-xs text-gray-500">
+                    ({entry.odometerEndKm - entry.odometerStartKm} km recorridos)
+                  </span>
+                </p>
+              )}
+            </div>
+          )
+        }
+      </section>
+
+      {/* Viajes */}
+      {
+        entry.odometerStartKm !== null && !entry.closedAt && (
+          <section class="rounded-2xl border border-gray-200 bg-white p-4">
+            <div class="mb-3 flex items-center justify-between">
+              <h2 class="text-xs font-bold tracking-wider text-gray-500 uppercase">
+                Viajes del día
+              </h2>
+              {allTrips.length === 0 && <span class="text-xs text-gray-400">(ninguno aún)</span>}
+            </div>
+
+            {activeTrip ? (
+              <div class="border-primary bg-primary/5 mb-3 rounded-lg border-l-4 p-3">
+                <p class="text-primary text-xs font-bold tracking-wider uppercase">
+                  Viaje en curso
+                </p>
+                <p class="mt-1 font-bold">
+                  {activeTrip.origin} → {activeTrip.destination}
+                </p>
+                <p class="text-xs text-gray-600">
+                  Inició{' '}
+                  {new Date(activeTrip.startedAt).toLocaleTimeString('es-PE', {
+                    timeZone: 'America/Lima',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                  · {tripDuration(activeTrip)} · {activeTrip.serviceKind}
+                </p>
+                <form
+                  method="POST"
+                  action={`/api/panel/trips/${activeTrip.id}/end/`}
+                  class="mt-3 space-y-2"
+                >
+                  <label class="block text-sm">
+                    <span class="mb-1 block font-bold">Monto cobrado (S/) *</span>
+                    <input
+                      type="number"
+                      name="amount_soles"
+                      required
+                      min="0"
+                      step="0.01"
+                      inputmode="decimal"
+                      value={
+                        activeTrip.amountCents ? (activeTrip.amountCents / 100).toFixed(2) : ''
+                      }
+                      placeholder="Ej: 70.00"
+                      class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+                    />
+                  </label>
+                  <button
+                    type="submit"
+                    class="w-full rounded-full bg-green-600 py-2 text-sm font-bold text-white hover:bg-green-700"
+                  >
+                    Finalizar viaje
+                  </button>
+                </form>
+              </div>
+            ) : (
+              <form
+                method="POST"
+                action="/api/panel/trips/start/"
+                class="mb-3 space-y-2 rounded-lg border border-dashed border-gray-300 p-3"
+              >
+                <input type="hidden" name="entry_id" value={entry.id} />
+                <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">
+                  Iniciar nuevo viaje
+                </p>
+                <div class="grid grid-cols-2 gap-2">
+                  <label class="block text-sm">
+                    <span class="mb-1 block text-xs font-bold">Tipo</span>
+                    <select
+                      name="service_kind"
+                      required
+                      class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 focus:ring-2 focus:outline-none"
+                    >
+                      <option value="flete">Flete</option>
+                      <option value="mudanza">Mudanza</option>
+                      <option value="taxi_carga">Taxi carga</option>
+                      <option value="embalaje">Embalaje</option>
+                      <option value="armado">Armado</option>
+                      <option value="otro">Otro</option>
+                    </select>
+                  </label>
+                  <label class="block text-sm">
+                    <span class="mb-1 block text-xs font-bold">Personal</span>
+                    <input
+                      type="number"
+                      name="crew_size"
+                      min="1"
+                      max="20"
+                      value="1"
+                      required
+                      inputmode="numeric"
+                      class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+                    />
+                  </label>
+                </div>
+                <label class="block text-sm">
+                  <span class="mb-1 block text-xs font-bold">Origen *</span>
+                  <input
+                    type="text"
+                    name="origin"
+                    required
+                    placeholder="San Sebastián"
+                    class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+                  />
+                </label>
+                <label class="block text-sm">
+                  <span class="mb-1 block text-xs font-bold">Destino *</span>
+                  <input
+                    type="text"
+                    name="destination"
+                    required
+                    placeholder="San Jerónimo"
+                    class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+                  />
+                </label>
+                <label class="block text-sm">
+                  <span class="mb-1 block text-xs font-bold">Cliente (opcional)</span>
+                  <input
+                    type="text"
+                    name="customer_name"
+                    class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+                  />
+                </label>
+                <label class="block text-sm">
+                  <span class="mb-1 block text-xs font-bold">Monto preliminar (S/)</span>
+                  <input
+                    type="number"
+                    name="amount_soles"
+                    min="0"
+                    step="0.01"
+                    value="0.00"
+                    inputmode="decimal"
+                    placeholder="70.00"
+                    class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+                  />
+                  <span class="mt-1 block text-[10px] text-gray-500">
+                    Se puede ajustar al finalizar.
+                  </span>
+                </label>
+                <button
+                  type="submit"
+                  class="bg-primary hover:bg-primary-dark w-full rounded-full py-2 text-sm font-bold text-white"
+                >
+                  Iniciar viaje
+                </button>
+              </form>
+            )}
+
+            {/* Lista de viajes cerrados */}
+            {allTrips.filter((t) => t.endedAt !== null).length > 0 && (
+              <ul class="space-y-2">
+                {allTrips
+                  .filter((t) => t.endedAt !== null)
+                  .map((t) => (
+                    <li class="rounded-lg border border-gray-100 bg-gray-50 p-3 text-sm">
+                      <div class="flex items-start justify-between gap-2">
+                        <div>
+                          <p class="font-bold">
+                            {t.origin} → {t.destination}
+                          </p>
+                          <p class="text-xs text-gray-600">
+                            {t.serviceKind} · {t.crewSize}p · {tripDuration(t)}
+                          </p>
+                        </div>
+                        <div class="text-right">
+                          <p class="font-bold text-green-700">{fmt(t.amountCents)}</p>
+                          <form
+                            method="POST"
+                            action={`/api/panel/trips/${t.id}/delete/`}
+                            class="mt-1 inline"
+                          >
+                            <button
+                              type="submit"
+                              class="text-[10px] text-red-600 hover:underline"
+                              onclick="return confirm('¿Eliminar este viaje?');"
+                            >
+                              eliminar
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+              </ul>
+            )}
+          </section>
+        )
+      }
+
+      {/* Gastos */}
+      {
+        entry.odometerStartKm !== null && !entry.closedAt && (
+          <section class="rounded-2xl border border-gray-200 bg-white p-4">
+            <h2 class="mb-3 text-xs font-bold tracking-wider text-gray-500 uppercase">
+              Gastos del día
+            </h2>
+
+            <form
+              method="POST"
+              action="/api/panel/entry-items/"
+              class="space-y-2 rounded-lg border border-dashed border-gray-300 p-3"
+            >
+              <input type="hidden" name="entry_id" value={entry.id} />
+              <input type="hidden" name="kind" value="expense" />
+              <div class="grid grid-cols-2 gap-2">
+                <label class="block text-sm">
+                  <span class="mb-1 block text-xs font-bold">Categoría *</span>
+                  <select
+                    name="category_id"
+                    required
+                    class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 focus:ring-2 focus:outline-none"
+                  >
+                    <option value="">—</option>
+                    {categories.map((c) => (
+                      <option value={c.id}>{c.labelEs}</option>
+                    ))}
+                  </select>
+                </label>
+                <label class="block text-sm">
+                  <span class="mb-1 block text-xs font-bold">Monto (S/) *</span>
+                  <input
+                    type="number"
+                    name="amount_soles"
+                    min="0"
+                    step="0.01"
+                    required
+                    inputmode="decimal"
+                    placeholder="50.00"
+                    class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+                  />
+                </label>
+              </div>
+              <label class="block text-sm">
+                <span class="mb-1 block text-xs font-bold">Descripción *</span>
+                <input
+                  type="text"
+                  name="description"
+                  required
+                  minlength="3"
+                  maxlength="200"
+                  placeholder="Combustible grifo Repsol San Sebastián"
+                  class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+                />
+              </label>
+
+              {storageReady ? (
+                <div>
+                  <span class="mb-1 block text-xs font-bold">
+                    Foto (obligatoria si la categoría la exige)
+                  </span>
+                  <PhotoUploader
+                    name="photo_key"
+                    scope="fotos"
+                    prefix="entry-items"
+                    label="Sacar foto o elegir del rollo"
+                  />
+                </div>
+              ) : (
+                <p class="rounded bg-amber-50 px-3 py-2 text-[10px] text-amber-800">
+                  Storage B2 no configurado en este entorno. Foto no disponible hasta que admin
+                  configure las credenciales.
+                </p>
+              )}
+
+              <button
+                type="submit"
+                class="w-full rounded-full bg-red-600 py-2 text-sm font-bold text-white hover:bg-red-700"
+              >
+                Añadir gasto
+              </button>
+            </form>
+
+            {items.filter((i) => i.kind === 'expense').length > 0 && (
+              <ul class="mt-3 space-y-2">
+                {items
+                  .filter((i) => i.kind === 'expense')
+                  .map((item) => (
+                    <li class="rounded-lg border border-gray-100 bg-gray-50 p-3 text-sm">
+                      <div class="flex items-start justify-between gap-2">
+                        <div>
+                          <p class="font-bold">{item.categoryLabel ?? 'Otros'}</p>
+                          <p class="text-xs text-gray-600">{item.description}</p>
+                        </div>
+                        <div class="text-right">
+                          <p class="font-bold text-red-700">{fmt(item.amountCents)}</p>
+                          <form
+                            method="POST"
+                            action={`/api/panel/entry-items/${item.id}/delete/`}
+                            class="mt-1 inline"
+                          >
+                            <button
+                              type="submit"
+                              class="text-[10px] text-red-600 hover:underline"
+                              onclick="return confirm('¿Eliminar este gasto?');"
+                            >
+                              eliminar
+                            </button>
+                          </form>
+                        </div>
+                      </div>
+                    </li>
+                  ))}
+              </ul>
+            )}
+          </section>
+        )
+      }
+
+      {/* Cerrar día */}
+      {
+        !entry.closedAt && allTrips.length > 0 && !activeTrip && entry.odometerStartKm !== null && (
+          <section class="rounded-2xl border border-gray-200 bg-white p-4">
+            <h2 class="mb-2 text-xs font-bold tracking-wider text-gray-500 uppercase">
+              Cerrar el día
+            </h2>
+
+            {entry.odometerEndKm === null ? (
+              <form
+                method="POST"
+                action={`/api/panel/daily-entries/${entry.id}/odometer/`}
+                class="space-y-2"
+              >
+                <input type="hidden" name="kind" value="end" />
+                <label class="block text-sm">
+                  <span class="mb-1 block font-bold">Kilometraje final *</span>
+                  <input
+                    type="number"
+                    name="km"
+                    required
+                    min={entry.odometerStartKm}
+                    inputmode="numeric"
+                    class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 text-lg focus:ring-2 focus:outline-none"
+                  />
+                </label>
+                <button
+                  type="submit"
+                  class="w-full rounded-full bg-gray-700 py-2 text-sm font-bold text-white hover:bg-gray-800"
+                >
+                  Guardar kilometraje final
+                </button>
+              </form>
+            ) : (
+              <form method="POST" action={`/api/panel/daily-entries/${entry.id}/close/`}>
+                <p class="mb-2 text-xs text-gray-600">
+                  Al cerrar, el día ya no admite cambios. El sistema también lo cerrará
+                  automáticamente mañana al mediodía si lo olvidas.
+                </p>
+                <button
+                  type="submit"
+                  class="w-full rounded-full bg-gray-900 py-2 text-sm font-bold text-white hover:bg-black"
+                  onclick="return confirm('¿Cerrar el día? No podrás modificar nada después.');"
+                >
+                  Cerrar el día
+                </button>
+              </form>
+            )}
+          </section>
+        )
+      }
+
+      <footer class="pt-4 text-center">
+        <a
+          href="/panel/conductor/historial/"
+          class="text-xs font-bold text-gray-500 hover:text-gray-800"
+        >
+          Ver historial de días anteriores →
+        </a>
+      </footer>
+    </div>
+  </main>
+</PanelLayout>

@@ -1,0 +1,241 @@
+---
+export const prerender = false;
+
+import CotizadorLayout from '@layouts/CotizadorLayout.astro';
+import KpiCard from '@components/panel/KpiCard.astro';
+import StatusBadge from '@components/panel/StatusBadge.astro';
+import SectionHeader from '@components/panel/SectionHeader.astro';
+import EmptyState from '@components/panel/EmptyState.astro';
+import { ICONS } from '@components/panel/icons';
+import { db } from '@db/client';
+import { quotes, receipts, customers } from '@db/schema';
+import { count, eq, sql, gte } from 'drizzle-orm';
+import { soles, fmtDateTime } from '@lib/panel/format';
+import { todayLimaISO } from '@lib/panel/lima-date';
+import { getService } from '@lib/panel/services';
+
+const user = Astro.locals.user!;
+const today = todayLimaISO();
+
+// Fecha de hace 30 días para "este mes"
+const monthStart = new Date(today + 'T00:00:00');
+monthStart.setUTCDate(monthStart.getUTCDate() - 30);
+const monthStartISO = monthStart.toISOString().slice(0, 10);
+
+const [qTotal, qDraft, qSent, qAccepted, rTotal, cTotal] = [
+  db.select({ n: count() }).from(quotes).get(),
+  db.select({ n: count() }).from(quotes).where(eq(quotes.status, 'draft')).get(),
+  db.select({ n: count() }).from(quotes).where(eq(quotes.status, 'sent')).get(),
+  db.select({ n: count() }).from(quotes).where(eq(quotes.status, 'accepted')).get(),
+  db.select({ n: count() }).from(receipts).get(),
+  db.select({ n: count() }).from(customers).get(),
+];
+
+// Pipeline 30 días
+const monthQuotes = await db
+  .select({
+    status: quotes.status,
+    totalCents: quotes.totalCents,
+    createdAt: quotes.createdAt,
+  })
+  .from(quotes)
+  .where(gte(quotes.createdAt, monthStartISO + 'T00:00:00.000Z'))
+  .all();
+
+const monthAccepted = monthQuotes.filter((q) => q.status === 'accepted');
+const acceptedRevenueCents = monthAccepted.reduce((s, q) => s + q.totalCents, 0);
+const conversionPct =
+  monthQuotes.length > 0 ? Math.round((monthAccepted.length / monthQuotes.length) * 100) : 0;
+
+const recent = await db
+  .select({
+    id: quotes.id,
+    number: quotes.number,
+    status: quotes.status,
+    totalCents: quotes.totalCents,
+    serviceType: quotes.serviceType,
+    createdAt: quotes.createdAt,
+    customerName: customers.name,
+  })
+  .from(quotes)
+  .innerJoin(customers, eq(customers.id, quotes.customerId))
+  .orderBy(sql`${quotes.createdAt} desc`)
+  .limit(10)
+  .all();
+
+const greeting = (() => {
+  const h = new Date().getUTCHours() - 5;
+  const lh = ((h % 24) + 24) % 24;
+  if (lh < 12) return 'Buenos días';
+  if (lh < 19) return 'Buenas tardes';
+  return 'Buenas noches';
+})();
+
+const todayPretty = new Date(today + 'T00:00:00').toLocaleDateString('es-PE', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+});
+---
+
+<CotizadorLayout title="Inicio">
+  {/* HERO */}
+  <header
+    class="bg-brand-gradient panel-fade-in shadow-brand-lg -mx-4 -mt-4 mb-6 px-4 py-6 text-white sm:rounded-2xl md:-mx-8 md:-mt-8 md:px-8 md:py-8"
+  >
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-xs font-bold tracking-wider text-white/80 uppercase">Pipeline de ventas</p>
+        <h1 class="font-heading mt-1 text-2xl font-bold tracking-tight md:text-4xl">
+          {greeting}, {user.fullName.split(' ')[0]}
+        </h1>
+        <p class="mt-1 text-sm text-white/90 capitalize md:text-base">{todayPretty}</p>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <div class="rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+          <p class="text-[10px] font-bold tracking-wider text-white/80 uppercase">
+            Cerradas (30 d)
+          </p>
+          <p class="mt-1 text-2xl font-bold tabular-nums md:text-3xl">
+            {soles(acceptedRevenueCents)}
+          </p>
+        </div>
+        <div class="rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+          <p class="text-[10px] font-bold tracking-wider text-white/80 uppercase">Conversión</p>
+          <p class="mt-1 text-2xl font-bold tabular-nums md:text-3xl">{conversionPct}%</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-6 flex flex-wrap gap-2">
+      <a
+        href="/panel/cotizador/nueva/"
+        class="text-primary-700 shadow-brand inline-flex items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-bold transition-transform hover:scale-105"
+      >
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d={ICONS.plus}></path>
+        </svg>
+        Nueva cotización
+      </a>
+      <a
+        href="/panel/cotizador/clientes/nuevo/"
+        class="inline-flex items-center gap-2 rounded-full border border-white/30 bg-white/10 px-5 py-2 text-sm font-bold text-white backdrop-blur-sm transition-colors hover:bg-white/20"
+      >
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d={ICONS.users}></path>
+        </svg>
+        Nuevo cliente
+      </a>
+    </div>
+  </header>
+
+  {/* KPIs */}
+  <SectionHeader title="Resumen del pipeline" subtitle="Estado de las cotizaciones por etapa." />
+  <div class="panel-slide-up grid grid-cols-2 gap-3 md:grid-cols-6">
+    <KpiCard
+      label="Total"
+      value={String(qTotal?.n ?? 0)}
+      variant="primary"
+      iconHref={ICONS.doc}
+      href="/panel/cotizador/listado/"
+    />
+    <KpiCard
+      label="Borradores"
+      value={String(qDraft?.n ?? 0)}
+      variant="neutral"
+      iconHref={ICONS.doc}
+      href="/panel/cotizador/listado/?status=draft"
+    />
+    <KpiCard
+      label="Enviadas"
+      value={String(qSent?.n ?? 0)}
+      variant="info"
+      iconHref={ICONS.doc}
+      href="/panel/cotizador/listado/?status=sent"
+    />
+    <KpiCard
+      label="Aceptadas"
+      value={String(qAccepted?.n ?? 0)}
+      variant="success"
+      iconHref={ICONS.check}
+      href="/panel/cotizador/listado/?status=accepted"
+    />
+    <KpiCard
+      label="Recibos"
+      value={String(rTotal?.n ?? 0)}
+      variant="primary"
+      iconHref={ICONS.receipt}
+      href="/panel/cotizador/recibos/"
+    />
+    <KpiCard
+      label="Clientes"
+      value={String(cTotal?.n ?? 0)}
+      variant="neutral"
+      iconHref={ICONS.users}
+      href="/panel/cotizador/clientes/"
+    />
+  </div>
+
+  {/* Últimas cotizaciones */}
+  <section class="panel-slide-up mt-8">
+    <SectionHeader
+      title="Últimas cotizaciones"
+      subtitle="Las 10 más recientes."
+      actionLabel="Ver todas"
+      actionHref="/panel/cotizador/listado/"
+    />
+
+    {
+      recent.length === 0 ? (
+        <EmptyState
+          title="Aún no hay cotizaciones"
+          description="Crea la primera y empieza a llenar el pipeline."
+          ctaLabel="Crear cotización"
+          ctaHref="/panel/cotizador/nueva/"
+          iconHref={ICONS.doc}
+        />
+      ) : (
+        <ul class="shadow-brand-sm divide-y divide-gray-100 overflow-hidden rounded-2xl border border-gray-200 bg-white">
+          {recent.map((q) => (
+            <li>
+              <a
+                href={`/panel/cotizador/${q.id}/`}
+                class="flex items-center justify-between gap-3 p-4 text-sm transition-colors hover:bg-gray-50"
+              >
+                <div class="min-w-0 flex-1">
+                  <div class="flex flex-wrap items-center gap-2">
+                    <p class="font-mono text-xs font-bold text-gray-500">{q.number}</p>
+                    <StatusBadge status={q.status} />
+                  </div>
+                  <p class="mt-1 truncate font-bold">{q.customerName}</p>
+                  <p class="text-primary text-xs font-bold">{getService(q.serviceType).name}</p>
+                  <p class="mt-0.5 text-[10px] text-gray-400">{fmtDateTime(q.createdAt)}</p>
+                </div>
+                <div class="text-right">
+                  <p class="text-primary text-lg font-bold tabular-nums">{soles(q.totalCents)}</p>
+                </div>
+              </a>
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </section>
+</CotizadorLayout>

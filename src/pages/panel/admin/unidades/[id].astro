@@ -1,0 +1,212 @@
+---
+export const prerender = false;
+
+import AdminLayout from '@layouts/AdminLayout.astro';
+import { db } from '@db/client';
+import { units, driverAssignments, users } from '@db/schema';
+import { and, eq, isNull } from 'drizzle-orm';
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect('/panel/admin/unidades/');
+
+const unit = await db.select().from(units).where(eq(units.id, id)).get();
+if (!unit) return Astro.redirect('/panel/admin/unidades/?error=notfound');
+
+// Asignación actual (si la hay)
+const currentAssignment = await db
+  .select({
+    id: driverAssignments.id,
+    driverId: users.id,
+    driverName: users.fullName,
+    startsAt: driverAssignments.startsAt,
+  })
+  .from(driverAssignments)
+  .innerJoin(users, eq(users.id, driverAssignments.userId))
+  .where(and(eq(driverAssignments.unitId, id), isNull(driverAssignments.endsAt)))
+  .get();
+
+const error = Astro.url.searchParams.get('error');
+const updated = Astro.url.searchParams.get('updated') === 'true';
+---
+
+<AdminLayout title={`Unidad ${unit.plate}`}>
+  <header class="mb-6">
+    <nav class="mb-2 text-sm">
+      <a href="/panel/admin/unidades/" class="text-gray-500 hover:text-gray-700">← Unidades</a>
+    </nav>
+    <h1 class="font-heading text-2xl font-bold">{unit.plate}</h1>
+    <p class="mt-1 text-sm text-gray-600">
+      {unit.tonnage} toneladas{unit.alias ? ` · ${unit.alias}` : ''}
+    </p>
+  </header>
+
+  {
+    updated && (
+      <div
+        class="mb-4 rounded-lg border-l-4 border-green-500 bg-green-50 p-3 text-sm text-green-800"
+        role="status"
+      >
+        Unidad actualizada correctamente.
+      </div>
+    )
+  }
+  {
+    error && (
+      <div
+        class="mb-4 rounded-lg border-l-4 border-red-500 bg-red-50 p-3 text-sm text-red-800"
+        role="alert"
+      >
+        {error === 'invalid' ? 'Datos inválidos.' : 'Error al guardar.'}
+      </div>
+    )
+  }
+
+  <div class="grid gap-6 lg:grid-cols-3">
+    <form
+      method="POST"
+      action={`/api/panel/units/${unit.id}/update/`}
+      class="space-y-4 rounded-2xl border border-gray-200 bg-white p-6 lg:col-span-2"
+    >
+      <input type="hidden" name="id" value={unit.id} />
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="block">
+          <span class="mb-1 block text-sm font-bold">Placa</span>
+          <input
+            type="text"
+            name="plate"
+            required
+            value={unit.plate}
+            class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 font-mono uppercase focus:ring-2 focus:outline-none"
+          />
+        </label>
+
+        <label class="block">
+          <span class="mb-1 block text-sm font-bold">Tonelaje</span>
+          <select
+            name="tonnage"
+            required
+            class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+          >
+            <option value="1" selected={unit.tonnage === 1}>1 tonelada</option>
+            <option value="2" selected={unit.tonnage === 2}>2 toneladas</option>
+            <option value="4" selected={unit.tonnage === 4}>4 toneladas</option>
+          </select>
+        </label>
+      </div>
+
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Alias</span>
+        <input
+          type="text"
+          name="alias"
+          value={unit.alias ?? ''}
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+
+      <div class="grid gap-4 sm:grid-cols-2">
+        <label class="block">
+          <span class="mb-1 block text-sm font-bold">Vencimiento SOAT</span>
+          <input
+            type="date"
+            name="soat_expires"
+            value={unit.soatExpires ?? ''}
+            class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+          />
+        </label>
+
+        <label class="block">
+          <span class="mb-1 block text-sm font-bold">Vencimiento RTV</span>
+          <input
+            type="date"
+            name="rtv_expires"
+            value={unit.rtvExpires ?? ''}
+            class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+          />
+        </label>
+      </div>
+
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Próximo mantenimiento (km)</span>
+        <input
+          type="number"
+          name="next_service_km"
+          min="0"
+          value={unit.nextServiceKm ?? ''}
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+
+      <label class="flex items-center gap-2">
+        <input type="checkbox" name="active" value="1" checked={unit.active} class="h-4 w-4" />
+        <span class="text-sm font-bold">Unidad activa</span>
+      </label>
+
+      <div class="flex gap-3 pt-2">
+        <button
+          type="submit"
+          class="bg-primary hover:bg-primary-dark rounded-full px-6 py-2 text-sm font-bold text-white"
+        >
+          Guardar cambios
+        </button>
+        <a
+          href="/panel/admin/unidades/"
+          class="rounded-full border border-gray-300 px-6 py-2 text-sm font-bold hover:bg-gray-100"
+        >
+          Cancelar
+        </a>
+      </div>
+    </form>
+
+    <aside class="space-y-4">
+      <a
+        href={`/panel/admin/unidades/${unit.id}/documentos/`}
+        class="block rounded-2xl border border-gray-200 bg-white p-5 hover:bg-gray-50"
+      >
+        <h2 class="font-heading mb-1 text-sm font-bold tracking-wider uppercase">Documentos</h2>
+        <p class="text-xs text-gray-600">SOAT, RTV, tarjeta de propiedad, seguro</p>
+        <p class="text-primary mt-2 text-xs font-bold">Abrir →</p>
+      </a>
+
+      <a
+        href={`/panel/admin/unidades/${unit.id}/mantenimiento/`}
+        class="block rounded-2xl border border-gray-200 bg-white p-5 hover:bg-gray-50"
+      >
+        <h2 class="font-heading mb-1 text-sm font-bold tracking-wider uppercase">Mantenimiento</h2>
+        <p class="text-xs text-gray-600">Cambios de aceite, frenos, llantas, RTV</p>
+        <p class="text-primary mt-2 text-xs font-bold">Abrir →</p>
+      </a>
+
+      <div class="rounded-2xl border border-gray-200 bg-white p-5">
+        <h2 class="font-heading mb-2 text-sm font-bold tracking-wider uppercase">
+          Asignación actual
+        </h2>
+        {
+          currentAssignment ? (
+            <div class="text-sm">
+              <p class="font-bold">{currentAssignment.driverName}</p>
+              <p class="mt-1 text-xs text-gray-500">Desde {currentAssignment.startsAt}</p>
+              <a
+                href={`/panel/admin/asignaciones/?unit=${unit.id}`}
+                class="text-primary mt-3 inline-block text-xs font-bold hover:underline"
+              >
+                Gestionar asignaciones →
+              </a>
+            </div>
+          ) : (
+            <div class="text-sm text-gray-500">
+              <p>Sin conductor asignado.</p>
+              <a
+                href={`/panel/admin/asignaciones/nueva/?unit=${unit.id}`}
+                class="text-primary mt-3 inline-block text-xs font-bold hover:underline"
+              >
+                + Asignar conductor
+              </a>
+            </div>
+          )
+        }
+      </div>
+    </aside>
+  </div>
+</AdminLayout>

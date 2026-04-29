@@ -1,0 +1,176 @@
+---
+export const prerender = false;
+
+import AdminLayout from '@layouts/AdminLayout.astro';
+import { db } from '@db/client';
+import { units, maintenanceRecords, users } from '@db/schema';
+import { desc, eq } from 'drizzle-orm';
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect('/panel/admin/unidades/');
+const unit = await db.select().from(units).where(eq(units.id, id)).get();
+if (!unit) return Astro.redirect('/panel/admin/unidades/');
+
+const records = await db
+  .select({
+    id: maintenanceRecords.id,
+    occurredAt: maintenanceRecords.occurredAt,
+    km: maintenanceRecords.km,
+    kind: maintenanceRecords.kind,
+    amountCents: maintenanceRecords.amountCents,
+    shop: maintenanceRecords.shop,
+    notes: maintenanceRecords.notes,
+    creatorName: users.fullName,
+  })
+  .from(maintenanceRecords)
+  .leftJoin(users, eq(users.id, maintenanceRecords.createdBy))
+  .where(eq(maintenanceRecords.unitId, id))
+  .orderBy(desc(maintenanceRecords.occurredAt))
+  .limit(50)
+  .all();
+
+const total = records.reduce((s, r) => s + r.amountCents, 0);
+const fmt = (c: number | null | undefined): string =>
+  `S/ ${((c ?? 0) / 100).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const today = new Date().toISOString().slice(0, 10);
+const created = Astro.url.searchParams.get('created');
+---
+
+<AdminLayout title={`Mantenimiento · ${unit.plate}`}>
+  <header class="mb-6">
+    <nav class="mb-2 text-sm">
+      <a href={`/panel/admin/unidades/${unit.id}/`} class="text-gray-500 hover:text-gray-700">
+        ← {unit.plate}
+      </a>
+    </nav>
+    <h1 class="font-heading text-2xl font-bold">Mantenimiento de la unidad</h1>
+    <p class="mt-1 text-sm text-gray-600">
+      {unit.plate} · {unit.tonnage}t · Total histórico: <strong>{fmt(total)}</strong>
+    </p>
+  </header>
+
+  {
+    created && (
+      <div class="mb-4 rounded-lg border-l-4 border-green-500 bg-green-50 p-3 text-sm text-green-800">
+        Registro añadido.
+      </div>
+    )
+  }
+
+  <div class="grid gap-6 lg:grid-cols-3">
+    <form
+      method="POST"
+      action="/api/panel/maintenance/"
+      class="space-y-3 rounded-2xl border border-gray-200 bg-white p-5 lg:col-span-1"
+    >
+      <h2 class="font-heading text-sm font-bold tracking-wider text-gray-500 uppercase">
+        Nuevo registro
+      </h2>
+      <input type="hidden" name="unit_id" value={unit.id} />
+
+      <label class="block">
+        <span class="mb-1 block text-xs font-bold">Fecha *</span>
+        <input
+          type="date"
+          name="occurred_at"
+          required
+          value={today}
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+        />
+      </label>
+
+      <label class="block">
+        <span class="mb-1 block text-xs font-bold">Tipo *</span>
+        <select
+          name="kind"
+          required
+          class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm"
+        >
+          <option value="">—</option>
+          <option value="aceite">Cambio de aceite</option>
+          <option value="frenos">Frenos</option>
+          <option value="llantas">Llantas</option>
+          <option value="rtv">RTV (revisión técnica)</option>
+          <option value="soat">SOAT</option>
+          <option value="otro">Otro</option>
+        </select>
+      </label>
+
+      <label class="block">
+        <span class="mb-1 block text-xs font-bold">Kilometraje al momento</span>
+        <input
+          type="number"
+          name="km"
+          min="0"
+          max="9999999"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+        />
+      </label>
+
+      <label class="block">
+        <span class="mb-1 block text-xs font-bold">Monto (S/) *</span>
+        <input
+          type="number"
+          name="amount_soles"
+          min="0.01"
+          step="0.01"
+          inputmode="decimal"
+          required
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+        />
+      </label>
+
+      <label class="block">
+        <span class="mb-1 block text-xs font-bold">Taller / proveedor</span>
+        <input
+          type="text"
+          name="shop"
+          maxlength="120"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+        />
+      </label>
+
+      <label class="block">
+        <span class="mb-1 block text-xs font-bold">Notas</span>
+        <textarea
+          name="notes"
+          rows="2"
+          maxlength="500"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"></textarea>
+      </label>
+
+      <button
+        class="bg-primary hover:bg-primary-dark w-full rounded-full py-2 text-sm font-bold text-white"
+      >
+        Añadir registro
+      </button>
+    </form>
+
+    <div class="space-y-2 lg:col-span-2">
+      {
+        records.length === 0 ? (
+          <div class="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-600">
+            Sin registros de mantenimiento.
+          </div>
+        ) : (
+          records.map((r) => (
+            <div class="rounded-2xl border border-gray-200 bg-white p-4">
+              <div class="flex items-start justify-between gap-3">
+                <div>
+                  <p class="font-bold">{r.kind}</p>
+                  <p class="text-xs text-gray-600">
+                    {r.occurredAt} {r.km && ` · ${r.km} km`}
+                    {r.shop && ` · ${r.shop}`}
+                  </p>
+                  {r.notes && <p class="mt-1 text-xs text-gray-500">{r.notes}</p>}
+                  <p class="mt-1 text-[10px] text-gray-400">Por {r.creatorName ?? '—'}</p>
+                </div>
+                <p class="font-bold text-red-700">{fmt(r.amountCents)}</p>
+              </div>
+            </div>
+          ))
+        )
+      }
+    </div>
+  </div>
+</AdminLayout>

@@ -1,0 +1,158 @@
+---
+export const prerender = false;
+
+import PanelLayout from '@layouts/PanelLayout.astro';
+import { getActiveAssignments, getPreTripCheck, PRETRIP_ITEMS } from '@lib/panel/conductor';
+import { todayLimaISO } from '@lib/panel/lima-date';
+
+const user = Astro.locals.user!;
+
+const assignments = await getActiveAssignments(user.id);
+const entryDate = todayLimaISO();
+
+// Si el conductor tiene >1 unidad, usamos ?unit= o la primera por default.
+const unitParam = Astro.url.searchParams.get('unit');
+const selectedAssignment = unitParam
+  ? assignments.find((a) => a.unitId === unitParam)
+  : assignments[0];
+
+if (!selectedAssignment) {
+  // Sin unidad asignada → mensaje claro
+}
+
+const existing = selectedAssignment
+  ? await getPreTripCheck(selectedAssignment.unitId, entryDate)
+  : null;
+
+const error = Astro.url.searchParams.get('error');
+const errorMessage =
+  error === 'invalid'
+    ? 'Revisa los ítems: faltan respuestas.'
+    : error === 'fail-note'
+      ? 'Si marcas un ítem como "Falla", debes escribir la nota explicando qué pasa.'
+      : null;
+
+// Si ya existe y no hay blocker activo, redirigir a /hoy/
+if (existing && !existing.blocker) {
+  return Astro.redirect(`/panel/conductor/hoy/?unit=${selectedAssignment!.unitId}`);
+}
+---
+
+<PanelLayout title="Check pre-viaje">
+  <main class="mx-auto max-w-lg p-4">
+    <header class="mb-6">
+      <h1 class="font-heading text-2xl font-bold">Check pre-viaje</h1>
+      <p class="mt-1 text-sm text-gray-600">
+        {entryDate} · Obligatorio antes de iniciar el día.
+      </p>
+    </header>
+
+    {
+      !selectedAssignment && (
+        <div
+          class="rounded-2xl border-l-4 border-red-500 bg-red-50 p-4 text-sm text-red-900"
+          role="alert"
+        >
+          <p class="font-bold">No tienes unidad asignada.</p>
+          <p class="mt-1">
+            Pide al administrador que te asigne una unidad antes de iniciar tu turno.
+          </p>
+        </div>
+      )
+    }
+
+    {
+      selectedAssignment && existing && existing.blocker && (
+        <div
+          class="mb-4 rounded-2xl border-l-4 border-red-500 bg-red-50 p-4 text-sm text-red-900"
+          role="alert"
+        >
+          <p class="font-bold">Unidad bloqueada: no operativa</p>
+          <p class="mt-1">
+            Uno o más ítems críticos fallaron en el check de hoy. El administrador debe desbloquear
+            la unidad antes de que puedas iniciar el día.
+          </p>
+          <p class="mt-2 font-bold">Unidad: {selectedAssignment.plate}</p>
+        </div>
+      )
+    }
+
+    {
+      selectedAssignment && !existing && (
+        <form
+          method="POST"
+          action="/api/panel/pre-trip/"
+          class="space-y-3 rounded-2xl border border-gray-200 bg-white p-5"
+        >
+          <input type="hidden" name="unit_id" value={selectedAssignment.unitId} />
+          <input type="hidden" name="entry_date" value={entryDate} />
+
+          {errorMessage && (
+            <div
+              class="rounded-lg border-l-4 border-red-500 bg-red-50 p-3 text-sm text-red-800"
+              role="alert"
+            >
+              {errorMessage}
+            </div>
+          )}
+
+          <div class="bg-primary/5 rounded-lg p-3 text-xs text-gray-700">
+            <p class="font-bold">
+              Unidad: {selectedAssignment.plate} ({selectedAssignment.tonnage} t)
+            </p>
+            <p class="mt-1">
+              Revisa cada ítem con atención. Los ítems marcados como críticos bloquean el uso de la
+              unidad si fallan.
+            </p>
+          </div>
+
+          {PRETRIP_ITEMS.map((item) => (
+            <fieldset class="rounded-lg border border-gray-200 p-3">
+              <legend class="text-sm font-bold">
+                {item.label}
+                {item.critical && (
+                  <span class="ml-2 inline-block rounded-full bg-red-100 px-2 py-0.5 text-[10px] font-bold text-red-800">
+                    Crítico
+                  </span>
+                )}
+              </legend>
+              <div class="mt-2 flex flex-wrap gap-3 text-sm">
+                <label class="flex items-center gap-1.5">
+                  <input
+                    type="radio"
+                    name={`status_${item.key}`}
+                    value="ok"
+                    required
+                    class="h-4 w-4"
+                  />
+                  <span class="text-green-700">OK</span>
+                </label>
+                <label class="flex items-center gap-1.5">
+                  <input type="radio" name={`status_${item.key}`} value="fail" class="h-4 w-4" />
+                  <span class="text-red-700">Falla</span>
+                </label>
+                <label class="flex items-center gap-1.5">
+                  <input type="radio" name={`status_${item.key}`} value="na" class="h-4 w-4" />
+                  <span class="text-gray-500">N/A</span>
+                </label>
+              </div>
+              <input
+                type="text"
+                name={`note_${item.key}`}
+                placeholder="Nota (obligatoria si marcaste Falla)"
+                class="focus:border-primary focus:ring-primary/20 mt-2 w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-2 focus:outline-none"
+              />
+            </fieldset>
+          ))}
+
+          <button
+            type="submit"
+            class="bg-primary hover:bg-primary-dark w-full rounded-full px-6 py-3 text-sm font-bold text-white"
+          >
+            Confirmar y continuar
+          </button>
+        </form>
+      )
+    }
+  </main>
+</PanelLayout>

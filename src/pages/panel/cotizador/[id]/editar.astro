@@ -1,0 +1,697 @@
+---
+export const prerender = false;
+
+import CotizadorLayout from '@layouts/CotizadorLayout.astro';
+import CoverageDatalist from '@components/panel/CoverageDatalist.astro';
+import { db } from '@db/client';
+import { customers, quotes, quoteItems, receipts } from '@db/schema';
+import { desc, eq, asc } from 'drizzle-orm';
+import { loadRules } from '@lib/panel/pricing';
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect('/panel/cotizador/listado/');
+
+// Cargar la cotización + items existentes.
+const row = await db
+  .select({ q: quotes, c: customers })
+  .from(quotes)
+  .innerJoin(customers, eq(customers.id, quotes.customerId))
+  .where(eq(quotes.id, id))
+  .get();
+if (!row) return Astro.redirect('/panel/cotizador/listado/');
+
+const q = row.q;
+
+// No permitir edición si ya se emitió un recibo (recibos son inmutables).
+const hasReceipt = await db
+  .select({ id: receipts.id })
+  .from(receipts)
+  .where(eq(receipts.quoteId, id))
+  .get();
+if (hasReceipt) {
+  return Astro.redirect(`/panel/cotizador/${id}/?error=has-receipt`);
+}
+// Sólo editable si está en draft o sent.
+if (!['draft', 'sent'].includes(q.status)) {
+  return Astro.redirect(`/panel/cotizador/${id}/?error=cannot-edit`);
+}
+
+const existingItems = await db
+  .select({ label: quoteItems.label, amountCents: quoteItems.amountCents })
+  .from(quoteItems)
+  .where(eq(quoteItems.quoteId, id))
+  .orderBy(asc(quoteItems.orderIdx))
+  .all();
+
+const customersList = await db
+  .select({ id: customers.id, name: customers.name, phone: customers.phone })
+  .from(customers)
+  .orderBy(desc(customers.createdAt))
+  .limit(500)
+  .all();
+
+const rules = await loadRules();
+
+const error = Astro.url.searchParams.get('error');
+const errorMsg =
+  error === 'invalid'
+    ? 'Datos inválidos.'
+    : error === 'customer-missing'
+      ? 'Cliente inválido.'
+      : null;
+---
+
+<CotizadorLayout title={`Editar cotización ${q.number}`}>
+  <header class="mb-6">
+    <nav class="mb-2 text-sm">
+      <a href={`/panel/cotizador/${id}/`} class="text-gray-500 hover:text-gray-700"
+        >← Volver al detalle</a
+      >
+    </nav>
+    <div class="flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <p class="font-mono text-xs font-bold text-gray-500">{q.number}</p>
+        <h1 class="font-heading text-2xl font-bold tracking-tight md:text-3xl">
+          Editar cotización
+        </h1>
+        <p class="mt-1 text-sm text-gray-600">
+          Modifica los datos del servicio y el desglose. Se guarda como una nueva versión de la
+          cotización; no se crea una distinta.
+        </p>
+      </div>
+      <span
+        class:list={[
+          'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-xs font-bold',
+          q.status === 'draft'
+            ? 'border-gray-300 bg-gray-100 text-gray-700'
+            : 'border-blue-200 bg-blue-50 text-blue-800',
+        ]}
+      >
+        {q.status === 'draft' ? 'Borrador editable' : 'Enviada — editable hasta antes de aceptar'}
+      </span>
+    </div>
+  </header>
+
+  <form
+    method="POST"
+    action={`/api/panel/quotes/${id}/update/`}
+    class="shadow-brand-sm max-w-3xl space-y-5 rounded-2xl border border-gray-200 bg-white p-6"
+    data-quote-form
+  >
+    {
+      errorMsg && (
+        <div class="rounded-lg border-l-4 border-red-500 bg-red-50 p-3 text-sm text-red-800">
+          {errorMsg}
+        </div>
+      )
+    }
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Cliente *</span>
+        <select
+          name="customer_id"
+          required
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+        >
+          <option value="">—</option>
+          {
+            customersList.map((c) => (
+              <option value={c.id} selected={c.id === q.customerId}>
+                {c.name}
+                {c.phone ? ` (${c.phone})` : ''}
+              </option>
+            ))
+          }
+        </select>
+      </label>
+
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Tipo de servicio *</span>
+        <select
+          name="service_type"
+          required
+          data-service-type
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+        >
+          <optgroup label="Mudanzas">
+            <option value="mudanza_embalaje" selected={q.serviceType === 'mudanza_embalaje'}
+              >Mudanza Express (servicio integral)</option
+            >
+            <option value="mudanza_personal" selected={q.serviceType === 'mudanza_personal'}
+              >Mudanza Estándar (vehículo + personal)</option
+            >
+            <option
+              value="solo_vehiculo_personal"
+              selected={q.serviceType === 'solo_vehiculo_personal'}
+              >Vehículo + Personal de carga y descarga</option
+            >
+          </optgroup>
+          <optgroup label="Otros servicios">
+            <option value="flete" selected={q.serviceType === 'flete'}>Flete</option>
+            <option value="embalaje_solo" selected={q.serviceType === 'embalaje_solo'}
+              >Embalaje profesional</option
+            >
+            <option value="armado_desarmado" selected={q.serviceType === 'armado_desarmado'}
+              >Armado y desarmado de muebles</option
+            >
+            <option value="almacenaje" selected={q.serviceType === 'almacenaje'}
+              >Almacenaje y custodia</option
+            >
+            <option value="otro" selected={q.serviceType === 'otro'}>Servicio personalizado</option>
+          </optgroup>
+        </select>
+        <span class="text-primary mt-1 block text-xs" data-service-tagline></span>
+      </label>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Origen</span>
+        <input
+          type="text"
+          name="origin"
+          maxlength="120"
+          value={q.origin ?? ''}
+          list="coverage-list"
+          autocomplete="off"
+          placeholder="Ej. Wanchaq, Cusco"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Destino</span>
+        <input
+          type="text"
+          name="destination"
+          maxlength="120"
+          value={q.destination ?? ''}
+          list="coverage-list"
+          autocomplete="off"
+          placeholder="Ej. San Sebastián, Cusco"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+    </div>
+    <CoverageDatalist />
+
+    <div class="grid gap-4 sm:grid-cols-4">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Fecha tentativa</span>
+        <input
+          type="date"
+          name="tentative_date"
+          data-calc-input
+          value={q.tentativeDate ?? ''}
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Volumen m³</span>
+        <input
+          type="number"
+          name="volume_m3"
+          min="0"
+          max="500"
+          data-calc-input
+          value={q.volumeM3 ?? ''}
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Distancia km</span>
+        <input
+          type="number"
+          name="distance_km"
+          min="0"
+          max="9999"
+          data-calc-input
+          value={q.distanceKm ?? ''}
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Personal</span>
+        <input
+          type="number"
+          name="crew_size"
+          min="1"
+          max="20"
+          value={q.crewSize ?? 2}
+          data-calc-input
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-3">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Pisos origen</span>
+        <input
+          type="number"
+          name="floors_origin"
+          min="0"
+          max="30"
+          value={q.floorsOrigin ?? 0}
+          data-calc-input
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Pisos destino</span>
+        <input
+          type="number"
+          name="floors_dest"
+          min="0"
+          max="30"
+          value={q.floorsDest ?? 0}
+          data-calc-input
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="mt-5 flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          name="has_elevator"
+          value="1"
+          data-calc-input
+          checked={q.hasElevator === true}
+          class="h-4 w-4"
+        />
+        <span class="font-bold">Tiene ascensor</span>
+      </label>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">¿Cómo nos conoció? *</span>
+        <select
+          name="lead_source"
+          required
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+        >
+          <option value="whatsapp" selected={q.leadSource === 'whatsapp'}>WhatsApp</option>
+          <option value="google" selected={q.leadSource === 'google'}>Google</option>
+          <option value="referido" selected={q.leadSource === 'referido'}>Referido</option>
+          <option value="walk-in" selected={q.leadSource === 'walk-in'}>Walk-in</option>
+          <option value="recurrente" selected={q.leadSource === 'recurrente'}
+            >Cliente recurrente</option
+          >
+          <option value="otro" selected={q.leadSource === 'otro'}>Otro</option>
+        </select>
+      </label>
+
+      <label class="mt-5 flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          name="use_calculator"
+          value="1"
+          checked={q.usedCalculator === true}
+          data-use-calc
+          class="h-4 w-4"
+        />
+        <span class="font-bold">Re-calcular con calculadora (sobreescribe líneas auto)</span>
+      </label>
+    </div>
+
+    <fieldset
+      class="border-primary-100 from-primary-50/30 rounded-2xl border-2 bg-gradient-to-br to-white p-4 sm:p-5"
+    >
+      <legend class="text-primary-700 px-2 text-xs font-bold tracking-wider uppercase">
+        Desglose del servicio
+      </legend>
+      <p class="-mt-1 mb-3 text-xs text-gray-600">
+        Edita textos y montos. Si activas la calculadora, las líneas auto se re-generan pero las que
+        agregues manualmente se preservan.
+      </p>
+
+      <div class="overflow-hidden rounded-lg border border-gray-200 bg-white">
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 text-left text-[10px] tracking-wider text-gray-500 uppercase">
+            <tr>
+              <th class="px-3 py-2">Concepto</th>
+              <th class="w-32 px-3 py-2 text-right">Monto S/</th>
+              <th class="w-10 px-2 py-2"></th>
+            </tr>
+          </thead>
+          <tbody data-items-tbody class="divide-y divide-gray-100">
+            <tr data-items-empty>
+              <td colspan="3" class="px-3 py-6 text-center text-xs text-gray-500">Sin líneas.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <button
+        type="button"
+        data-add-item
+        class="border-primary-300 text-primary-700 hover:bg-primary-50 mt-3 inline-flex items-center gap-1.5 rounded-full border bg-white px-3 py-1.5 text-xs font-bold transition-colors"
+      >
+        <svg
+          class="h-3.5 w-3.5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 5v14 M5 12h14"></path>
+        </svg>
+        Agregar línea
+      </button>
+
+      <div
+        class="mt-4 grid gap-3 border-t border-gray-100 pt-4 sm:grid-cols-[1fr_auto] sm:items-center"
+      >
+        <fieldset>
+          <legend class="text-xs font-bold tracking-wider text-gray-500 uppercase"
+            >Tratamiento IGV</legend
+          >
+          <div class="mt-2 flex flex-wrap gap-2" role="radiogroup">
+            <label
+              class="has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50 has-[:checked]:text-primary-700 inline-flex cursor-pointer items-center gap-2 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-xs font-bold"
+            >
+              <input
+                type="radio"
+                name="includes_igv"
+                value="1"
+                checked={q.includesIgv === true}
+                class="h-3 w-3"
+              />
+              <span>Precios incluyen IGV (18%)</span>
+            </label>
+            <label
+              class="has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50 has-[:checked]:text-primary-700 inline-flex cursor-pointer items-center gap-2 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-xs font-bold"
+            >
+              <input
+                type="radio"
+                name="includes_igv"
+                value="0"
+                checked={q.includesIgv === false}
+                class="h-3 w-3"
+              />
+              <span>Precios sin IGV</span>
+            </label>
+          </div>
+        </fieldset>
+        <div class="shadow-brand-sm rounded-lg bg-white p-3 text-right sm:min-w-[180px]">
+          <p class="text-[10px] font-bold tracking-wider text-gray-500 uppercase">
+            Total del desglose
+          </p>
+          <p class="text-primary-700 text-2xl font-bold tabular-nums" data-items-total>S/ 0.00</p>
+        </div>
+      </div>
+    </fieldset>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Total final (S/) *</span>
+      <input
+        type="number"
+        name="total_soles"
+        required
+        min="0"
+        step="0.01"
+        inputmode="decimal"
+        value={(q.totalCents / 100).toFixed(2)}
+        data-total-input
+        data-manual="1"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 text-lg font-bold tabular-nums focus:ring-2 focus:outline-none"
+      />
+      <span class="mt-1 block text-xs text-gray-500">
+        Se mantiene el total existente. Si re-calculas, se actualiza con la suma del desglose.
+      </span>
+    </label>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Notas / observaciones</span>
+      <textarea
+        name="notes"
+        rows="3"
+        maxlength="1000"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        >{q.notes ?? ''}</textarea
+      >
+    </label>
+
+    <div class="flex flex-wrap gap-3 border-t border-gray-100 pt-4">
+      <a
+        href={`/panel/cotizador/${id}/`}
+        class="rounded-full border border-gray-300 px-6 py-2 text-sm font-bold hover:bg-gray-100"
+      >
+        Cancelar
+      </a>
+      <button
+        type="submit"
+        name="action"
+        value="save"
+        class="bg-primary hover:bg-primary-dark rounded-full px-6 py-2 text-sm font-bold text-white"
+      >
+        Guardar cambios
+      </button>
+      {
+        q.status === 'draft' && (
+          <button
+            type="submit"
+            name="action"
+            value="send"
+            class="border-primary text-primary hover:bg-primary rounded-full border-2 bg-white px-6 py-2 text-sm font-bold hover:text-white"
+          >
+            Guardar y marcar como enviada
+          </button>
+        )
+      }
+    </div>
+  </form>
+
+  <script
+    is:inline
+    define:vars={{
+      RULES: rules,
+      EXISTING_ITEMS: existingItems,
+    }}
+  >
+    (function () {
+      const form = document.querySelector('[data-quote-form]');
+      if (!form) return;
+      const useCalc = form.querySelector('[data-use-calc]');
+      const serviceSel = form.querySelector('[data-service-type]');
+      const totalInput = form.querySelector('[data-total-input]');
+      const itemsTbody = form.querySelector('[data-items-tbody]');
+      const itemsTotalEl = form.querySelector('[data-items-total]');
+      const taglineEl = form.querySelector('[data-service-tagline]');
+
+      const TAGLINES = {
+        mudanza_embalaje: 'Servicio puerta a puerta integral, sin que te preocupes por nada.',
+        mudanza_personal: 'Mudanza con vehiculo y personal de carga, tu haces tu propio embalaje.',
+        solo_vehiculo_personal: 'Solo el camion y la cuadrilla; tu coordinas el resto.',
+        flete: 'Transporte de carga punto a punto, sin personal extra.',
+        embalaje_solo: 'Equipo experto que embala tu casa o oficina, sin transporte.',
+        armado_desarmado: 'Tecnicos para desarmar antes de mudar y armar al llegar.',
+        almacenaje: 'Guardamos tus pertenencias por dias, meses o anos.',
+        otro: 'Coordinamos un servicio a medida segun tus necesidades.',
+      };
+      function updateTagline() {
+        if (taglineEl && serviceSel) taglineEl.textContent = TAGLINES[serviceSel.value] || '';
+      }
+      if (serviceSel) {
+        serviceSel.addEventListener('change', updateTagline);
+        updateTagline();
+      }
+
+      function fmt(c) {
+        return (
+          'S/ ' +
+          (c / 100).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+        );
+      }
+      function num(name) {
+        const el = form.querySelector('[name="' + name + '"]');
+        if (!el) return 0;
+        if (el.type === 'checkbox') return el.checked ? 1 : 0;
+        const v = parseFloat(el.value);
+        return isNaN(v) ? 0 : v;
+      }
+      function str(name) {
+        const el = form.querySelector('[name="' + name + '"]');
+        return el ? el.value : '';
+      }
+      function escapeHtml(s) {
+        return String(s).replace(
+          /[&<>"']/g,
+          (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
+        );
+      }
+
+      function makeRow({ label = '', amountSoles = '', source = 'manual' } = {}) {
+        const tr = document.createElement('tr');
+        tr.dataset.itemRow = '';
+        tr.dataset.source = source;
+        tr.innerHTML =
+          '<td class="px-3 py-2"><input type="text" name="item_label[]" value="' +
+          escapeHtml(label) +
+          '" maxlength="120" required class="focus:border-primary focus:ring-primary/20 w-full rounded border border-gray-200 bg-white px-2 py-1 text-sm focus:ring-2 focus:outline-none" /></td>' +
+          '<td class="px-3 py-2"><input type="number" name="item_amount[]" value="' +
+          escapeHtml(amountSoles) +
+          '" min="0" step="0.01" inputmode="decimal" required data-item-amount class="focus:border-primary focus:ring-primary/20 tabular-nums w-full rounded border border-gray-200 bg-white px-2 py-1 text-right text-sm focus:ring-2 focus:outline-none" /></td>' +
+          '<td class="px-2 py-2 text-right"><button type="button" data-remove-item title="Eliminar" class="rounded p-1 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-700"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18 M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2 M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6 M10 11v6 M14 11v6"/></svg></button></td>';
+        return tr;
+      }
+
+      function ensureEmptyHidden() {
+        const empty = itemsTbody.querySelector('[data-items-empty]');
+        const realRows = itemsTbody.querySelectorAll('[data-item-row]');
+        if (empty) empty.style.display = realRows.length === 0 ? '' : 'none';
+      }
+
+      function recalcTotal() {
+        let totalCents = 0;
+        const inputs = itemsTbody.querySelectorAll('[data-item-amount]');
+        inputs.forEach((inp) => {
+          const v = parseFloat(inp.value);
+          if (!isNaN(v) && v > 0) totalCents += Math.round(v * 100);
+        });
+        if (itemsTotalEl) itemsTotalEl.textContent = fmt(totalCents);
+        if (totalInput && !totalInput.dataset.manual) {
+          totalInput.value = (totalCents / 100).toFixed(2);
+        }
+        ensureEmptyHidden();
+      }
+
+      function addItem(label, amountCents, source) {
+        const amountSoles = amountCents != null ? (amountCents / 100).toFixed(2) : '';
+        const row = makeRow({ label, amountSoles, source: source || 'manual' });
+        itemsTbody.appendChild(row);
+        recalcTotal();
+        return row;
+      }
+
+      function clearCalcRows() {
+        itemsTbody
+          .querySelectorAll('[data-item-row][data-source="calc"]')
+          .forEach((r) => r.remove());
+      }
+
+      // Pre-poblar con los items existentes (todos como manuales — el cotizador
+      // los puede editar libremente, y si activa la calculadora se agregan filas calc).
+      if (Array.isArray(EXISTING_ITEMS) && EXISTING_ITEMS.length > 0) {
+        EXISTING_ITEMS.forEach((it) => addItem(it.label, it.amountCents, 'manual'));
+      }
+
+      const addBtn = form.querySelector('[data-add-item]');
+      if (addBtn) {
+        addBtn.addEventListener('click', () => {
+          const row = addItem('', null, 'manual');
+          const labelInp = row.querySelector('input[name="item_label[]"]');
+          if (labelInp) labelInp.focus();
+        });
+      }
+
+      itemsTbody.addEventListener('click', (e) => {
+        const btn = e.target && e.target.closest && e.target.closest('[data-remove-item]');
+        if (btn) {
+          const row = btn.closest('[data-item-row]');
+          if (row) row.remove();
+          recalcTotal();
+        }
+      });
+      itemsTbody.addEventListener('input', (e) => {
+        if (e.target && e.target.matches && e.target.matches('[data-item-amount]')) recalcTotal();
+      });
+
+      function runCalculator() {
+        if (!useCalc || !useCalc.checked || !serviceSel) return;
+        const kind = serviceSel.value;
+        const rule = RULES[kind] || RULES.otro;
+        const surcharges = RULES.surcharges;
+        const lines = [];
+        let subtotal = rule.baseCents;
+        lines.push({ label: 'Tarifa base', c: rule.baseCents });
+
+        const km = num('distance_km');
+        if (km && rule.perKmCents) {
+          const c = Math.round(km * rule.perKmCents);
+          lines.push({ label: 'Distancia (' + km + ' km)', c });
+          subtotal += c;
+        }
+        const m3 = num('volume_m3');
+        if (m3 && rule.perM3Cents) {
+          const c = Math.round(m3 * rule.perM3Cents);
+          lines.push({ label: 'Volumen (' + m3 + ' m3)', c });
+          subtotal += c;
+        }
+        const crew = num('crew_size');
+        if (crew > 1 && rule.perCrewCents) {
+          const extras = crew - 1;
+          const c = extras * rule.perCrewCents;
+          lines.push({ label: 'Personal adicional (+' + extras + ')', c });
+          subtotal += c;
+        }
+        const hasEl = num('has_elevator');
+        if (!hasEl && rule.perFloorWithoutElevatorCents) {
+          const floors = num('floors_origin') + num('floors_dest');
+          if (floors > 0) {
+            const c = floors * rule.perFloorWithoutElevatorCents;
+            lines.push({ label: 'Pisos sin ascensor (' + floors + ')', c });
+            subtotal += c;
+          }
+        }
+        const date = str('tentative_date');
+        if (date) {
+          const d = new Date(date + 'T00:00:00');
+          const dow = d.getUTCDay();
+          if (dow === 0 || dow === 6) {
+            const c = Math.round((subtotal * surcharges.weekendPct) / 100);
+            lines.push({ label: 'Recargo fin de semana (' + surcharges.weekendPct + '%)', c });
+            subtotal += c;
+          }
+        }
+        const total = Math.max(subtotal, rule.minCents);
+        if (total > subtotal) lines.push({ label: 'Ajuste minimo', c: total - subtotal });
+
+        clearCalcRows();
+        const manuals = Array.from(
+          itemsTbody.querySelectorAll('[data-item-row][data-source="manual"]'),
+        );
+        lines.forEach((l) => {
+          const row = makeRow({
+            label: l.label,
+            amountSoles: (l.c / 100).toFixed(2),
+            source: 'calc',
+          });
+          if (manuals.length > 0) itemsTbody.insertBefore(row, manuals[0]);
+          else itemsTbody.appendChild(row);
+        });
+        // Al re-calcular, deja que el total se sincronice de nuevo.
+        if (totalInput) delete totalInput.dataset.manual;
+        recalcTotal();
+      }
+
+      form.addEventListener('input', (e) => {
+        if (e.target && e.target.matches && e.target.matches('[data-total-input]')) {
+          e.target.dataset.manual = '1';
+        }
+        if (
+          e.target &&
+          e.target.matches &&
+          e.target.matches('[data-calc-input], [data-service-type]')
+        ) {
+          runCalculator();
+        }
+      });
+      if (useCalc) {
+        useCalc.addEventListener('change', () => {
+          if (useCalc.checked) {
+            if (totalInput) delete totalInput.dataset.manual;
+            runCalculator();
+          } else {
+            itemsTbody.querySelectorAll('[data-item-row][data-source="calc"]').forEach((r) => {
+              r.dataset.source = 'manual';
+            });
+          }
+        });
+      }
+      recalcTotal();
+    })();
+  </script>
+</CotizadorLayout>

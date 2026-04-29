@@ -1,0 +1,76 @@
+---
+export const prerender = false;
+
+import AdminLayout from '@layouts/AdminLayout.astro';
+import { loadRules } from '@lib/panel/pricing';
+
+const rules = await loadRules();
+const updated = Astro.url.searchParams.get('updated');
+const error = Astro.url.searchParams.get('error');
+---
+
+<AdminLayout title="Calculadora">
+  <header class="mb-6">
+    <h1 class="font-heading text-2xl font-bold md:text-3xl">Reglas de la calculadora</h1>
+    <p class="mt-1 text-sm text-gray-600">
+      Editar como JSON. Los cambios afectan a las próximas cotizaciones (cache invalidado tras
+      guardar).
+    </p>
+  </header>
+
+  {
+    updated && (
+      <div class="mb-4 rounded-lg border-l-4 border-green-500 bg-green-50 p-3 text-sm text-green-800">
+        Reglas actualizadas.
+      </div>
+    )
+  }
+  {
+    error && (
+      <div class="mb-4 rounded-lg border-l-4 border-red-500 bg-red-50 p-3 text-sm text-red-800">
+        Error: {error}
+      </div>
+    )
+  }
+
+  <form
+    method="POST"
+    action="/api/panel/calc-config/update/"
+    class="space-y-4 rounded-2xl border border-gray-200 bg-white p-6"
+  >
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Reglas (JSON)</span>
+      <textarea
+        name="rules_json"
+        rows="30"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 font-mono text-xs focus:ring-2 focus:outline-none"
+        >{JSON.stringify(rules, null, 2)}</textarea
+      >
+    </label>
+
+    <button
+      type="submit"
+      class="bg-primary hover:bg-primary-dark rounded-full px-6 py-2 text-sm font-bold text-white"
+    >
+      Guardar reglas
+    </button>
+  </form>
+
+  <details class="mt-6 rounded-2xl border border-gray-200 bg-white p-5 text-sm">
+    <summary class="cursor-pointer font-bold">Documentación de campos</summary>
+    <ul class="mt-3 space-y-1 text-xs text-gray-700">
+      <li><code>baseCents</code>: tarifa base del servicio (céntimos).</li>
+      <li><code>perKmCents</code>: costo por km recorrido.</li>
+      <li><code>perM3Cents</code>: costo por m³ de volumen.</li>
+      <li><code>perCrewCents</code>: costo por persona adicional sobre 1.</li>
+      <li><code>perFloorWithoutElevatorCents</code>: por piso si no hay ascensor.</li>
+      <li><code>minCents</code>: mínimo facturable, ajusta hacia arriba si la suma es menor.</li>
+      <li>
+        <code>surcharges.weekendPct</code>: % adicional en fin de semana sobre subtotal.
+      </li>
+      <li>
+        <code>surcharges.overnightRouteFlatCents</code>: monto plano para rutas con pernocte.
+      </li>
+    </ul>
+  </details>
+</AdminLayout>

@@ -1,0 +1,478 @@
+---
+export const prerender = false;
+
+import CotizadorLayout from '@layouts/CotizadorLayout.astro';
+import { db } from '@db/client';
+import { quotes, customers, jobs, receipts, quoteItems } from '@db/schema';
+import { eq, asc } from 'drizzle-orm';
+import { soles as fmt } from '@lib/panel/format';
+import { getService } from '@lib/panel/services';
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect('/panel/cotizador/listado/');
+
+const q = await db
+  .select({
+    q: quotes,
+    c: customers,
+  })
+  .from(quotes)
+  .innerJoin(customers, eq(customers.id, quotes.customerId))
+  .where(eq(quotes.id, id))
+  .get();
+
+if (!q) return Astro.redirect('/panel/cotizador/listado/');
+
+const job = await db.select().from(jobs).where(eq(jobs.quoteId, id)).get();
+const receipt = job
+  ? await db.select().from(receipts).where(eq(receipts.jobId, job.id)).get()
+  : null;
+
+const items = await db
+  .select()
+  .from(quoteItems)
+  .where(eq(quoteItems.quoteId, id))
+  .orderBy(asc(quoteItems.orderIdx))
+  .all();
+
+const created = Astro.url.searchParams.get('created') === 'true';
+const updated = Astro.url.searchParams.get('updated') === 'true';
+const errParam = Astro.url.searchParams.get('error');
+const notice = created
+  ? 'Cotización creada.'
+  : updated
+    ? 'Cotización actualizada.'
+    : errParam === 'has-receipt'
+      ? null
+      : null;
+const errorMsg =
+  errParam === 'has-receipt'
+    ? 'No se puede editar: ya hay un recibo emitido para esta cotización.'
+    : errParam === 'cannot-edit'
+      ? 'No se puede editar en este estado.'
+      : null;
+
+// Cotización editable mientras esté en draft o sent y no haya recibo emitido
+// (el recibo es inmutable y bloquea cambios).
+const hasReceipt = await db
+  .select({ id: receipts.id })
+  .from(receipts)
+  .where(eq(receipts.quoteId, id))
+  .get();
+const canEdit = ['draft', 'sent'].includes(q.q.status) && !hasReceipt;
+const canSend = q.q.status === 'draft';
+const canAccept = q.q.status === 'sent';
+const canReject = q.q.status === 'sent' || q.q.status === 'draft';
+const canCancel = !['completed', 'canceled'].includes(q.q.status);
+---
+
+<CotizadorLayout title={q.q.number}>
+  <header class="mb-4">
+    <nav class="mb-2 text-sm">
+      <a href="/panel/cotizador/listado/" class="text-gray-500 hover:text-gray-700"
+        >← Cotizaciones</a
+      >
+    </nav>
+    <div class="flex flex-wrap items-start justify-between gap-4">
+      <div>
+        <p class="font-mono text-xs font-bold text-gray-500">{q.q.number}</p>
+        <h1 class="font-heading text-2xl font-bold">{q.c.name}</h1>
+        <p class="text-primary text-sm font-bold">{getService(q.q.serviceType).name}</p>
+      </div>
+      <span
+        class:list={[
+          'rounded-full px-3 py-1 text-xs font-bold',
+          q.q.status === 'draft' && 'bg-gray-200 text-gray-700',
+          q.q.status === 'sent' && 'bg-blue-100 text-blue-800',
+          q.q.status === 'accepted' && 'bg-green-100 text-green-800',
+          q.q.status === 'rejected' && 'bg-red-100 text-red-800',
+          q.q.status === 'expired' && 'bg-amber-100 text-amber-800',
+          q.q.status === 'completed' && 'bg-primary/10 text-primary',
+          q.q.status === 'canceled' && 'bg-gray-100 text-gray-500',
+        ]}
+      >
+        {q.q.status}
+      </span>
+    </div>
+  </header>
+
+  {
+    notice && (
+      <div class="mb-4 rounded-lg border-l-4 border-green-500 bg-green-50 p-3 text-sm text-green-800">
+        {notice}
+      </div>
+    )
+  }
+  {
+    errorMsg && (
+      <div
+        class="mb-4 rounded-lg border-l-4 border-red-500 bg-red-50 p-3 text-sm text-red-800"
+        role="alert"
+      >
+        {errorMsg}
+      </div>
+    )
+  }
+
+  <div class="grid gap-6 lg:grid-cols-3">
+    <div class="space-y-4 lg:col-span-2">
+      {/* Bloque de servicio */}
+      <section class="border-primary bg-primary/5 rounded-2xl border-l-4 p-5">
+        <p class="text-primary text-xs font-bold tracking-wider uppercase">Servicio contratado</p>
+        <h2 class="font-heading mt-1 text-xl font-bold">{getService(q.q.serviceType).name}</h2>
+        <p class="text-primary mt-1 text-sm">{getService(q.q.serviceType).tagline}</p>
+        {
+          getService(q.q.serviceType).description && (
+            <p class="mt-2 text-sm leading-relaxed text-gray-700">
+              {getService(q.q.serviceType).description}
+            </p>
+          )
+        }
+      </section>
+
+      {/* Detalles operativos */}
+      <section class="rounded-2xl border border-gray-200 bg-white p-6">
+        <h2 class="font-heading mb-4 text-sm font-bold tracking-wider text-gray-500 uppercase">
+          Detalles del servicio
+        </h2>
+        <dl class="grid grid-cols-1 gap-x-6 gap-y-4 text-sm sm:grid-cols-2">
+          <div>
+            <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">Origen</dt>
+            <dd class="mt-0.5 text-base font-bold">{q.q.origin ?? 'Por confirmar'}</dd>
+            {
+              (q.q.floorsOrigin ?? 0) > 0 && (
+                <dd class="mt-0.5 text-xs text-gray-600">
+                  {q.q.floorsOrigin} piso{q.q.floorsOrigin === 1 ? '' : 's'}
+                  {q.q.hasElevator ? ' · con ascensor' : ' · sin ascensor'}
+                </dd>
+              )
+            }
+          </div>
+          <div>
+            <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">Destino</dt>
+            <dd class="mt-0.5 text-base font-bold">{q.q.destination ?? 'Por confirmar'}</dd>
+            {
+              (q.q.floorsDest ?? 0) > 0 && (
+                <dd class="mt-0.5 text-xs text-gray-600">
+                  {q.q.floorsDest} piso{q.q.floorsDest === 1 ? '' : 's'}
+                  {q.q.hasElevator ? ' · con ascensor' : ' · sin ascensor'}
+                </dd>
+              )
+            }
+          </div>
+          <div>
+            <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">
+              Fecha tentativa
+            </dt>
+            <dd class="mt-0.5">{q.q.tentativeDate ?? '—'}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">
+              Personal asignado
+            </dt>
+            <dd class="mt-0.5">
+              {q.q.crewSize ?? '—'}
+              {(q.q.crewSize ?? 0) === 1 ? 'persona' : 'personas'}
+            </dd>
+          </div>
+          {
+            (q.q.volumeM3 ?? 0) > 0 && (
+              <div>
+                <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">
+                  Volumen estimado
+                </dt>
+                <dd class="mt-0.5">{q.q.volumeM3} m³</dd>
+              </div>
+            )
+          }
+          {
+            (q.q.distanceKm ?? 0) > 0 && (
+              <div>
+                <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">
+                  Distancia aprox.
+                </dt>
+                <dd class="mt-0.5">{q.q.distanceKm} km</dd>
+              </div>
+            )
+          }
+          <div>
+            <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">
+              Fuente del lead
+            </dt>
+            <dd class="mt-0.5 capitalize">{q.q.leadSource ?? '—'}</dd>
+          </div>
+          <div>
+            <dt class="text-xs font-bold tracking-wider text-gray-500 uppercase">
+              Modo de cálculo
+            </dt>
+            <dd class="mt-0.5">{q.q.usedCalculator ? 'Calculadora automática' : 'Total manual'}</dd>
+          </div>
+        </dl>
+      </section>
+
+      {/* Desglose del servicio */}
+      <section class="rounded-2xl border border-gray-200 bg-white p-6">
+        <div class="mb-4 flex items-center justify-between">
+          <h2 class="font-heading text-sm font-bold tracking-wider text-gray-500 uppercase">
+            Desglose del servicio
+          </h2>
+          <span
+            class:list={[
+              'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[10px] font-bold',
+              q.q.includesIgv
+                ? 'border-green-200 bg-green-50 text-green-800'
+                : 'border-amber-200 bg-amber-50 text-amber-800',
+            ]}
+          >
+            <span
+              class:list={[
+                'inline-block h-1.5 w-1.5 rounded-full',
+                q.q.includesIgv ? 'bg-green-500' : 'bg-amber-500',
+              ]}></span>
+            {q.q.includesIgv ? 'Precios incluyen IGV (18%)' : 'Precios sin IGV'}
+          </span>
+        </div>
+
+        {
+          items.length > 0 ? (
+            <ul class="divide-y divide-gray-100">
+              {items.map((it) => (
+                <li class="flex items-start justify-between gap-3 py-2.5 text-sm">
+                  <span class="flex-1">{it.label}</span>
+                  <span class="font-bold text-gray-900 tabular-nums">{fmt(it.amountCents)}</span>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p class="rounded-lg border border-dashed border-gray-200 bg-gray-50 p-3 text-center text-xs text-gray-500">
+              Esta cotización no tiene desglose detallado.
+            </p>
+          )
+        }
+
+        <div class="mt-4 flex items-end justify-between border-t border-gray-100 pt-4">
+          <span class="text-sm text-gray-500">
+            {q.q.expiresAt ? `Vence: ${q.q.expiresAt.slice(0, 10)}` : 'Sin fecha de vencimiento'}
+          </span>
+          <span class="text-primary text-3xl font-bold tabular-nums">{fmt(q.q.totalCents)}</span>
+        </div>
+
+        {
+          q.q.notes && (
+            <div class="mt-4 border-t border-gray-100 pt-4">
+              <h3 class="text-xs font-bold tracking-wider text-gray-500 uppercase">Notas</h3>
+              <p class="mt-1 text-sm">{q.q.notes}</p>
+            </div>
+          )
+        }
+
+        {
+          q.q.rejectionReason && (
+            <div class="mt-3 rounded-lg bg-red-50 p-3 text-sm text-red-800">
+              <p class="font-bold">Razón de rechazo: {q.q.rejectionReason}</p>
+              {q.q.rejectionNote && <p class="mt-1">{q.q.rejectionNote}</p>}
+            </div>
+          )
+        }
+      </section>
+    </div>
+
+    <aside class="space-y-4">
+      <div class="rounded-2xl border border-gray-200 bg-white p-5">
+        <h3 class="font-heading mb-3 text-sm font-bold tracking-wider text-gray-500 uppercase">
+          Cliente
+        </h3>
+        <p class="font-bold">{q.c.name}</p>
+        {q.c.phone && <p class="text-xs text-gray-600">{q.c.phone}</p>}
+        {q.c.email && <p class="text-xs text-gray-600">{q.c.email}</p>}
+        <a
+          href={`/panel/cotizador/clientes/${q.c.id}/`}
+          class="text-primary mt-3 inline-block text-xs font-bold hover:underline"
+        >
+          Ver ficha completa →
+        </a>
+      </div>
+
+      <div class="space-y-3 rounded-2xl border border-gray-200 bg-white p-5">
+        <h3 class="font-heading text-sm font-bold tracking-wider text-gray-500 uppercase">
+          Acciones
+        </h3>
+
+        {
+          canEdit && (
+            <a
+              href={`/panel/cotizador/${id}/editar/`}
+              class="bg-primary shadow-brand-sm hover:bg-primary-dark block w-full rounded-full py-2 text-center text-sm font-bold text-white transition-colors"
+            >
+              <span class="inline-flex items-center gap-1.5">
+                <svg
+                  class="h-4 w-4"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                  stroke-width="2.5"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" />
+                  <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" />
+                </svg>
+                Editar cotización
+              </span>
+            </a>
+          )
+        }
+
+        <a
+          href={`/api/panel/quotes/${id}/pdf/`}
+          target="_blank"
+          rel="noopener"
+          class="border-primary text-primary hover:bg-primary block w-full rounded-full border-2 bg-white py-2 text-center text-sm font-bold transition-colors hover:text-white"
+        >
+          Descargar PDF
+        </a>
+
+        {
+          canSend && (
+            <form method="POST" action={`/api/panel/quotes/${id}/send/`} class="block">
+              <button class="w-full rounded-full bg-blue-600 py-2 text-sm font-bold text-white hover:bg-blue-700">
+                Marcar como enviada al cliente
+              </button>
+            </form>
+          )
+        }
+        {
+          canAccept && (
+            <form method="POST" action={`/api/panel/quotes/${id}/accept/`} class="block">
+              <button class="w-full rounded-full bg-green-600 py-2 text-sm font-bold text-white hover:bg-green-700">
+                Cliente aceptó — crear trabajo
+              </button>
+            </form>
+          )
+        }
+        {
+          canReject && (
+            <form method="POST" action={`/api/panel/quotes/${id}/reject/`} class="space-y-2">
+              <select
+                name="reason"
+                required
+                class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm"
+              >
+                <option value="">Motivo de rechazo…</option>
+                <option value="precio">Precio</option>
+                <option value="fecha">Fecha</option>
+                <option value="competidor">Competidor</option>
+                <option value="sin-respuesta">Sin respuesta</option>
+                <option value="otro">Otro</option>
+              </select>
+              <input
+                type="text"
+                name="note"
+                placeholder="Comentario (obligatorio si 'Otro')"
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              />
+              <button class="w-full rounded-full border border-red-300 bg-red-50 py-2 text-sm font-bold text-red-700 hover:bg-red-100">
+                Marcar rechazada
+              </button>
+            </form>
+          )
+        }
+        {
+          canCancel && (
+            <form method="POST" action={`/api/panel/quotes/${id}/cancel/`} class="block">
+              <button
+                class="w-full rounded-full border border-gray-300 py-2 text-xs font-bold text-gray-700 hover:bg-gray-100"
+                onclick="return confirm('¿Cancelar esta cotización?');"
+              >
+                Cancelar cotización
+              </button>
+            </form>
+          )
+        }
+
+        {/* Guardar como plantilla — útil para servicios recurrentes */}
+        <details class="group rounded-lg border border-gray-200 bg-gray-50 px-3 py-2">
+          <summary
+            class="hover:text-primary-700 cursor-pointer list-none text-xs font-bold text-gray-700"
+          >
+            <span class="inline-flex items-center gap-1.5">
+              <svg
+                class="h-3.5 w-3.5 transition-transform group-open:rotate-90"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                stroke-width="2.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M9 18l6-6-6-6"></path>
+              </svg>
+              Guardar como plantilla
+            </span>
+          </summary>
+          <form
+            method="POST"
+            action={`/api/panel/quotes/${id}/save-as-template/`}
+            class="mt-2 space-y-2"
+          >
+            <input
+              type="text"
+              name="name"
+              required
+              minlength="3"
+              maxlength="120"
+              placeholder={`Ej. ${getService(q.q.serviceType).name} ${q.q.origin ? '· ' + q.q.origin : ''}`}
+              class="focus:border-primary focus:ring-primary/20 w-full rounded border border-gray-300 bg-white px-2 py-1.5 text-xs focus:ring-2 focus:outline-none"
+            />
+            <button
+              type="submit"
+              class="w-full rounded-full bg-gray-700 py-1.5 text-[11px] font-bold text-white hover:bg-gray-900"
+            >
+              Crear plantilla con estos datos
+            </button>
+            <p class="text-[10px] text-gray-500">
+              Reutilizable en futuras cotizaciones desde "Nueva cotización".
+            </p>
+          </form>
+        </details>
+      </div>
+
+      {
+        job && (
+          <div class="rounded-2xl border border-green-200 bg-green-50 p-5">
+            <h3 class="font-heading mb-2 text-sm font-bold tracking-wider text-green-800 uppercase">
+              Trabajo
+            </h3>
+            <p class="text-sm">
+              Estado: <strong>{job.status}</strong>
+            </p>
+            <a
+              href={`/panel/cotizador/trabajos/${job.id}/`}
+              class="text-primary mt-2 inline-block text-xs font-bold hover:underline"
+            >
+              Gestionar trabajo →
+            </a>
+          </div>
+        )
+      }
+
+      {
+        receipt && (
+          <div class="border-primary/30 bg-primary/5 rounded-2xl border p-5">
+            <h3 class="font-heading text-primary mb-2 text-sm font-bold tracking-wider uppercase">
+              Recibo
+            </h3>
+            <p class="text-sm font-bold">{receipt.number}</p>
+            {receipt.voidedAt && <p class="text-xs text-red-700">ANULADO</p>}
+            <a
+              href={`/panel/cotizador/recibos/${receipt.id}/`}
+              class="text-primary mt-2 inline-block text-xs font-bold hover:underline"
+            >
+              Abrir recibo →
+            </a>
+          </div>
+        )
+      }
+    </aside>
+  </div>
+</CotizadorLayout>

@@ -1,0 +1,219 @@
+---
+export const prerender = false;
+
+import AdminLayout from '@layouts/AdminLayout.astro';
+import PhotoUploader from '@components/panel/PhotoUploader.astro';
+import { db } from '@db/client';
+import { units, unitDocuments, users } from '@db/schema';
+import { desc, eq } from 'drizzle-orm';
+import { isStorageConfigured, signedGetUrl } from '@lib/panel/storage';
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect('/panel/admin/unidades/');
+const unit = await db.select().from(units).where(eq(units.id, id)).get();
+if (!unit) return Astro.redirect('/panel/admin/unidades/');
+
+const docs = await db
+  .select({
+    id: unitDocuments.id,
+    kind: unitDocuments.kind,
+    fileKey: unitDocuments.fileKey,
+    validUntil: unitDocuments.validUntil,
+    notes: unitDocuments.notes,
+    uploadedAt: unitDocuments.uploadedAt,
+    uploaderName: users.fullName,
+  })
+  .from(unitDocuments)
+  .leftJoin(users, eq(users.id, unitDocuments.uploadedBy))
+  .where(eq(unitDocuments.unitId, id))
+  .orderBy(desc(unitDocuments.uploadedAt))
+  .all();
+
+// URLs firmadas (1h) para los que tienen B2 configurado.
+const docsWithUrl = await Promise.all(
+  docs.map(async (d) => ({
+    ...d,
+    url: isStorageConfigured() ? await signedGetUrl('docs', d.fileKey) : null,
+  })),
+);
+
+const labels: Record<string, string> = {
+  soat: 'SOAT',
+  rtv: 'RTV',
+  tarjeta_propiedad: 'Tarjeta de propiedad',
+  seguro: 'Seguro',
+  poliza: 'Póliza',
+  otro: 'Otro',
+};
+
+const created = Astro.url.searchParams.get('created');
+const deleted = Astro.url.searchParams.get('deleted');
+const today = new Date().toISOString().slice(0, 10);
+
+function expiryBadge(validUntil: string | null): { label: string; cls: string } | null {
+  if (!validUntil) return null;
+  const days = Math.floor(
+    (new Date(validUntil + 'T00:00:00').getTime() - new Date(today + 'T00:00:00').getTime()) /
+      (1000 * 60 * 60 * 24),
+  );
+  if (days < 0) return { label: 'VENCIDO', cls: 'bg-red-100 text-red-800' };
+  if (days <= 7) return { label: `${days} días`, cls: 'bg-red-100 text-red-800' };
+  if (days <= 30) return { label: `${days} días`, cls: 'bg-amber-100 text-amber-800' };
+  return { label: `${days} días`, cls: 'bg-green-100 text-green-800' };
+}
+---
+
+<AdminLayout title={`Documentos · ${unit.plate}`}>
+  <header class="mb-6">
+    <nav class="mb-2 text-sm">
+      <a href={`/panel/admin/unidades/${unit.id}/`} class="text-gray-500 hover:text-gray-700">
+        ← {unit.plate}
+      </a>
+    </nav>
+    <h1 class="font-heading text-2xl font-bold">Documentos de la unidad</h1>
+    <p class="mt-1 text-sm text-gray-600">{unit.plate} · {unit.tonnage}t</p>
+  </header>
+
+  {
+    created && (
+      <div class="mb-4 rounded-lg border-l-4 border-green-500 bg-green-50 p-3 text-sm text-green-800">
+        Documento subido.
+      </div>
+    )
+  }
+  {
+    deleted && (
+      <div class="mb-4 rounded-lg border-l-4 border-amber-500 bg-amber-50 p-3 text-sm text-amber-800">
+        Documento eliminado.
+      </div>
+    )
+  }
+
+  <div class="grid gap-6 lg:grid-cols-3">
+    <form
+      method="POST"
+      action={`/api/panel/unit-documents/`}
+      class="space-y-3 rounded-2xl border border-gray-200 bg-white p-5 lg:col-span-1"
+    >
+      <h2 class="font-heading text-sm font-bold tracking-wider text-gray-500 uppercase">
+        Subir documento
+      </h2>
+      <input type="hidden" name="unit_id" value={unit.id} />
+
+      <label class="block">
+        <span class="mb-1 block text-xs font-bold">Tipo *</span>
+        <select
+          name="kind"
+          required
+          class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm"
+        >
+          <option value="">—</option>
+          {Object.entries(labels).map(([slug, lbl]) => <option value={slug}>{lbl}</option>)}
+        </select>
+      </label>
+
+      <label class="block">
+        <span class="mb-1 block text-xs font-bold">Vigencia (yyyy-mm-dd)</span>
+        <input
+          type="date"
+          name="valid_until"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+        />
+      </label>
+
+      <label class="block">
+        <span class="mb-1 block text-xs font-bold">Notas</span>
+        <input
+          type="text"
+          name="notes"
+          maxlength="200"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+        />
+      </label>
+
+      <div>
+        <span class="mb-1 block text-xs font-bold">Archivo (PDF o imagen) *</span>
+        <PhotoUploader
+          name="file_key"
+          scope="docs"
+          prefix="unit-docs"
+          allowPdf={true}
+          label="Elegir archivo"
+        />
+      </div>
+
+      <button
+        class="bg-primary hover:bg-primary-dark w-full rounded-full py-2 text-sm font-bold text-white"
+      >
+        Subir documento
+      </button>
+
+      {
+        !isStorageConfigured() && (
+          <p class="rounded bg-amber-50 p-2 text-[10px] text-amber-800">
+            Storage B2 no configurado en este entorno. La subida no funciona aún.
+          </p>
+        )
+      }
+    </form>
+
+    <div class="space-y-3 lg:col-span-2">
+      {
+        docsWithUrl.length === 0 ? (
+          <div class="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-600">
+            Sin documentos para esta unidad.
+          </div>
+        ) : (
+          docsWithUrl.map((d) => {
+            const exp = expiryBadge(d.validUntil);
+            return (
+              <div class="rounded-2xl border border-gray-200 bg-white p-4">
+                <div class="flex items-start justify-between gap-3">
+                  <div>
+                    <p class="font-bold">{labels[d.kind] ?? d.kind}</p>
+                    <p class="mt-1 text-xs text-gray-600">
+                      {d.uploaderName ?? '—'} · {d.uploadedAt.slice(0, 10)}
+                      {d.validUntil && ` · vence ${d.validUntil}`}
+                    </p>
+                    {d.notes && <p class="mt-1 text-xs text-gray-500">{d.notes}</p>}
+                  </div>
+                  <div class="flex flex-col items-end gap-1">
+                    {exp && (
+                      <span
+                        class:list={['rounded-full px-2 py-0.5 text-[10px] font-bold', exp.cls]}
+                      >
+                        {exp.label}
+                      </span>
+                    )}
+                    {d.url && (
+                      <a
+                        href={d.url}
+                        target="_blank"
+                        rel="noopener"
+                        class="text-primary text-xs font-bold hover:underline"
+                      >
+                        Abrir →
+                      </a>
+                    )}
+                    <form
+                      method="POST"
+                      action={`/api/panel/unit-documents/${d.id}/delete/`}
+                      class="inline"
+                    >
+                      <button
+                        class="text-xs text-red-600 hover:underline"
+                        onclick="return confirm('¿Eliminar este documento?');"
+                      >
+                        eliminar
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )
+      }
+    </div>
+  </div>
+</AdminLayout>

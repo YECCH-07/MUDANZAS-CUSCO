@@ -1,0 +1,108 @@
+---
+export const prerender = false;
+
+import AdminLayout from '@layouts/AdminLayout.astro';
+
+const error = Astro.url.searchParams.get('error');
+const errorMessage =
+  error === 'invalid'
+    ? 'Datos inválidos. Revisa email y rol.'
+    : error === 'duplicate'
+      ? 'Ya existe un usuario con ese email.'
+      : null;
+---
+
+<AdminLayout title="Nuevo usuario">
+  <header class="mb-6">
+    <nav class="mb-2 text-sm">
+      <a href="/panel/admin/usuarios/" class="text-gray-500 hover:text-gray-700">← Usuarios</a>
+    </nav>
+    <h1 class="font-heading text-2xl font-bold">Nuevo usuario</h1>
+    <p class="mt-1 text-sm text-gray-600">
+      Se genera una contraseña temporal de 12 caracteres. Se muestra una sola vez después de crear.
+    </p>
+  </header>
+
+  <form
+    method="POST"
+    action="/api/panel/users/"
+    class="max-w-2xl space-y-4 rounded-2xl border border-gray-200 bg-white p-6"
+  >
+    {
+      errorMessage && (
+        <div
+          class="rounded-lg border-l-4 border-red-500 bg-red-50 p-3 text-sm text-red-800"
+          role="alert"
+        >
+          {errorMessage}
+        </div>
+      )
+    }
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Nombre completo *</span>
+      <input
+        type="text"
+        name="full_name"
+        required
+        minlength="2"
+        maxlength="100"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      />
+    </label>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Email *</span>
+      <input
+        type="email"
+        name="email"
+        required
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      />
+    </label>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Rol *</span>
+      <select
+        name="role"
+        required
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+      >
+        <option value="">—</option>
+        <option value="conductor">Conductor</option>
+        <option value="cotizador">Cotizador</option>
+        <option value="superadmin">Superadmin</option>
+      </select>
+    </label>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Teléfono / WhatsApp</span>
+      <input
+        type="tel"
+        name="phone"
+        pattern="[0-9+\-\s]{6,}"
+        inputmode="tel"
+        placeholder="925671052"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      />
+      <span class="mt-1 block text-xs text-gray-500">
+        Se usa para comunicar la contraseña temporal por WhatsApp.
+      </span>
+    </label>
+
+    <div class="flex gap-3 pt-2">
+      <button
+        type="submit"
+        class="bg-primary hover:bg-primary-dark rounded-full px-6 py-2 text-sm font-bold text-white"
+      >
+        Crear usuario
+      </button>
+      <a
+        href="/panel/admin/usuarios/"
+        class="rounded-full border border-gray-300 px-6 py-2 text-sm font-bold hover:bg-gray-100"
+      >
+        Cancelar
+      </a>
+    </div>
+  </form>
+</AdminLayout>

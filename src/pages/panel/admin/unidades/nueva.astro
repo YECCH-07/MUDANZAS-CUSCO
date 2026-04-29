@@ -1,0 +1,126 @@
+---
+export const prerender = false;
+
+import AdminLayout from '@layouts/AdminLayout.astro';
+
+const error = Astro.url.searchParams.get('error');
+const errorMessage =
+  error === 'invalid'
+    ? 'Datos inválidos. Revisa los campos.'
+    : error === 'duplicate'
+      ? 'Ya existe una unidad con esa placa.'
+      : null;
+---
+
+<AdminLayout title="Nueva unidad">
+  <header class="mb-6">
+    <nav class="mb-2 text-sm">
+      <a href="/panel/admin/unidades/" class="text-gray-500 hover:text-gray-700">← Unidades</a>
+    </nav>
+    <h1 class="font-heading text-2xl font-bold">Nueva unidad</h1>
+  </header>
+
+  <form
+    method="POST"
+    action="/api/panel/units/"
+    class="max-w-2xl space-y-4 rounded-2xl border border-gray-200 bg-white p-6"
+  >
+    {
+      errorMessage && (
+        <div
+          class="rounded-lg border-l-4 border-red-500 bg-red-50 p-3 text-sm text-red-800"
+          role="alert"
+        >
+          {errorMessage}
+        </div>
+      )
+    }
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Placa *</span>
+        <input
+          type="text"
+          name="plate"
+          required
+          maxlength="10"
+          pattern="[A-Za-z0-9\-]{5,10}"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 font-mono uppercase focus:ring-2 focus:outline-none"
+          placeholder="ABC-123"
+        />
+      </label>
+
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Tonelaje *</span>
+        <select
+          name="tonnage"
+          required
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+        >
+          <option value="">—</option>
+          <option value="1">1 tonelada</option>
+          <option value="2">2 toneladas</option>
+          <option value="4">4 toneladas</option>
+        </select>
+      </label>
+    </div>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Alias (opcional)</span>
+      <input
+        type="text"
+        name="alias"
+        maxlength="50"
+        placeholder="Ñan-1, Ñan-4 toneladas, etc."
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      />
+    </label>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Vencimiento SOAT</span>
+        <input
+          type="date"
+          name="soat_expires"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Vencimiento RTV</span>
+        <input
+          type="date"
+          name="rtv_expires"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+    </div>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Próximo mantenimiento (km)</span>
+      <input
+        type="number"
+        name="next_service_km"
+        min="0"
+        max="9999999"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        placeholder="Ej: 85000"
+      />
+    </label>
+
+    <div class="flex gap-3 pt-2">
+      <button
+        type="submit"
+        class="bg-primary hover:bg-primary-dark rounded-full px-6 py-2 text-sm font-bold text-white"
+      >
+        Crear unidad
+      </button>
+      <a
+        href="/panel/admin/unidades/"
+        class="rounded-full border border-gray-300 px-6 py-2 text-sm font-bold hover:bg-gray-100"
+      >
+        Cancelar
+      </a>
+    </div>
+  </form>
+</AdminLayout>

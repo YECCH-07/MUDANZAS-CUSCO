@@ -1,0 +1,127 @@
+---
+export const prerender = false;
+import CotizadorLayout from '@layouts/CotizadorLayout.astro';
+
+const error = Astro.url.searchParams.get('error');
+const errorMsg =
+  error === 'invalid'
+    ? 'Datos inválidos.'
+    : error === 'phone-dup'
+      ? 'Ese teléfono ya existe para otro cliente.'
+      : null;
+---
+
+<CotizadorLayout title="Nuevo cliente">
+  <header class="mb-6">
+    <nav class="mb-2 text-sm">
+      <a href="/panel/cotizador/clientes/" class="text-gray-500 hover:text-gray-700">← Clientes</a>
+    </nav>
+    <h1 class="font-heading text-2xl font-bold">Nuevo cliente</h1>
+  </header>
+
+  <form
+    method="POST"
+    action="/api/panel/customers/"
+    class="max-w-2xl space-y-4 rounded-2xl border border-gray-200 bg-white p-6"
+  >
+    {
+      errorMsg && (
+        <div class="rounded-lg border-l-4 border-red-500 bg-red-50 p-3 text-sm text-red-800">
+          {errorMsg}
+        </div>
+      )
+    }
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Nombre completo *</span>
+      <input
+        type="text"
+        name="name"
+        required
+        minlength="2"
+        maxlength="120"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      />
+    </label>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Teléfono / WhatsApp</span>
+        <input
+          type="tel"
+          name="phone"
+          pattern="[0-9+\-\s]{6,}"
+          placeholder="925671052"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Email</span>
+        <input
+          type="email"
+          name="email"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Tipo de documento</span>
+        <select
+          name="doc_type"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+        >
+          <option value="">—</option>
+          <option value="DNI">DNI</option>
+          <option value="RUC">RUC</option>
+          <option value="CE">CE</option>
+          <option value="Pasaporte">Pasaporte</option>
+        </select>
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Número</span>
+        <input
+          type="text"
+          name="doc_number"
+          maxlength="20"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+    </div>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Etiquetas (separadas por coma)</span>
+      <input
+        type="text"
+        name="tags"
+        placeholder="familia, expat, empresa, las-bambas"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      />
+    </label>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Notas internas</span>
+      <textarea
+        name="notes"
+        rows="3"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      ></textarea>
+    </label>
+
+    <div class="flex gap-3 pt-2">
+      <button
+        type="submit"
+        class="bg-primary hover:bg-primary-dark rounded-full px-6 py-2 text-sm font-bold text-white"
+      >
+        Crear cliente
+      </button>
+      <a
+        href="/panel/cotizador/clientes/"
+        class="rounded-full border border-gray-300 px-6 py-2 text-sm font-bold hover:bg-gray-100"
+      >
+        Cancelar
+      </a>
+    </div>
+  </form>
+</CotizadorLayout>

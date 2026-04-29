@@ -1,0 +1,298 @@
+---
+export const prerender = false;
+
+import AdminLayout from '@layouts/AdminLayout.astro';
+import { db } from '@db/client';
+import { dailyEntries, trips, entryItems, units, users, quotes } from '@db/schema';
+import { between, eq } from 'drizzle-orm';
+
+// Periodo: ?from=yyyy-mm-dd&to=yyyy-mm-dd  (default: mes actual)
+function firstDayOfMonth(): string {
+  const d = new Date();
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, '0')}-01`;
+}
+function todayISO(): string {
+  return new Date().toISOString().slice(0, 10);
+}
+const from = Astro.url.searchParams.get('from') || firstDayOfMonth();
+const to = Astro.url.searchParams.get('to') || todayISO();
+const groupBy =
+  (Astro.url.searchParams.get('groupBy') as
+    | 'unit'
+    | 'driver'
+    | 'service_type'
+    | 'route'
+    | 'cotizador'
+    | 'lead_source') || 'unit';
+
+const fmt = (c: number | null | undefined): string =>
+  `S/ ${((c ?? 0) / 100).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+
+// Trae trips + entry_items dentro del rango via daily_entries.entry_date.
+const entriesInRange = await db
+  .select()
+  .from(dailyEntries)
+  .where(between(dailyEntries.entryDate, from, to))
+  .all();
+const entryIds = entriesInRange.map((e) => e.id);
+
+let allTrips: Array<{
+  entryId: string;
+  serviceKind: string;
+  origin: string;
+  destination: string;
+  amountCents: number;
+}> = [];
+let allItems: Array<{ entryId: string; kind: string; amountCents: number }> = [];
+
+if (entryIds.length > 0) {
+  // Drizzle no soporta `inArray` aquí sin importar; uso loop simple
+  for (const e of entriesInRange) {
+    const ts = await db.select().from(trips).where(eq(trips.entryId, e.id)).all();
+    allTrips = allTrips.concat(
+      ts.map((t) => ({
+        entryId: t.entryId,
+        serviceKind: t.serviceKind,
+        origin: t.origin,
+        destination: t.destination,
+        amountCents: t.amountCents,
+      })),
+    );
+    const its = await db.select().from(entryItems).where(eq(entryItems.entryId, e.id)).all();
+    allItems = allItems.concat(
+      its.map((i) => ({
+        entryId: i.entryId,
+        kind: i.kind,
+        amountCents: i.amountCents,
+      })),
+    );
+  }
+}
+
+// Mapas auxiliares
+const entryByUnit: Record<string, string> = {};
+const entryByDriver: Record<string, string> = {};
+for (const e of entriesInRange) {
+  entryByUnit[e.id] = e.unitId;
+  entryByDriver[e.id] = e.driverId;
+}
+
+const unitsMap = Object.fromEntries((await db.select().from(units).all()).map((u) => [u.id, u]));
+const usersMap = Object.fromEntries((await db.select().from(users).all()).map((u) => [u.id, u]));
+
+// Acumulación por agrupador.
+type Bucket = {
+  label: string;
+  income: number;
+  expense: number;
+  tripCount: number;
+  days: Set<string>;
+};
+const buckets: Record<string, Bucket> = {};
+
+function getBucket(key: string, label: string): Bucket {
+  if (!buckets[key]) buckets[key] = { label, income: 0, expense: 0, tripCount: 0, days: new Set() };
+  return buckets[key];
+}
+
+function unitKey(entryId: string): { key: string; label: string } {
+  const uid = entryByUnit[entryId];
+  if (!uid) return { key: '?', label: '?' };
+  const u = unitsMap[uid];
+  return { key: uid, label: u ? `${u.plate} (${u.tonnage}t)` : uid };
+}
+function driverKey(entryId: string): { key: string; label: string } {
+  const did = entryByDriver[entryId];
+  if (!did) return { key: '?', label: '?' };
+  const u = usersMap[did];
+  return { key: did, label: u ? u.fullName : did };
+}
+
+for (const t of allTrips) {
+  let key = '?',
+    label = '?';
+  if (groupBy === 'unit') ({ key, label } = unitKey(t.entryId));
+  else if (groupBy === 'driver') ({ key, label } = driverKey(t.entryId));
+  else if (groupBy === 'service_type') {
+    key = t.serviceKind;
+    label = t.serviceKind;
+  } else if (groupBy === 'route') {
+    key = `${t.origin} -> ${t.destination}`;
+    label = key;
+  } else if (groupBy === 'cotizador' || groupBy === 'lead_source') {
+    // Estos agrupadores trabajan sobre quotes; trips no aporta. Saltamos.
+    continue;
+  }
+  const b = getBucket(key, label);
+  b.income += t.amountCents;
+  b.tripCount++;
+  const e = entriesInRange.find((x) => x.id === t.entryId);
+  if (e) b.days.add(e.entryDate);
+}
+
+for (const item of allItems) {
+  let key = '?',
+    label = '?';
+  if (groupBy === 'unit') ({ key, label } = unitKey(item.entryId));
+  else if (groupBy === 'driver') ({ key, label } = driverKey(item.entryId));
+  else continue;
+  const b = getBucket(key, label);
+  if (item.kind === 'income') b.income += item.amountCents;
+  else b.expense += item.amountCents;
+}
+
+// Para agrupadores 'cotizador' y 'lead_source' usamos quotes/receipts.
+if (groupBy === 'cotizador' || groupBy === 'lead_source') {
+  const qrows = await db
+    .select({
+      id: quotes.id,
+      total: quotes.totalCents,
+      status: quotes.status,
+      leadSource: quotes.leadSource,
+      createdBy: quotes.createdBy,
+      createdAt: quotes.createdAt,
+    })
+    .from(quotes)
+    .where(between(quotes.createdAt, from + 'T00:00:00.000Z', to + 'T23:59:59.999Z'))
+    .all();
+  for (const q of qrows) {
+    let key = '?',
+      label = '?';
+    if (groupBy === 'cotizador') {
+      const u = usersMap[q.createdBy];
+      key = q.createdBy;
+      label = u ? u.fullName : q.createdBy;
+    } else {
+      key = q.leadSource ?? 'sin-fuente';
+      label = key;
+    }
+    const b = getBucket(key, label);
+    b.tripCount++;
+    if (q.status === 'completed' || q.status === 'accepted') b.income += q.total;
+  }
+}
+
+const rows = Object.values(buckets).sort((a, b) => b.income - b.expense - (a.income - a.expense));
+
+// Totales globales
+const totalIncome = rows.reduce((s, r) => s + r.income, 0);
+const totalExpense = rows.reduce((s, r) => s + r.expense, 0);
+const totalBalance = totalIncome - totalExpense;
+---
+
+<AdminLayout title="Balances">
+  <header class="mb-6">
+    <h1 class="font-heading text-2xl font-bold md:text-3xl">Balances</h1>
+    <p class="mt-1 text-sm text-gray-600">Ingresos, gastos y balance por periodo.</p>
+  </header>
+
+  <form
+    method="GET"
+    class="mb-4 flex flex-wrap items-end gap-3 rounded-2xl border border-gray-200 bg-white p-4"
+  >
+    <label class="block">
+      <span class="mb-1 block text-xs font-bold tracking-wider text-gray-500 uppercase">Desde</span>
+      <input
+        type="date"
+        name="from"
+        value={from}
+        class="rounded-lg border border-gray-300 px-3 py-2 text-sm"
+      />
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-xs font-bold tracking-wider text-gray-500 uppercase">Hasta</span>
+      <input
+        type="date"
+        name="to"
+        value={to}
+        class="rounded-lg border border-gray-300 px-3 py-2 text-sm"
+      />
+    </label>
+    <label class="block">
+      <span class="mb-1 block text-xs font-bold tracking-wider text-gray-500 uppercase"
+        >Agrupar por</span
+      >
+      <select name="groupBy" class="rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm">
+        <option value="unit" selected={groupBy === 'unit'}>Unidad</option>
+        <option value="driver" selected={groupBy === 'driver'}>Conductor</option>
+        <option value="service_type" selected={groupBy === 'service_type'}>Tipo de servicio</option>
+        <option value="route" selected={groupBy === 'route'}>Ruta</option>
+        <option value="cotizador" selected={groupBy === 'cotizador'}>Cotizador</option>
+        <option value="lead_source" selected={groupBy === 'lead_source'}>Fuente del lead</option>
+      </select>
+    </label>
+    <button
+      class="bg-primary hover:bg-primary-dark rounded-full px-5 py-2 text-sm font-bold text-white"
+    >
+      Aplicar
+    </button>
+    <a
+      href={`/api/panel/reports/balance.csv?from=${from}&to=${to}&groupBy=${groupBy}`}
+      class="rounded-full border border-gray-300 px-5 py-2 text-sm font-bold hover:bg-gray-100"
+    >
+      Exportar CSV
+    </a>
+  </form>
+
+  <div class="mb-4 grid grid-cols-3 gap-3">
+    <div class="rounded-2xl border border-gray-200 bg-white p-4">
+      <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">Ingresos</p>
+      <p class="text-2xl font-bold text-green-700">{fmt(totalIncome)}</p>
+    </div>
+    <div class="rounded-2xl border border-gray-200 bg-white p-4">
+      <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">Gastos</p>
+      <p class="text-2xl font-bold text-red-700">{fmt(totalExpense)}</p>
+    </div>
+    <div class="rounded-2xl border border-gray-200 bg-white p-4">
+      <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">Balance</p>
+      <p class:list={['text-2xl font-bold', totalBalance >= 0 ? 'text-primary' : 'text-red-700']}>
+        {fmt(totalBalance)}
+      </p>
+    </div>
+  </div>
+
+  {
+    rows.length === 0 ? (
+      <div class="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-600">
+        Sin movimientos en el periodo seleccionado.
+      </div>
+    ) : (
+      <div class="overflow-x-auto rounded-2xl border border-gray-200 bg-white">
+        <table class="w-full text-left text-sm">
+          <thead class="bg-gray-50 text-xs font-bold tracking-wider uppercase">
+            <tr>
+              <th class="px-4 py-3">{groupBy}</th>
+              <th class="px-4 py-3 text-right">Ingresos</th>
+              <th class="px-4 py-3 text-right">Gastos</th>
+              <th class="px-4 py-3 text-right">Balance</th>
+              <th class="px-4 py-3 text-right">Items</th>
+              <th class="px-4 py-3 text-right">Días</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            {rows.map((r) => {
+              const balance = r.income - r.expense;
+              return (
+                <tr>
+                  <td class="px-4 py-3 font-bold">{r.label}</td>
+                  <td class="px-4 py-3 text-right text-green-700">{fmt(r.income)}</td>
+                  <td class="px-4 py-3 text-right text-red-700">{fmt(r.expense)}</td>
+                  <td
+                    class:list={[
+                      'px-4 py-3 text-right font-bold',
+                      balance >= 0 ? 'text-primary' : 'text-red-700',
+                    ]}
+                  >
+                    {fmt(balance)}
+                  </td>
+                  <td class="px-4 py-3 text-right text-xs">{r.tripCount}</td>
+                  <td class="px-4 py-3 text-right text-xs">{r.days.size}</td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
+    )
+  }
+</AdminLayout>

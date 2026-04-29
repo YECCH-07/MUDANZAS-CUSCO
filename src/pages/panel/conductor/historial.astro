@@ -1,0 +1,127 @@
+---
+export const prerender = false;
+
+import PanelLayout from '@layouts/PanelLayout.astro';
+import { db } from '@db/client';
+import { dailyEntries, units, trips, entryItems } from '@db/schema';
+import { desc, eq } from 'drizzle-orm';
+
+const user = Astro.locals.user!;
+
+const rows = await db
+  .select({
+    id: dailyEntries.id,
+    entryDate: dailyEntries.entryDate,
+    closedAt: dailyEntries.closedAt,
+    odometerStartKm: dailyEntries.odometerStartKm,
+    odometerEndKm: dailyEntries.odometerEndKm,
+    plate: units.plate,
+    tonnage: units.tonnage,
+  })
+  .from(dailyEntries)
+  .innerJoin(units, eq(units.id, dailyEntries.unitId))
+  .where(eq(dailyEntries.driverId, user.id))
+  .orderBy(desc(dailyEntries.entryDate))
+  .limit(60)
+  .all();
+
+// Totales por día (una pasada por entry)
+interface EntryTotals {
+  incomeCents: number;
+  expenseCents: number;
+  tripCount: number;
+}
+const totals: Record<string, EntryTotals> = {};
+
+for (const r of rows) {
+  const tripsOfEntry = await db
+    .select({ amountCents: trips.amountCents })
+    .from(trips)
+    .where(eq(trips.entryId, r.id))
+    .all();
+  const itemsOfEntry = await db
+    .select({ kind: entryItems.kind, amountCents: entryItems.amountCents })
+    .from(entryItems)
+    .where(eq(entryItems.entryId, r.id))
+    .all();
+  const incomeTrips = tripsOfEntry.reduce((s, t) => s + t.amountCents, 0);
+  const incomeExtra = itemsOfEntry
+    .filter((i) => i.kind === 'income')
+    .reduce((s, i) => s + i.amountCents, 0);
+  const expense = itemsOfEntry
+    .filter((i) => i.kind === 'expense')
+    .reduce((s, i) => s + i.amountCents, 0);
+  totals[r.id] = {
+    incomeCents: incomeTrips + incomeExtra,
+    expenseCents: expense,
+    tripCount: tripsOfEntry.length,
+  };
+}
+
+const fmt = (c: number | null | undefined): string =>
+  `S/ ${((c ?? 0) / 100).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+---
+
+<PanelLayout title="Historial" bodyClass="pb-8">
+  <main class="mx-auto max-w-lg space-y-3 p-4">
+    <header class="mb-4">
+      <a href="/panel/conductor/hoy/" class="text-xs text-gray-500 hover:text-gray-800">← Hoy</a>
+      <h1 class="font-heading mt-1 text-xl font-bold">Historial</h1>
+      <p class="mt-1 text-xs text-gray-600">Últimos 60 días. Solo lectura.</p>
+    </header>
+
+    {
+      rows.length === 0 ? (
+        <div class="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-600">
+          Aún no tienes días registrados.
+        </div>
+      ) : (
+        <ul class="space-y-2">
+          {rows.map((r) => {
+            const t = totals[r.id]!;
+            const balance = t.incomeCents - t.expenseCents;
+            return (
+              <li class="rounded-2xl border border-gray-200 bg-white p-4">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <p class="font-bold">{r.entryDate}</p>
+                    <p class="text-xs text-gray-600">
+                      {r.plate} · {r.tonnage} t
+                    </p>
+                    <p class="mt-1 text-xs text-gray-500">
+                      {t.tripCount} viaje{t.tripCount === 1 ? '' : 's'}
+                      {r.odometerStartKm !== null && r.odometerEndKm !== null && (
+                        <> · {r.odometerEndKm - r.odometerStartKm} km</>
+                      )}
+                    </p>
+                  </div>
+                  <div class="text-right">
+                    <p class="text-[10px] font-bold tracking-wider text-gray-500 uppercase">
+                      Balance
+                    </p>
+                    <p class:list={['font-bold', balance >= 0 ? 'text-primary' : 'text-red-700']}>
+                      {fmt(balance)}
+                    </p>
+                  </div>
+                </div>
+                <div class="mt-2 flex items-center justify-between text-xs">
+                  <span class="text-green-700">+{fmt(t.incomeCents)}</span>
+                  <span class="text-red-700">-{fmt(t.expenseCents)}</span>
+                  {r.closedAt ? (
+                    <span class="rounded-full bg-gray-200 px-2 py-0.5 font-bold text-gray-700">
+                      cerrado
+                    </span>
+                  ) : (
+                    <span class="rounded-full bg-amber-100 px-2 py-0.5 font-bold text-amber-800">
+                      abierto
+                    </span>
+                  )}
+                </div>
+              </li>
+            );
+          })}
+        </ul>
+      )
+    }
+  </main>
+</PanelLayout>

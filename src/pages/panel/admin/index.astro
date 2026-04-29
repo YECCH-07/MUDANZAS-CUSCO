@@ -1,0 +1,515 @@
+---
+export const prerender = false;
+
+import AdminLayout from '@layouts/AdminLayout.astro';
+import KpiCard from '@components/panel/KpiCard.astro';
+import Sparkline from '@components/panel/Sparkline.astro';
+import Avatar from '@components/panel/Avatar.astro';
+import StatusBadge from '@components/panel/StatusBadge.astro';
+import SectionHeader from '@components/panel/SectionHeader.astro';
+import EmptyState from '@components/panel/EmptyState.astro';
+import { ICONS } from '@components/panel/icons';
+import { db } from '@db/client';
+import {
+  users,
+  units,
+  driverAssignments,
+  dailyEntries,
+  trips,
+  entryItems,
+  quotes,
+  expenseCategories,
+} from '@db/schema';
+import { count, eq, isNull, lte, gte, and, isNotNull } from 'drizzle-orm';
+import { todayLimaISO } from '@lib/panel/lima-date';
+import { soles, fmtDateTime } from '@lib/panel/format';
+
+const user = Astro.locals.user!;
+
+const [usersCount, conductoresCount, cotizadoresCount, unitsActive, activeAssignments] = [
+  db.select({ n: count() }).from(users).get(),
+  db.select({ n: count() }).from(users).where(eq(users.role, 'conductor')).get(),
+  db.select({ n: count() }).from(users).where(eq(users.role, 'cotizador')).get(),
+  db.select({ n: count() }).from(units).where(eq(units.active, true)).get(),
+  db.select({ n: count() }).from(driverAssignments).where(isNull(driverAssignments.endsAt)).get(),
+];
+
+const today = todayLimaISO();
+
+// Movimientos del día
+const todayEntries = await db
+  .select()
+  .from(dailyEntries)
+  .where(eq(dailyEntries.entryDate, today))
+  .all();
+let todayIncomeCents = 0;
+let todayExpenseCents = 0;
+let todayTrips = 0;
+
+interface MovementRow {
+  ts: string;
+  kind: 'trip' | 'income' | 'expense';
+  amountCents: number;
+  driverName: string | null;
+  unitPlate: string | null;
+  description: string;
+}
+const movements: MovementRow[] = [];
+
+const unitsAll = await db.select({ id: units.id, plate: units.plate }).from(units).all();
+const unitMap = new Map(unitsAll.map((u) => [u.id, u.plate]));
+const driversAll = await db
+  .select({ id: users.id, fullName: users.fullName })
+  .from(users)
+  .where(eq(users.role, 'conductor'))
+  .all();
+const driverMap = new Map(driversAll.map((u) => [u.id, u.fullName]));
+const catsAll = await db
+  .select({ id: expenseCategories.id, label: expenseCategories.labelEs })
+  .from(expenseCategories)
+  .all();
+const catMap = new Map(catsAll.map((c) => [c.id, c.label]));
+
+for (const e of todayEntries) {
+  const driverName = driverMap.get(e.driverId) ?? null;
+  const unitPlate = unitMap.get(e.unitId) ?? null;
+
+  const ts = await db.select().from(trips).where(eq(trips.entryId, e.id)).all();
+  for (const t of ts) {
+    if (t.endedAt) {
+      todayIncomeCents += t.amountCents;
+      todayTrips++;
+      movements.push({
+        ts: t.endedAt,
+        kind: 'trip',
+        amountCents: t.amountCents,
+        driverName,
+        unitPlate,
+        description: `${t.origin} → ${t.destination}`,
+      });
+    }
+  }
+
+  const its = await db.select().from(entryItems).where(eq(entryItems.entryId, e.id)).all();
+  for (const i of its) {
+    if (i.kind === 'income') todayIncomeCents += i.amountCents;
+    else todayExpenseCents += i.amountCents;
+    movements.push({
+      ts: i.createdAt,
+      kind: i.kind === 'income' ? 'income' : 'expense',
+      amountCents: i.amountCents,
+      driverName,
+      unitPlate,
+      description: i.description + (i.categoryId ? ` · ${catMap.get(i.categoryId) ?? ''}` : ''),
+    });
+  }
+}
+movements.sort((a, b) => (a.ts < b.ts ? 1 : -1));
+
+// Series de los últimos 14 días para sparklines
+const days14: string[] = [];
+for (let i = 13; i >= 0; i--) {
+  const d = new Date(today + 'T00:00:00');
+  d.setUTCDate(d.getUTCDate() - i);
+  days14.push(d.toISOString().slice(0, 10));
+}
+const incomeByDay = new Map<string, number>(days14.map((d) => [d, 0]));
+const expenseByDay = new Map<string, number>(days14.map((d) => [d, 0]));
+const tripsByDay = new Map<string, number>(days14.map((d) => [d, 0]));
+
+const fromDate = days14[0]!;
+const recentEntries = await db
+  .select()
+  .from(dailyEntries)
+  .where(gte(dailyEntries.entryDate, fromDate))
+  .all();
+for (const e of recentEntries) {
+  const ts = await db
+    .select({ amountCents: trips.amountCents, endedAt: trips.endedAt })
+    .from(trips)
+    .where(eq(trips.entryId, e.id))
+    .all();
+  for (const t of ts) {
+    if (t.endedAt) {
+      incomeByDay.set(e.entryDate, (incomeByDay.get(e.entryDate) ?? 0) + t.amountCents);
+      tripsByDay.set(e.entryDate, (tripsByDay.get(e.entryDate) ?? 0) + 1);
+    }
+  }
+  const its = await db
+    .select({ kind: entryItems.kind, amountCents: entryItems.amountCents })
+    .from(entryItems)
+    .where(eq(entryItems.entryId, e.id))
+    .all();
+  for (const i of its) {
+    if (i.kind === 'income')
+      incomeByDay.set(e.entryDate, (incomeByDay.get(e.entryDate) ?? 0) + i.amountCents);
+    else expenseByDay.set(e.entryDate, (expenseByDay.get(e.entryDate) ?? 0) + i.amountCents);
+  }
+}
+const incomeSeries = days14.map((d) => incomeByDay.get(d) ?? 0);
+const expenseSeries = days14.map((d) => expenseByDay.get(d) ?? 0);
+const tripsSeries = days14.map((d) => tripsByDay.get(d) ?? 0);
+
+// Cotizaciones de los últimos 14 días para sparkline
+const recentQuotes = await db
+  .select({ status: quotes.status, createdAt: quotes.createdAt })
+  .from(quotes)
+  .where(gte(quotes.createdAt, fromDate + 'T00:00:00.000Z'))
+  .all();
+const quotesByDay = new Map<string, number>(days14.map((d) => [d, 0]));
+for (const q of recentQuotes) {
+  const day = q.createdAt.slice(0, 10);
+  if (quotesByDay.has(day)) quotesByDay.set(day, (quotesByDay.get(day) ?? 0) + 1);
+}
+const quotesSeries = days14.map((d) => quotesByDay.get(d) ?? 0);
+
+const todayQuotes = recentQuotes.filter((q) => q.createdAt.slice(0, 10) === today);
+const todayQuoteCount = todayQuotes.length;
+const todayAccepted = todayQuotes.filter((q) => q.status === 'accepted').length;
+
+// Deltas (hoy vs ayer)
+const yesterday = days14[12] ?? today;
+const yIncome = incomeByDay.get(yesterday) ?? 0;
+const incomeDelta = yIncome > 0 ? Math.round(((todayIncomeCents - yIncome) / yIncome) * 100) : 0;
+
+const balanceCents = todayIncomeCents - todayExpenseCents;
+
+// Alertas SOAT/RTV
+const horizon = new Date();
+horizon.setUTCDate(horizon.getUTCDate() + 30);
+const horizonISO = horizon.toISOString().slice(0, 10);
+const alertSoat = await db
+  .select({ id: units.id, plate: units.plate, soatExpires: units.soatExpires })
+  .from(units)
+  .where(
+    and(eq(units.active, true), isNotNull(units.soatExpires), lte(units.soatExpires, horizonISO)),
+  )
+  .all();
+const alertRtv = await db
+  .select({ id: units.id, plate: units.plate, rtvExpires: units.rtvExpires })
+  .from(units)
+  .where(
+    and(eq(units.active, true), isNotNull(units.rtvExpires), lte(units.rtvExpires, horizonISO)),
+  )
+  .all();
+
+function daysUntil(date: string): number {
+  return Math.floor(
+    (new Date(date + 'T00:00:00').getTime() - new Date(today + 'T00:00:00').getTime()) / 86400000,
+  );
+}
+
+const greeting = (() => {
+  const h = new Date().getUTCHours() - 5; // Lima UTC-5
+  const lh = ((h % 24) + 24) % 24;
+  if (lh < 12) return 'Buenos días';
+  if (lh < 19) return 'Buenas tardes';
+  return 'Buenas noches';
+})();
+
+const todayPretty = new Date(today + 'T00:00:00').toLocaleDateString('es-PE', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+});
+---
+
+<AdminLayout title="Dashboard">
+  {/* HERO con gradiente corporativo */}
+  <header
+    class="bg-brand-gradient panel-fade-in shadow-brand-lg -mx-4 -mt-4 mb-6 px-4 py-6 text-white sm:rounded-2xl md:-mx-8 md:-mt-8 md:px-8 md:py-8"
+  >
+    <div class="flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="text-xs font-bold tracking-wider text-white/80 uppercase">Panel ejecutivo</p>
+        <h1 class="font-heading mt-1 text-2xl font-bold tracking-tight md:text-4xl">
+          {greeting}, {user.fullName.split(' ')[0]}
+        </h1>
+        <p class="mt-1 text-sm text-white/90 capitalize md:text-base">{todayPretty}</p>
+      </div>
+
+      <div class="flex flex-wrap gap-3">
+        <div class="rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+          <p class="text-[10px] font-bold tracking-wider text-white/80 uppercase">
+            Ingresos del día
+          </p>
+          <p class="mt-1 text-2xl font-bold tabular-nums md:text-3xl">{soles(todayIncomeCents)}</p>
+        </div>
+        <div class="rounded-xl bg-white/10 px-4 py-3 backdrop-blur-sm">
+          <p class="text-[10px] font-bold tracking-wider text-white/80 uppercase">Balance neto</p>
+          <p
+            class:list={[
+              'mt-1 text-2xl font-bold tabular-nums md:text-3xl',
+              balanceCents < 0 ? 'text-red-200' : '',
+            ]}
+          >
+            {soles(balanceCents)}
+          </p>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  {/* KPI cards principales con sparklines */}
+  <SectionHeader title="Hoy" subtitle="Tendencia de los últimos 14 días" />
+  <div class="panel-slide-up grid grid-cols-2 gap-3 md:grid-cols-4">
+    <KpiCard
+      label="Ingresos"
+      value={soles(todayIncomeCents)}
+      variant="success"
+      iconHref={ICONS.trendingUp}
+      delta={incomeDelta !== 0
+        ? `${incomeDelta > 0 ? '+' : ''}${incomeDelta}% vs ayer`
+        : 'Sin movimiento ayer'}
+      deltaTone={incomeDelta > 0 ? 'positive' : incomeDelta < 0 ? 'negative' : 'neutral'}
+    >
+      <Sparkline slot="sparkline" data={incomeSeries} stroke="#059669" />
+    </KpiCard>
+
+    <KpiCard
+      label="Gastos"
+      value={soles(todayExpenseCents)}
+      variant="danger"
+      iconHref={ICONS.trendingDown}
+    >
+      <Sparkline slot="sparkline" data={expenseSeries} stroke="#dc2626" />
+    </KpiCard>
+
+    <KpiCard label="Viajes" value={String(todayTrips)} variant="primary" iconHref={ICONS.truck}>
+      <Sparkline slot="sparkline" data={tripsSeries} stroke="#d72638" />
+    </KpiCard>
+
+    <KpiCard
+      label={`Cotizaciones (${todayAccepted} aceptadas)`}
+      value={String(todayQuoteCount)}
+      variant="info"
+      iconHref={ICONS.doc}
+    >
+      <Sparkline slot="sparkline" data={quotesSeries} stroke="#2563eb" />
+    </KpiCard>
+  </div>
+
+  {/* Stats secundarios */}
+  <SectionHeader title="Equipo y flota" subtitle="Estado actual del personal y vehículos." />
+  <div class="panel-slide-up grid grid-cols-2 gap-3 md:grid-cols-5">
+    <KpiCard
+      label="Usuarios"
+      value={String(usersCount?.n ?? 0)}
+      variant="neutral"
+      iconHref={ICONS.users}
+    />
+    <KpiCard
+      label="Conductores"
+      value={String(conductoresCount?.n ?? 0)}
+      variant="neutral"
+      iconHref={ICONS.users}
+      href="/panel/admin/usuarios/"
+    />
+    <KpiCard
+      label="Cotizadores"
+      value={String(cotizadoresCount?.n ?? 0)}
+      variant="neutral"
+      iconHref={ICONS.users}
+      href="/panel/admin/usuarios/"
+    />
+    <KpiCard
+      label="Unidades activas"
+      value={String(unitsActive?.n ?? 0)}
+      variant="neutral"
+      iconHref={ICONS.truck}
+      href="/panel/admin/unidades/"
+    />
+    <KpiCard
+      label="Asignaciones"
+      value={String(activeAssignments?.n ?? 0)}
+      variant="neutral"
+      iconHref={ICONS.tag}
+      href="/panel/admin/asignaciones/"
+    />
+  </div>
+
+  {/* Alertas SOAT/RTV */}
+  {
+    (alertSoat.length > 0 || alertRtv.length > 0) && (
+      <section class="panel-slide-up mt-8">
+        <SectionHeader
+          title="Vencimientos próximos"
+          subtitle="Documentos por renovar en 30 días o ya vencidos."
+          actionLabel="Ver todas las unidades"
+          actionHref="/panel/admin/unidades/"
+        />
+        <div class="grid gap-2 md:grid-cols-2">
+          {alertSoat.map((u) => {
+            const days = daysUntil(u.soatExpires!);
+            const tone = days < 0 ? 'danger' : days < 8 ? 'danger' : 'warning';
+            return (
+              <a
+                href={`/panel/admin/unidades/${u.id}/`}
+                class:list={[
+                  'panel-lift block rounded-2xl border-l-4 bg-white p-4',
+                  tone === 'danger' ? 'border-red-500' : 'border-amber-500',
+                ]}
+              >
+                <div class="flex items-start gap-3">
+                  <div
+                    class:list={[
+                      'rounded-lg p-2',
+                      tone === 'danger' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700',
+                    ]}
+                  >
+                    <svg
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d={ICONS.warning} />
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <p class="font-bold">
+                      Unidad {u.plate} — SOAT
+                      {days < 0 ? (
+                        <span class="text-red-700"> VENCIDO hace {Math.abs(days)} d</span>
+                      ) : (
+                        <span> vence en {days} d</span>
+                      )}
+                    </p>
+                    <p class="text-xs text-gray-500">Vencimiento: {u.soatExpires}</p>
+                  </div>
+                </div>
+              </a>
+            );
+          })}
+          {alertRtv.map((u) => {
+            const days = daysUntil(u.rtvExpires!);
+            const tone = days < 0 ? 'danger' : days < 8 ? 'danger' : 'warning';
+            return (
+              <a
+                href={`/panel/admin/unidades/${u.id}/`}
+                class:list={[
+                  'panel-lift block rounded-2xl border-l-4 bg-white p-4',
+                  tone === 'danger' ? 'border-red-500' : 'border-amber-500',
+                ]}
+              >
+                <div class="flex items-start gap-3">
+                  <div
+                    class:list={[
+                      'rounded-lg p-2',
+                      tone === 'danger' ? 'bg-red-100 text-red-700' : 'bg-amber-100 text-amber-700',
+                    ]}
+                  >
+                    <svg
+                      class="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    >
+                      <path d={ICONS.warning} />
+                    </svg>
+                  </div>
+                  <div class="flex-1">
+                    <p class="font-bold">
+                      Unidad {u.plate} — RTV
+                      {days < 0 ? (
+                        <span class="text-red-700"> VENCIDA hace {Math.abs(days)} d</span>
+                      ) : (
+                        <span> vence en {days} d</span>
+                      )}
+                    </p>
+                    <p class="text-xs text-gray-500">Vencimiento: {u.rtvExpires}</p>
+                  </div>
+                </div>
+              </a>
+            );
+          })}
+        </div>
+      </section>
+    )
+  }
+
+  {/* Movimientos del día */}
+  <section class="panel-slide-up mt-8">
+    <SectionHeader
+      title="Movimientos del día"
+      subtitle={`${movements.length} eventos · ordenados del más reciente`}
+      actionLabel="Ver auditoría completa"
+      actionHref="/panel/admin/audit/"
+    />
+    {
+      movements.length === 0 ? (
+        <EmptyState
+          title="Sin movimientos registrados aún"
+          description="Cuando los conductores cierren viajes o registren gastos, aparecerán aquí en tiempo real."
+          iconHref={ICONS.clock}
+        />
+      ) : (
+        <div class="shadow-brand-sm overflow-hidden rounded-2xl border border-gray-200 bg-white">
+          <div class="overflow-x-auto">
+            <table class="min-w-full text-sm">
+              <thead class="bg-gradient-to-r from-gray-50 to-white text-left text-xs tracking-wider text-gray-500 uppercase">
+                <tr>
+                  <th class="px-3 py-3 sm:px-4">Hora</th>
+                  <th class="px-3 py-3 sm:px-4">Tipo</th>
+                  <th class="px-3 py-3 sm:px-4">Conductor</th>
+                  <th class="px-3 py-3 sm:px-4">Detalle</th>
+                  <th class="px-3 py-3 text-right sm:px-4">Monto</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                {movements.slice(0, 50).map((m) => (
+                  <tr class="transition-colors hover:bg-gray-50">
+                    <td class="px-3 py-3 font-mono text-xs whitespace-nowrap sm:px-4">
+                      {fmtDateTime(m.ts)}
+                    </td>
+                    <td class="px-3 py-3 sm:px-4">
+                      <StatusBadge status={m.kind} />
+                    </td>
+                    <td class="px-3 py-3 sm:px-4">
+                      <div class="flex items-center gap-2">
+                        <Avatar name={m.driverName ?? '—'} size="sm" />
+                        <div class="min-w-0">
+                          <p class="truncate text-xs font-bold">{m.driverName ?? '—'}</p>
+                          <p class="text-[10px] text-gray-500">{m.unitPlate ?? '—'}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td class="px-3 py-3 text-xs sm:px-4">{m.description}</td>
+                    <td
+                      class:list={[
+                        'px-3 py-3 text-right font-bold whitespace-nowrap tabular-nums sm:px-4',
+                        m.kind === 'expense' ? 'text-red-700' : 'text-green-700',
+                      ]}
+                    >
+                      {m.kind === 'expense' ? '−' : '+'}
+                      {soles(m.amountCents)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          {movements.length > 50 && (
+            <p class="border-t border-gray-100 bg-gray-50 px-4 py-2 text-center text-xs text-gray-500">
+              Mostrando 50 de {movements.length}. Para análisis completo usa
+              <a href="/panel/admin/balances/" class="text-primary mx-1 font-bold hover:underline">
+                balances
+              </a>
+              o
+              <a href="/panel/admin/audit/" class="text-primary mx-1 font-bold hover:underline">
+                auditoría
+              </a>
+              .
+            </p>
+          )}
+        </div>
+      )
+    }
+  </section>
+</AdminLayout>

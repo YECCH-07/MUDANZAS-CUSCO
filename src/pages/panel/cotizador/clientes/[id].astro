@@ -1,0 +1,524 @@
+---
+export const prerender = false;
+
+import CotizadorLayout from '@layouts/CotizadorLayout.astro';
+import KpiCard from '@components/panel/KpiCard.astro';
+import StatusBadge from '@components/panel/StatusBadge.astro';
+import EmptyState from '@components/panel/EmptyState.astro';
+import SectionHeader from '@components/panel/SectionHeader.astro';
+import Avatar from '@components/panel/Avatar.astro';
+import { ICONS } from '@components/panel/icons';
+import { db } from '@db/client';
+import { customers, quotes, receipts } from '@db/schema';
+import { desc, eq } from 'drizzle-orm';
+import { soles, fmtDate } from '@lib/panel/format';
+import { getService } from '@lib/panel/services';
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect('/panel/cotizador/clientes/');
+
+const c = await db.select().from(customers).where(eq(customers.id, id)).get();
+if (!c) return Astro.redirect('/panel/cotizador/clientes/');
+
+const tags: string[] = (() => {
+  try {
+    return JSON.parse(c.tagsJson);
+  } catch {
+    return [];
+  }
+})();
+
+const customerQuotes = await db
+  .select({
+    id: quotes.id,
+    number: quotes.number,
+    status: quotes.status,
+    totalCents: quotes.totalCents,
+    serviceType: quotes.serviceType,
+    origin: quotes.origin,
+    destination: quotes.destination,
+    createdAt: quotes.createdAt,
+  })
+  .from(quotes)
+  .where(eq(quotes.customerId, id))
+  .orderBy(desc(quotes.createdAt))
+  .all();
+
+const customerReceipts = await db
+  .select({
+    id: receipts.id,
+    number: receipts.number,
+    totalCents: receipts.totalCents,
+    issuedAt: receipts.issuedAt,
+    voidedAt: receipts.voidedAt,
+    paymentMethod: receipts.paymentMethod,
+  })
+  .from(receipts)
+  .where(eq(receipts.customerId, id))
+  .orderBy(desc(receipts.issuedAt))
+  .all();
+
+// KPIs
+const validReceipts = customerReceipts.filter((r) => !r.voidedAt);
+const ltvCents = validReceipts.reduce((s, r) => s + r.totalCents, 0);
+const completedJobs = validReceipts.length;
+const ticketAverageCents =
+  validReceipts.length > 0 ? Math.round(ltvCents / validReceipts.length) : 0;
+const acceptedCount = customerQuotes.filter((q) =>
+  ['accepted', 'completed'].includes(q.status),
+).length;
+const conversionPct =
+  customerQuotes.length > 0 ? Math.round((acceptedCount / customerQuotes.length) * 100) : 0;
+const lastReceiptISO = validReceipts[0]?.issuedAt ?? null;
+const daysSinceLast = lastReceiptISO
+  ? Math.floor((Date.now() - new Date(lastReceiptISO).getTime()) / 86400000)
+  : null;
+
+// Lead status: cliente está "caliente" si tiene una cotización sent reciente (≤7d) sin respuesta.
+const hotQuote = customerQuotes.find(
+  (q) => q.status === 'sent' && (Date.now() - new Date(q.createdAt).getTime()) / 86400000 < 7,
+);
+
+const tab = Astro.url.searchParams.get('tab') ?? 'datos';
+const updated = Astro.url.searchParams.get('updated');
+---
+
+<CotizadorLayout title={c.name}>
+  {/* HERO con avatar + datos clave */}
+  <header
+    class="bg-brand-gradient panel-fade-in shadow-brand-lg -mx-4 -mt-4 mb-6 px-4 py-6 text-white sm:rounded-2xl md:-mx-8 md:-mt-8 md:px-8 md:py-8"
+  >
+    <nav class="mb-3 text-xs">
+      <a href="/panel/cotizador/clientes/" class="text-white/80 hover:text-white">← Clientes</a>
+    </nav>
+    <div class="flex flex-wrap items-start justify-between gap-4">
+      <div class="flex min-w-0 items-start gap-4">
+        <Avatar name={c.name} size="lg" className="ring-4 ring-white/30" />
+        <div class="min-w-0">
+          <h1 class="font-heading text-2xl font-bold tracking-tight md:text-3xl">{c.name}</h1>
+          <div class="mt-2 flex flex-wrap gap-1.5 text-[11px]">
+            {
+              c.phone && (
+                <span class="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 font-bold backdrop-blur-sm">
+                  <svg
+                    class="h-3 w-3"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.37 1.9.72 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0122 16.92z" />
+                  </svg>
+                  {c.phone}
+                </span>
+              )
+            }
+            {
+              c.email && (
+                <span class="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 font-bold backdrop-blur-sm">
+                  <svg
+                    class="h-3 w-3"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2.5"
+                  >
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z M22 6l-10 7L2 6" />
+                  </svg>
+                  {c.email}
+                </span>
+              )
+            }
+            {
+              c.docType && c.docNumber && (
+                <span class="inline-flex items-center gap-1 rounded-full bg-white/15 px-2 py-0.5 font-bold backdrop-blur-sm">
+                  {c.docType} {c.docNumber}
+                </span>
+              )
+            }
+            {
+              tags.map((t) => (
+                <span class="rounded-full bg-white/25 px-2 py-0.5 font-bold backdrop-blur-sm">
+                  {t}
+                </span>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap gap-2">
+        <a
+          href={`/panel/cotizador/nueva/?customer=${c.id}`}
+          class="text-primary-700 shadow-brand inline-flex items-center gap-1.5 rounded-full bg-white px-4 py-2 text-sm font-bold transition-transform hover:scale-105"
+        >
+          <svg
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+            stroke-width="2.5"><path d="M12 5v14 M5 12h14"></path></svg
+          >
+          Nueva cotización
+        </a>
+      </div>
+    </div>
+  </header>
+
+  {
+    c.blacklisted && (
+      <div class="panel-slide-up mb-4 rounded-2xl border-l-4 border-red-500 bg-red-50 p-4 text-sm text-red-800">
+        <p class="font-bold">⚠ Cliente en lista negra</p>
+        {c.notes && <p class="mt-1">{c.notes}</p>}
+      </div>
+    )
+  }
+  {
+    !c.blacklisted && hotQuote && (
+      <div class="panel-slide-up mb-4 rounded-2xl border-l-4 border-amber-500 bg-amber-50 p-4 text-sm text-amber-900">
+        <p class="font-bold">🔥 Lead caliente</p>
+        <p class="mt-1">
+          Tiene cotización{' '}
+          <a href={`/panel/cotizador/${hotQuote.id}/`} class="font-bold underline">
+            {hotQuote.number}
+          </a>
+          enviada hace{' '}
+          {Math.floor((Date.now() - new Date(hotQuote.createdAt).getTime()) / 86400000)} día(s) sin
+          respuesta. Considera hacer follow-up por WhatsApp.
+        </p>
+      </div>
+    )
+  }
+  {
+    !c.blacklisted && completedJobs >= 2 && (
+      <div class="panel-slide-up mb-4 rounded-2xl border-l-4 border-green-500 bg-green-50 p-4 text-sm text-green-900">
+        <p class="font-bold">⭐ Cliente recurrente — {completedJobs} servicios completados</p>
+        <p class="mt-1">
+          Considera ofrecer descuento por fidelidad. LTV: <strong>{soles(ltvCents)}</strong>
+        </p>
+      </div>
+    )
+  }
+  {
+    updated && (
+      <div class="panel-slide-up mb-4 rounded-lg border-l-4 border-green-500 bg-green-50 p-3 text-sm text-green-800">
+        Datos actualizados.
+      </div>
+    )
+  }
+
+  {/* KPIs del cliente */}
+  <SectionHeader title="Resumen" subtitle="Métricas históricas de este cliente." />
+  <div class="panel-slide-up grid grid-cols-2 gap-3 md:grid-cols-5">
+    <KpiCard
+      label="Cotizaciones"
+      value={String(customerQuotes.length)}
+      variant="primary"
+      iconHref={ICONS.doc}
+    />
+    <KpiCard
+      label="Conversión"
+      value={`${conversionPct}%`}
+      variant="info"
+      iconHref={ICONS.check}
+      delta={`${acceptedCount} aceptadas`}
+      deltaTone="positive"
+    />
+    <KpiCard
+      label="Servicios completados"
+      value={String(completedJobs)}
+      variant="success"
+      iconHref={ICONS.truck}
+    />
+    <KpiCard
+      label="LTV (gasto total)"
+      value={soles(ltvCents)}
+      variant="primary"
+      iconHref={ICONS.cash}
+    />
+    <KpiCard
+      label="Ticket promedio"
+      value={soles(ticketAverageCents)}
+      variant="neutral"
+      iconHref={ICONS.receipt}
+      delta={daysSinceLast !== null ? `Último: hace ${daysSinceLast}d` : 'Sin recibos aún'}
+      deltaTone="neutral"
+    />
+  </div>
+
+  {/* Tabs */}
+  <div class="mt-8 mb-4 flex gap-1 border-b border-gray-200 text-sm" role="tablist">
+    {
+      (['datos', 'cotizaciones', 'recibos'] as const).map((t) => {
+        const count =
+          t === 'cotizaciones'
+            ? customerQuotes.length
+            : t === 'recibos'
+              ? customerReceipts.length
+              : null;
+        const labels = { datos: 'Datos', cotizaciones: 'Cotizaciones', recibos: 'Recibos' };
+        const active = tab === t;
+        return (
+          <a
+            href={`?tab=${t}`}
+            role="tab"
+            aria-selected={active}
+            class:list={[
+              '-mb-px rounded-t-lg border-b-2 px-4 py-2 font-bold transition-colors',
+              active
+                ? 'border-primary-600 text-primary-700'
+                : 'border-transparent text-gray-500 hover:text-gray-800',
+            ]}
+          >
+            {labels[t]}
+            {count !== null && (
+              <span
+                class:list={[
+                  'ml-1.5 rounded-full px-1.5 py-0.5 text-[10px]',
+                  active ? 'bg-primary-100 text-primary-700' : 'bg-gray-100 text-gray-600',
+                ]}
+              >
+                {count}
+              </span>
+            )}
+          </a>
+        );
+      })
+    }
+  </div>
+
+  {
+    tab === 'datos' && (
+      <form
+        method="POST"
+        action={`/api/panel/customers/${id}/update/`}
+        class="shadow-brand-sm panel-slide-up max-w-2xl space-y-4 rounded-2xl border border-gray-200 bg-white p-6"
+      >
+        <label class="block">
+          <span class="mb-1 block text-sm font-bold">Nombre</span>
+          <input
+            type="text"
+            name="name"
+            required
+            value={c.name}
+            class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+          />
+        </label>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Teléfono</span>
+            <input
+              type="tel"
+              name="phone"
+              value={c.phone ?? ''}
+              class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+            />
+          </label>
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Email</span>
+            <input
+              type="email"
+              name="email"
+              value={c.email ?? ''}
+              class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+            />
+          </label>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Tipo de documento</span>
+            <select
+              name="doc_type"
+              class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+            >
+              <option value="" selected={!c.docType}>
+                —
+              </option>
+              {(['DNI', 'RUC', 'CE', 'Pasaporte'] as const).map((t) => (
+                <option value={t} selected={c.docType === t}>
+                  {t}
+                </option>
+              ))}
+            </select>
+          </label>
+          <label class="block">
+            <span class="mb-1 block text-sm font-bold">Número</span>
+            <input
+              type="text"
+              name="doc_number"
+              value={c.docNumber ?? ''}
+              class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+            />
+          </label>
+        </div>
+
+        <label class="block">
+          <span class="mb-1 block text-sm font-bold">Etiquetas (separadas por coma)</span>
+          <input
+            type="text"
+            name="tags"
+            value={tags.join(', ')}
+            class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+          />
+        </label>
+
+        <label class="block">
+          <span class="mb-1 block text-sm font-bold">Notas internas</span>
+          <textarea
+            name="notes"
+            rows="3"
+            class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+          >
+            {c.notes ?? ''}
+          </textarea>
+        </label>
+
+        <label class="flex items-center gap-2">
+          <input
+            type="checkbox"
+            name="blacklisted"
+            value="1"
+            checked={c.blacklisted}
+            class="h-4 w-4"
+          />
+          <span class="text-sm font-bold">Lista negra</span>
+        </label>
+
+        <div class="flex flex-wrap gap-3 border-t border-gray-100 pt-4">
+          <button
+            type="submit"
+            class="bg-primary hover:bg-primary-dark rounded-full px-6 py-2 text-sm font-bold text-white"
+          >
+            Guardar cambios
+          </button>
+          <a
+            href={`/panel/cotizador/nueva/?customer=${c.id}`}
+            class="rounded-full border border-gray-300 px-6 py-2 text-sm font-bold hover:bg-gray-100"
+          >
+            Nueva cotización para este cliente
+          </a>
+        </div>
+      </form>
+    )
+  }
+
+  {
+    tab === 'cotizaciones' &&
+      (customerQuotes.length === 0 ? (
+        <EmptyState
+          title="Sin cotizaciones para este cliente"
+          description="Crea la primera cotización con los datos pre-llenados."
+          ctaLabel="Crear cotización"
+          ctaHref={`/panel/cotizador/nueva/?customer=${c.id}`}
+          iconHref={ICONS.doc}
+        />
+      ) : (
+        <div class="shadow-brand-sm panel-slide-up overflow-hidden rounded-2xl border border-gray-200 bg-white">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-gradient-to-r from-gray-50 to-white text-xs font-bold tracking-wider text-gray-500 uppercase">
+                <tr>
+                  <th class="px-4 py-3">Número</th>
+                  <th class="px-4 py-3">Servicio</th>
+                  <th class="px-4 py-3">Ruta</th>
+                  <th class="px-4 py-3">Estado</th>
+                  <th class="px-4 py-3 text-right">Total</th>
+                  <th class="px-4 py-3">Creada</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                {customerQuotes.map((q) => (
+                  <tr class="hover:bg-primary-50/30 transition-colors">
+                    <td class="px-4 py-3">
+                      <a
+                        href={`/panel/cotizador/${q.id}/`}
+                        class="text-primary-700 font-mono text-xs font-bold hover:underline"
+                      >
+                        {q.number}
+                      </a>
+                    </td>
+                    <td class="px-4 py-3">
+                      <p class="text-primary-700 text-xs font-bold">
+                        {getService(q.serviceType).name}
+                      </p>
+                    </td>
+                    <td class="px-4 py-3 text-xs text-gray-600">
+                      {q.origin || '—'} → {q.destination || '—'}
+                    </td>
+                    <td class="px-4 py-3">
+                      <StatusBadge status={q.status} />
+                    </td>
+                    <td class="px-4 py-3 text-right font-bold tabular-nums">
+                      {soles(q.totalCents)}
+                    </td>
+                    <td class="px-4 py-3 text-xs text-gray-500">{fmtDate(q.createdAt)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))
+  }
+
+  {
+    tab === 'recibos' &&
+      (customerReceipts.length === 0 ? (
+        <EmptyState
+          title="Sin recibos emitidos"
+          description="Los recibos se emiten al completar trabajos. Aún no hay ninguno para este cliente."
+          iconHref={ICONS.receipt}
+        />
+      ) : (
+        <div class="shadow-brand-sm panel-slide-up overflow-hidden rounded-2xl border border-gray-200 bg-white">
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-sm">
+              <thead class="bg-gradient-to-r from-gray-50 to-white text-xs font-bold tracking-wider text-gray-500 uppercase">
+                <tr>
+                  <th class="px-4 py-3">Recibo</th>
+                  <th class="px-4 py-3">Fecha</th>
+                  <th class="px-4 py-3">Pago</th>
+                  <th class="px-4 py-3">Estado</th>
+                  <th class="px-4 py-3 text-right">Total</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-gray-100">
+                {customerReceipts.map((r) => (
+                  <tr class="hover:bg-primary-50/30 transition-colors">
+                    <td class="px-4 py-3">
+                      <a
+                        href={`/panel/cotizador/recibos/${r.id}/`}
+                        class="text-primary-700 font-mono text-xs font-bold hover:underline"
+                      >
+                        {r.number}
+                      </a>
+                    </td>
+                    <td class="px-4 py-3 text-xs text-gray-500">{fmtDate(r.issuedAt)}</td>
+                    <td class="px-4 py-3 text-xs capitalize">{r.paymentMethod}</td>
+                    <td class="px-4 py-3">
+                      {r.voidedAt ? (
+                        <span class="inline-flex items-center gap-1 rounded-full border border-red-200 bg-red-50 px-2 py-0.5 text-[10px] font-bold text-red-800">
+                          <span class="inline-block h-1.5 w-1.5 rounded-full bg-red-500" />
+                          Anulado
+                        </span>
+                      ) : (
+                        <span class="inline-flex items-center gap-1 rounded-full border border-green-200 bg-green-50 px-2 py-0.5 text-[10px] font-bold text-green-800">
+                          <span class="inline-block h-1.5 w-1.5 rounded-full bg-green-500" />
+                          Válido
+                        </span>
+                      )}
+                    </td>
+                    <td class="px-4 py-3 text-right font-bold tabular-nums">
+                      {soles(r.totalCents)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      ))
+  }
+</CotizadorLayout>

@@ -1,0 +1,386 @@
+---
+export const prerender = false;
+
+import CotizadorLayout from '@layouts/CotizadorLayout.astro';
+import { db } from '@db/client';
+import { quotes, customers } from '@db/schema';
+import { desc, eq, inArray } from 'drizzle-orm';
+import { soles, fmtDate } from '@lib/panel/format';
+import { getService } from '@lib/panel/services';
+
+// Solo mostramos el funnel "vivo": draft → sent → accepted → completed.
+// Rejected/expired/canceled tienen su propia página (listado completo).
+const COLUMNS = [
+  {
+    status: 'draft' as const,
+    title: 'Borradores',
+    accent: 'bg-gray-500',
+    soft: 'bg-gray-50',
+    border: 'border-gray-200',
+  },
+  {
+    status: 'sent' as const,
+    title: 'Enviadas',
+    accent: 'bg-blue-500',
+    soft: 'bg-blue-50',
+    border: 'border-blue-200',
+  },
+  {
+    status: 'accepted' as const,
+    title: 'Aceptadas',
+    accent: 'bg-green-500',
+    soft: 'bg-green-50',
+    border: 'border-green-200',
+  },
+  {
+    status: 'completed' as const,
+    title: 'Completadas',
+    accent: 'bg-primary-600',
+    soft: 'bg-primary-50',
+    border: 'border-primary-200',
+  },
+];
+
+const liveStatuses = COLUMNS.map((c) => c.status);
+
+const allQuotes = await db
+  .select({
+    id: quotes.id,
+    number: quotes.number,
+    status: quotes.status,
+    totalCents: quotes.totalCents,
+    serviceType: quotes.serviceType,
+    expiresAt: quotes.expiresAt,
+    createdAt: quotes.createdAt,
+    customerName: customers.name,
+    customerPhone: customers.phone,
+  })
+  .from(quotes)
+  .innerJoin(customers, eq(customers.id, quotes.customerId))
+  .where(inArray(quotes.status, liveStatuses))
+  .orderBy(desc(quotes.createdAt))
+  .limit(400)
+  .all();
+
+// Agrupar por status
+const byStatus = new Map<string, typeof allQuotes>();
+for (const c of COLUMNS) byStatus.set(c.status, []);
+for (const q of allQuotes) {
+  const arr = byStatus.get(q.status);
+  if (arr) arr.push(q);
+}
+
+// Totales por columna
+const totalByStatus = new Map<string, number>();
+for (const [status, list] of byStatus.entries()) {
+  totalByStatus.set(
+    status,
+    list.reduce((s, q) => s + q.totalCents, 0),
+  );
+}
+
+const today = new Date().toISOString().slice(0, 10);
+function daysUntil(date: string): number {
+  return Math.floor(
+    (new Date(date.slice(0, 10) + 'T00:00:00').getTime() -
+      new Date(today + 'T00:00:00').getTime()) /
+      86400000,
+  );
+}
+---
+
+<CotizadorLayout title="Pipeline (Kanban)">
+  <header class="mb-6 flex flex-wrap items-end justify-between gap-3">
+    <div>
+      <nav class="mb-1 text-xs">
+        <a href="/panel/cotizador/" class="text-gray-500 hover:text-gray-700">← Inicio</a>
+      </nav>
+      <h1 class="font-heading text-2xl font-bold tracking-tight md:text-3xl">
+        Pipeline de cotizaciones
+      </h1>
+      <p class="mt-1 text-sm text-gray-600">
+        Vista funnel de las cotizaciones activas. Las rechazadas/vencidas viven en
+        <a href="/panel/cotizador/listado/" class="text-primary font-bold hover:underline"
+          >listado completo</a
+        >.
+      </p>
+    </div>
+    <div class="flex flex-wrap gap-2">
+      <a
+        href="/panel/cotizador/listado/"
+        class="inline-flex items-center gap-1.5 rounded-full border border-gray-300 bg-white px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-100"
+      >
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        Lista
+      </a>
+      <a
+        href="/panel/cotizador/nueva/"
+        class="bg-primary hover:bg-primary-dark shadow-brand-sm inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm font-bold text-white"
+      >
+        <svg
+          class="h-4 w-4"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 5v14 M5 12h14"></path>
+        </svg>
+        Nueva
+      </a>
+    </div>
+  </header>
+
+  {/* Tablero kanban: scroll horizontal en móvil, 4 columnas en desktop */}
+  <div class="panel-slide-up overflow-x-auto pb-4" data-kanban>
+    <div class="flex min-w-full gap-3 lg:grid lg:grid-cols-4">
+      {
+        COLUMNS.map((col) => {
+          const list = byStatus.get(col.status) ?? [];
+          const totalCents = totalByStatus.get(col.status) ?? 0;
+          return (
+            <section
+              class:list={[
+                'flex w-72 shrink-0 flex-col rounded-2xl border lg:w-auto',
+                col.border,
+                col.soft,
+              ]}
+              aria-label={col.title}
+              data-kanban-col={col.status}
+            >
+              {/* Cabecera de columna */}
+              <header class="flex items-center justify-between border-b border-gray-200/70 px-4 py-3">
+                <div class="flex items-center gap-2">
+                  <span class:list={['inline-block h-2.5 w-2.5 rounded-full', col.accent]} />
+                  <h2 class="font-heading text-sm font-bold tracking-tight text-gray-900">
+                    {col.title}
+                  </h2>
+                  <span class="shadow-brand-sm rounded-full bg-white px-2 py-0.5 text-[10px] font-bold text-gray-600">
+                    {list.length}
+                  </span>
+                </div>
+                <p class="text-xs font-bold text-gray-700 tabular-nums">{soles(totalCents)}</p>
+              </header>
+
+              {/* Tarjetas (zona drop) */}
+              <div
+                class="flex-1 space-y-2 overflow-y-auto p-3"
+                data-kanban-dropzone
+                style="max-height: calc(100vh - 280px); min-height: 200px;"
+              >
+                {list.length === 0 ? (
+                  <p class="rounded-lg border border-dashed border-gray-300 bg-white/60 p-4 text-center text-[11px] text-gray-500">
+                    Sin cotizaciones en esta etapa.
+                  </p>
+                ) : (
+                  list.map((q) => {
+                    const isExpiring =
+                      q.status === 'sent' && q.expiresAt && daysUntil(q.expiresAt) < 4;
+                    // draft y sent son arrastrables; accepted/completed no (necesitan flujo de jobs).
+                    const draggable = q.status === 'draft' || q.status === 'sent';
+                    return (
+                      <a
+                        href={`/panel/cotizador/${q.id}/`}
+                        draggable={draggable}
+                        data-kanban-card
+                        data-quote-id={q.id}
+                        data-quote-status={q.status}
+                        class:list={[
+                          'panel-lift block rounded-xl border bg-white p-3 transition-all',
+                          isExpiring ? 'border-amber-300 ring-2 ring-amber-100' : 'border-gray-200',
+                          draggable ? 'cursor-grab active:cursor-grabbing' : '',
+                        ]}
+                      >
+                        <div class="flex items-start justify-between gap-2">
+                          <p class="font-mono text-[10px] font-bold text-gray-500">{q.number}</p>
+                          {isExpiring && (
+                            <span class="inline-flex items-center gap-0.5 rounded-full bg-amber-100 px-1.5 py-0.5 text-[9px] font-bold text-amber-800">
+                              Vence pronto
+                            </span>
+                          )}
+                        </div>
+                        <p class="mt-1 truncate text-sm font-bold text-gray-900">
+                          {q.customerName}
+                        </p>
+                        <p class="text-primary-700 mt-0.5 truncate text-[11px] font-bold">
+                          {getService(q.serviceType).name}
+                        </p>
+                        {q.customerPhone && (
+                          <p class="mt-1 text-[10px] text-gray-500">{q.customerPhone}</p>
+                        )}
+                        <div class="mt-2 flex items-end justify-between border-t border-gray-100 pt-2">
+                          <span class="text-[10px] text-gray-400">{fmtDate(q.createdAt)}</span>
+                          <span class="text-primary-700 text-sm font-bold tabular-nums">
+                            {soles(q.totalCents)}
+                          </span>
+                        </div>
+                      </a>
+                    );
+                  })
+                )}
+              </div>
+
+              {/* Footer con CTA según etapa */}
+              {col.status === 'draft' && (
+                <a
+                  href="/panel/cotizador/nueva/"
+                  class="text-primary-700 block border-t border-gray-200/70 bg-white/50 px-4 py-2 text-center text-[11px] font-bold hover:bg-white"
+                >
+                  + Nueva cotización
+                </a>
+              )}
+            </section>
+          );
+        })
+      }
+    </div>
+  </div>
+
+  <p class="mt-4 text-center text-xs text-gray-500">
+    Tip: arrastra una tarjeta de <span class="font-bold">Borradores → Enviadas</span>
+    o de <span class="font-bold">Enviadas → Aceptadas</span> para avanzar el estado. Las tarjetas ámbar
+    vencen en ≤3 días.
+  </p>
+
+  {/* Toast de feedback */}
+  <div
+    data-kanban-toast
+    class="shadow-brand-lg pointer-events-none fixed bottom-6 left-1/2 z-50 -translate-x-1/2 rounded-full px-5 py-3 text-sm font-bold opacity-0 transition-opacity"
+    role="status"
+    aria-live="polite"
+  >
+  </div>
+
+  <script is:inline>
+    (function () {
+      const kanban = document.querySelector('[data-kanban]');
+      if (!kanban) return;
+      const toast = document.querySelector('[data-kanban-toast]');
+
+      // Transiciones permitidas: from -> to -> endpoint suffix.
+      const TRANSITIONS = {
+        draft: { sent: '/send/' },
+        sent: { accepted: '/accept/' },
+      };
+
+      let dragging = null;
+      let dragFromStatus = null;
+
+      function showToast(msg, kind) {
+        if (!toast) return;
+        toast.textContent = msg;
+        toast.classList.remove('opacity-0');
+        toast.classList.add('opacity-100');
+        const colors = {
+          ok: ['bg-green-600', 'text-white'],
+          err: ['bg-red-600', 'text-white'],
+          info: ['bg-gray-800', 'text-white'],
+        };
+        ['bg-green-600', 'bg-red-600', 'bg-gray-800', 'text-white'].forEach((c) =>
+          toast.classList.remove(c),
+        );
+        (colors[kind] || colors.info).forEach((c) => toast.classList.add(c));
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(() => {
+          toast.classList.add('opacity-0');
+          toast.classList.remove('opacity-100');
+        }, 2800);
+      }
+
+      // Cards: dragstart / dragend
+      kanban.addEventListener('dragstart', (e) => {
+        const card = e.target.closest && e.target.closest('[data-kanban-card]');
+        if (!card || card.getAttribute('draggable') !== 'true') return;
+        dragging = card;
+        dragFromStatus = card.dataset.quoteStatus;
+        card.classList.add('opacity-50');
+        if (e.dataTransfer) {
+          e.dataTransfer.effectAllowed = 'move';
+          e.dataTransfer.setData('text/plain', card.dataset.quoteId);
+        }
+      });
+      kanban.addEventListener('dragend', () => {
+        if (dragging) dragging.classList.remove('opacity-50');
+        dragging = null;
+        dragFromStatus = null;
+        document.querySelectorAll('[data-kanban-dropzone]').forEach((d) => {
+          d.classList.remove('ring-2', 'ring-primary-400', 'bg-primary-50');
+        });
+      });
+
+      // Dropzones (cuerpo de cada columna)
+      const dropzones = kanban.querySelectorAll('[data-kanban-dropzone]');
+      dropzones.forEach((zone) => {
+        zone.addEventListener('dragover', (e) => {
+          if (!dragging) return;
+          const targetCol = zone.closest('[data-kanban-col]');
+          const targetStatus = targetCol && targetCol.dataset.kanbanCol;
+          const allowed = TRANSITIONS[dragFromStatus] && TRANSITIONS[dragFromStatus][targetStatus];
+          if (allowed) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            zone.classList.add('ring-2', 'ring-primary-400', 'bg-primary-50');
+          }
+        });
+        zone.addEventListener('dragleave', () => {
+          zone.classList.remove('ring-2', 'ring-primary-400', 'bg-primary-50');
+        });
+        zone.addEventListener('drop', async (e) => {
+          e.preventDefault();
+          if (!dragging) return;
+          const targetCol = zone.closest('[data-kanban-col]');
+          const targetStatus = targetCol && targetCol.dataset.kanbanCol;
+          const fromStatus = dragFromStatus;
+          const quoteId = dragging.dataset.quoteId;
+          zone.classList.remove('ring-2', 'ring-primary-400', 'bg-primary-50');
+
+          const path = TRANSITIONS[fromStatus] && TRANSITIONS[fromStatus][targetStatus];
+          if (!path) {
+            showToast('Movimiento no permitido', 'err');
+            return;
+          }
+
+          // Optimista: mover el DOM antes de la respuesta.
+          zone.appendChild(dragging);
+          dragging.dataset.quoteStatus = targetStatus;
+          showToast('Actualizando estado…', 'info');
+
+          try {
+            const res = await fetch('/api/panel/quotes/' + quoteId + path, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: '',
+              redirect: 'manual',
+            });
+            // El endpoint responde 303; con `redirect: 'manual'` el browser lo expone como `opaqueredirect`.
+            if (res.type === 'opaqueredirect' || res.status === 303 || res.ok) {
+              showToast('Cotización movida a "' + targetStatus + '"', 'ok');
+              // Refresca para reflejar contadores y vencimientos.
+              setTimeout(() => window.location.reload(), 700);
+            } else {
+              showToast('Error al actualizar (HTTP ' + res.status + ')', 'err');
+              setTimeout(() => window.location.reload(), 1200);
+            }
+          } catch {
+            showToast('Sin conexión, recargando…', 'err');
+            setTimeout(() => window.location.reload(), 1200);
+          }
+        });
+      });
+    })();
+  </script>
+</CotizadorLayout>

@@ -1,0 +1,48 @@
+---
+export const prerender = false;
+import AdminLayout from '@layouts/AdminLayout.astro';
+
+const error = Astro.url.searchParams.get('error');
+---
+
+<AdminLayout title="Nueva cuenta de caja">
+  <header class="mb-6">
+    <nav class="mb-2 text-sm">
+      <a href="/panel/admin/caja-chica/" class="text-gray-500 hover:text-gray-700">← Caja chica</a>
+    </nav>
+    <h1 class="font-heading text-2xl font-bold">Nueva cuenta</h1>
+  </header>
+
+  <form
+    method="POST"
+    action="/api/panel/petty-cash/accounts/"
+    class="max-w-lg space-y-4 rounded-2xl border border-gray-200 bg-white p-6"
+  >
+    {
+      error && (
+        <div class="rounded-lg border-l-4 border-red-500 bg-red-50 p-3 text-sm text-red-800">
+          Error: {error}
+        </div>
+      )
+    }
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Nombre *</span>
+      <input
+        type="text"
+        name="name"
+        required
+        minlength="3"
+        maxlength="80"
+        placeholder="Caja principal"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      />
+    </label>
+
+    <button
+      class="bg-primary hover:bg-primary-dark rounded-full px-6 py-2 text-sm font-bold text-white"
+    >
+      Crear cuenta
+    </button>
+  </form>
+</AdminLayout>

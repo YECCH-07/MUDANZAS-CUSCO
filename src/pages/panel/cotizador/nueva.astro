@@ -1,0 +1,933 @@
+---
+export const prerender = false;
+
+import CotizadorLayout from '@layouts/CotizadorLayout.astro';
+import CoverageDatalist from '@components/panel/CoverageDatalist.astro';
+import { db } from '@db/client';
+import { customers, quoteTemplates } from '@db/schema';
+import { desc, eq, and } from 'drizzle-orm';
+import { loadRules } from '@lib/panel/pricing';
+
+const customersList = await db
+  .select({ id: customers.id, name: customers.name, phone: customers.phone })
+  .from(customers)
+  .orderBy(desc(customers.createdAt))
+  .limit(200)
+  .all();
+
+const templatesList = await db
+  .select({
+    id: quoteTemplates.id,
+    name: quoteTemplates.name,
+    serviceType: quoteTemplates.serviceType,
+  })
+  .from(quoteTemplates)
+  .where(eq(quoteTemplates.active, true))
+  .orderBy(desc(quoteTemplates.createdAt))
+  .all();
+
+const rules = await loadRules();
+const customerParam = Astro.url.searchParams.get('customer') ?? '';
+const templateParam = Astro.url.searchParams.get('template') ?? '';
+
+// Si hay plantilla seleccionada, cargar sus defaults para pre-fill server-side.
+let prefilled: {
+  fields: Record<string, unknown>;
+  items: Array<{ label: string; amountCents: number }>;
+  serviceType: string;
+} | null = null;
+if (templateParam) {
+  const tpl = await db
+    .select()
+    .from(quoteTemplates)
+    .where(and(eq(quoteTemplates.id, templateParam), eq(quoteTemplates.active, true)))
+    .get();
+  if (tpl) {
+    try {
+      prefilled = {
+        fields: JSON.parse(tpl.defaultFields),
+        items: JSON.parse(tpl.defaultItems),
+        serviceType: tpl.serviceType,
+      };
+    } catch {
+      prefilled = null;
+    }
+  }
+}
+
+const pf = prefilled?.fields ?? {};
+const pfService = prefilled?.serviceType ?? 'flete';
+const today = new Date().toISOString().slice(0, 10);
+
+const error = Astro.url.searchParams.get('error');
+const errorMsg =
+  error === 'invalid'
+    ? 'Datos inválidos.'
+    : error === 'customer-missing'
+      ? 'Cliente inválido.'
+      : null;
+---
+
+<CotizadorLayout title="Nueva cotización">
+  <header class="mb-6">
+    <nav class="mb-2 text-sm">
+      <a href="/panel/cotizador/" class="text-gray-500 hover:text-gray-700">← Cotizador</a>
+    </nav>
+    <h1 class="font-heading text-2xl font-bold">Nueva cotización</h1>
+    <p class="mt-1 text-sm text-gray-600">
+      La calculadora es opcional. Puedes ignorarla y poner el total manualmente.
+    </p>
+  </header>
+
+  {
+    templatesList.length > 0 && (
+      <div class="mb-4 rounded-2xl border border-gray-200 bg-gray-50 p-4">
+        <p class="text-primary text-xs font-bold tracking-wider uppercase">Acelerador</p>
+        <p class="mt-1 text-sm text-gray-700">Pre-llena el formulario desde una plantilla:</p>
+        <div class="mt-2 flex flex-wrap gap-2">
+          {templatesList.map((t) => (
+            <a
+              href={`?template=${t.id}${customerParam ? `&customer=${customerParam}` : ''}`}
+              class:list={[
+                'rounded-full px-3 py-1.5 text-xs font-bold',
+                t.id === templateParam
+                  ? 'bg-primary text-white'
+                  : 'border border-gray-300 bg-white hover:bg-gray-100',
+              ]}
+            >
+              {t.name}
+            </a>
+          ))}
+          {templateParam && (
+            <a
+              href={`?${customerParam ? `customer=${customerParam}` : ''}`}
+              class="rounded-full border border-gray-300 bg-white px-3 py-1.5 text-xs text-gray-500 hover:bg-gray-100"
+            >
+              Limpiar plantilla
+            </a>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  <form
+    method="POST"
+    action="/api/panel/quotes/"
+    class="max-w-3xl space-y-5 rounded-2xl border border-gray-200 bg-white p-6"
+    data-quote-form
+  >
+    {templateParam && <input type="hidden" name="template_id" value={templateParam} />}
+    {
+      errorMsg && (
+        <div class="rounded-lg border-l-4 border-red-500 bg-red-50 p-3 text-sm text-red-800">
+          {errorMsg}
+        </div>
+      )
+    }
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Cliente *</span>
+        <select
+          name="customer_id"
+          required
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+        >
+          <option value="">—</option>
+          {
+            customersList.map((c) => (
+              <option value={c.id} selected={c.id === customerParam}>
+                {c.name}
+                {c.phone ? ` (${c.phone})` : ''}
+              </option>
+            ))
+          }
+        </select>
+        <a
+          href="/panel/cotizador/clientes/nuevo/"
+          class="text-primary mt-1 inline-block text-xs font-bold hover:underline"
+        >
+          + Crear cliente nuevo
+        </a>
+      </label>
+
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Tipo de servicio *</span>
+        <select
+          name="service_type"
+          required
+          data-service-type
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+        >
+          <optgroup label="Mudanzas">
+            <option value="mudanza_embalaje" selected={pfService === 'mudanza_embalaje'}>
+              Mudanza Express (servicio integral)
+            </option>
+            <option value="mudanza_personal" selected={pfService === 'mudanza_personal'}>
+              Mudanza Estándar (vehículo + personal)
+            </option>
+            <option
+              value="solo_vehiculo_personal"
+              selected={pfService === 'solo_vehiculo_personal'}
+            >
+              Vehículo + Personal de carga y descarga
+            </option>
+          </optgroup>
+          <optgroup label="Otros servicios">
+            <option value="flete" selected={pfService === 'flete'}>Flete</option>
+            <option value="embalaje_solo" selected={pfService === 'embalaje_solo'}>
+              Embalaje profesional
+            </option>
+            <option value="armado_desarmado" selected={pfService === 'armado_desarmado'}>
+              Armado y desarmado de muebles
+            </option>
+            <option value="almacenaje" selected={pfService === 'almacenaje'}>
+              Almacenaje y custodia
+            </option>
+            <option value="otro" selected={pfService === 'otro'}>Servicio personalizado</option>
+          </optgroup>
+        </select>
+        <span class="text-primary mt-1 block text-xs" data-service-tagline></span>
+      </label>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Origen</span>
+        <input
+          type="text"
+          name="origin"
+          maxlength="120"
+          value={(pf.origin as string) ?? ''}
+          list="coverage-list"
+          autocomplete="off"
+          placeholder="Ej. Wanchaq, Cusco"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        />
+        <span class="mt-1 block text-[10px] text-gray-500"
+          >Empieza a escribir y aparecerán las localidades de cobertura.</span
+        >
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Destino</span>
+        <input
+          type="text"
+          name="destination"
+          maxlength="120"
+          value={(pf.destination as string) ?? ''}
+          list="coverage-list"
+          autocomplete="off"
+          placeholder="Ej. San Sebastián, Cusco"
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+    </div>
+    <CoverageDatalist />
+
+    <div class="grid gap-4 sm:grid-cols-4">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Fecha tentativa</span>
+        <input
+          type="date"
+          name="tentative_date"
+          data-calc-input
+          value={today}
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Volumen m³</span>
+        <input
+          type="number"
+          name="volume_m3"
+          min="0"
+          max="500"
+          data-calc-input
+          value={(pf.volume_m3 as number) ?? ''}
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Distancia km</span>
+        <input
+          type="number"
+          name="distance_km"
+          min="0"
+          max="9999"
+          data-calc-input
+          value={(pf.distance_km as number) ?? ''}
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Personal</span>
+        <input
+          type="number"
+          name="crew_size"
+          min="1"
+          max="20"
+          value={(pf.crew_size as number) ?? 2}
+          data-calc-input
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-3">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Pisos origen</span>
+        <input
+          type="number"
+          name="floors_origin"
+          min="0"
+          max="30"
+          value={(pf.floors as number) ?? 0}
+          data-calc-input
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">Pisos destino</span>
+        <input
+          type="number"
+          name="floors_dest"
+          min="0"
+          max="30"
+          value="0"
+          data-calc-input
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-3 py-2 focus:ring-2 focus:outline-none"
+        />
+      </label>
+      <label class="mt-5 flex items-center gap-2 text-sm">
+        <input type="checkbox" name="has_elevator" value="1" data-calc-input class="h-4 w-4" />
+        <span class="font-bold">Tiene ascensor</span>
+      </label>
+    </div>
+
+    <div class="grid gap-4 sm:grid-cols-2">
+      <label class="block">
+        <span class="mb-1 block text-sm font-bold">¿Cómo nos conoció? *</span>
+        <select
+          name="lead_source"
+          required
+          class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 focus:ring-2 focus:outline-none"
+        >
+          <option value="whatsapp">WhatsApp</option>
+          <option value="google">Google</option>
+          <option value="referido">Referido</option>
+          <option value="walk-in">Walk-in</option>
+          <option value="recurrente">Cliente recurrente</option>
+          <option value="otro">Otro</option>
+        </select>
+      </label>
+
+      <label class="mt-5 flex items-center gap-2 text-sm">
+        <input
+          type="checkbox"
+          name="use_calculator"
+          value="1"
+          checked
+          data-use-calc
+          class="h-4 w-4"
+        />
+        <span class="font-bold">Usar calculadora (rellena el desglose abajo)</span>
+      </label>
+    </div>
+
+    {/* DESGLOSE EDITABLE — el cotizador puede ajustar/agregar/quitar líneas */}
+    <fieldset
+      class="border-primary-100 from-primary-50/30 rounded-2xl border-2 bg-gradient-to-br to-white p-4 sm:p-5"
+    >
+      <legend class="text-primary-700 px-2 text-xs font-bold tracking-wider uppercase">
+        Desglose del servicio
+      </legend>
+
+      <p class="-mt-1 mb-3 text-xs text-gray-600">
+        Cada línea aparecerá tal cual en el PDF. La calculadora rellena automáticamente, pero puedes
+        editar los textos y montos, y agregar líneas adicionales.
+      </p>
+
+      <div class="overflow-hidden rounded-lg border border-gray-200 bg-white" data-items-wrapper>
+        <table class="w-full text-sm">
+          <thead class="bg-gray-50 text-left text-[10px] tracking-wider text-gray-500 uppercase">
+            <tr>
+              <th class="px-3 py-2">Concepto</th>
+              <th class="w-32 px-3 py-2 text-right">Monto S/</th>
+              <th class="w-10 px-2 py-2"></th>
+            </tr>
+          </thead>
+          <tbody data-items-tbody class="divide-y divide-gray-100">
+            <tr data-items-empty>
+              <td colspan="3" class="px-3 py-6 text-center text-xs text-gray-500">
+                Sin líneas. Activa la calculadora o agrega una manualmente.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <button
+        type="button"
+        data-add-item
+        class="border-primary-300 text-primary-700 hover:bg-primary-50 mt-3 inline-flex items-center gap-1.5 rounded-full border bg-white px-3 py-1.5 text-xs font-bold transition-colors"
+      >
+        <svg
+          class="h-3.5 w-3.5"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <path d="M12 5v14 M5 12h14"></path>
+        </svg>
+        Agregar línea
+      </button>
+
+      {/* Toggle IGV */}
+      <div
+        class="mt-4 grid gap-3 border-t border-gray-100 pt-4 sm:grid-cols-[1fr_auto] sm:items-center"
+      >
+        <fieldset>
+          <legend class="text-xs font-bold tracking-wider text-gray-500 uppercase"
+            >Tratamiento IGV</legend
+          >
+          <div class="mt-2 flex flex-wrap gap-2" role="radiogroup">
+            <label
+              class="has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50 has-[:checked]:text-primary-700 inline-flex cursor-pointer items-center gap-2 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-xs font-bold"
+            >
+              <input type="radio" name="includes_igv" value="1" checked class="h-3 w-3" />
+              <span>Precios incluyen IGV (18%)</span>
+            </label>
+            <label
+              class="has-[:checked]:border-primary-500 has-[:checked]:bg-primary-50 has-[:checked]:text-primary-700 inline-flex cursor-pointer items-center gap-2 rounded-full border border-gray-300 bg-white px-3 py-1.5 text-xs font-bold"
+            >
+              <input type="radio" name="includes_igv" value="0" class="h-3 w-3" />
+              <span>Precios sin IGV</span>
+            </label>
+          </div>
+        </fieldset>
+
+        {/* Total computado de los ítems */}
+        <div class="shadow-brand-sm rounded-lg bg-white p-3 text-right sm:min-w-[180px]">
+          <p class="text-[10px] font-bold tracking-wider text-gray-500 uppercase">
+            Total del desglose
+          </p>
+          <p class="text-primary-700 text-2xl font-bold tabular-nums" data-items-total>S/ 0.00</p>
+        </div>
+      </div>
+    </fieldset>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Total final (S/) *</span>
+      <input
+        type="number"
+        name="total_soles"
+        required
+        min="0"
+        step="0.01"
+        inputmode="decimal"
+        data-total-input
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 text-lg font-bold tabular-nums focus:ring-2 focus:outline-none"
+      />
+      <span class="mt-1 block text-xs text-gray-500">
+        Por defecto se sincroniza con el desglose. Si lo escribes manualmente, deja de
+        auto-actualizarse.
+      </span>
+    </label>
+
+    <label class="block">
+      <span class="mb-1 block text-sm font-bold">Notas / observaciones</span>
+      <textarea
+        name="notes"
+        rows="3"
+        maxlength="1000"
+        class="focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 px-4 py-2 focus:ring-2 focus:outline-none"
+      ></textarea>
+    </label>
+
+    <div class="flex flex-wrap gap-3 pt-2">
+      <button
+        type="submit"
+        name="action"
+        value="draft"
+        class="rounded-full border border-gray-300 px-6 py-2 text-sm font-bold hover:bg-gray-100"
+      >
+        Guardar borrador
+      </button>
+      <button
+        type="submit"
+        name="action"
+        value="send"
+        class="bg-primary hover:bg-primary-dark rounded-full px-6 py-2 text-sm font-bold text-white"
+      >
+        Guardar y enviar al cliente
+      </button>
+    </div>
+  </form>
+
+  <script
+    is:inline
+    define:vars={{
+      RULES: rules,
+      PREFILLED_ITEMS: prefilled?.items ?? [],
+    }}
+  >
+    (function () {
+      const form = document.querySelector('[data-quote-form]');
+      if (!form) return;
+      const useCalc = form.querySelector('[data-use-calc]');
+      const serviceSel = form.querySelector('[data-service-type]');
+      const totalInput = form.querySelector('[data-total-input]');
+      const itemsTbody = form.querySelector('[data-items-tbody]');
+      const itemsTotalEl = form.querySelector('[data-items-total]');
+      const taglineEl = form.querySelector('[data-service-tagline]');
+
+      const TAGLINES = {
+        mudanza_embalaje: 'Servicio puerta a puerta integral, sin que te preocupes por nada.',
+        mudanza_personal: 'Mudanza con vehiculo y personal de carga, tu haces tu propio embalaje.',
+        solo_vehiculo_personal: 'Solo el camion y la cuadrilla; tu coordinas el resto.',
+        flete: 'Transporte de carga punto a punto, sin personal extra.',
+        embalaje_solo: 'Equipo experto que embala tu casa o oficina, sin transporte.',
+        armado_desarmado: 'Tecnicos para desarmar antes de mudar y armar al llegar.',
+        almacenaje: 'Guardamos tus pertenencias por dias, meses o anos.',
+        otro: 'Coordinamos un servicio a medida segun tus necesidades.',
+      };
+      function updateTagline() {
+        if (taglineEl && serviceSel) {
+          taglineEl.textContent = TAGLINES[serviceSel.value] || '';
+        }
+      }
+      if (serviceSel) {
+        serviceSel.addEventListener('change', updateTagline);
+        updateTagline();
+      }
+
+      function fmt(cents) {
+        return (
+          'S/ ' +
+          (cents / 100).toLocaleString('es-PE', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          })
+        );
+      }
+      function num(name) {
+        const el = form.querySelector('[name="' + name + '"]');
+        if (!el) return 0;
+        if (el.type === 'checkbox') return el.checked ? 1 : 0;
+        const v = parseFloat(el.value);
+        return isNaN(v) ? 0 : v;
+      }
+      function str(name) {
+        const el = form.querySelector('[name="' + name + '"]');
+        return el ? el.value : '';
+      }
+      function escapeHtml(s) {
+        return String(s).replace(
+          /[&<>"']/g,
+          (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c],
+        );
+      }
+
+      // ─────────────────────────────────────────────────────────────────
+      // GESTIÓN DE LA TABLA DE ÍTEMS (editable)
+      // ─────────────────────────────────────────────────────────────────
+      function makeRow({ label = '', amountSoles = '', source = 'manual' } = {}) {
+        const tr = document.createElement('tr');
+        tr.dataset.itemRow = '';
+        tr.dataset.source = source; // 'calc' o 'manual'
+        tr.innerHTML =
+          '<td class="px-3 py-2">' +
+          '  <input type="text" name="item_label[]" value="' +
+          escapeHtml(label) +
+          '" maxlength="120" required ' +
+          '    class="focus:border-primary focus:ring-primary/20 w-full rounded border border-gray-200 bg-white px-2 py-1 text-sm focus:ring-2 focus:outline-none" />' +
+          '</td>' +
+          '<td class="px-3 py-2">' +
+          '  <input type="number" name="item_amount[]" value="' +
+          escapeHtml(amountSoles) +
+          '" min="0" step="0.01" inputmode="decimal" required data-item-amount ' +
+          '    class="focus:border-primary focus:ring-primary/20 tabular-nums w-full rounded border border-gray-200 bg-white px-2 py-1 text-right text-sm focus:ring-2 focus:outline-none" />' +
+          '</td>' +
+          '<td class="px-2 py-2 text-right">' +
+          '  <button type="button" data-remove-item title="Eliminar" ' +
+          '    class="rounded p-1 text-gray-400 transition-colors hover:bg-red-50 hover:text-red-700">' +
+          '    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+          '      <path d="M3 6h18 M8 6V4a2 2 0 012-2h4a2 2 0 012 2v2 M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6 M10 11v6 M14 11v6"/>' +
+          '    </svg>' +
+          '  </button>' +
+          '</td>';
+        return tr;
+      }
+
+      function ensureEmptyHidden() {
+        // Quita o pone la fila placeholder según haya filas reales.
+        const empty = itemsTbody.querySelector('[data-items-empty]');
+        const realRows = itemsTbody.querySelectorAll('[data-item-row]');
+        if (empty) empty.style.display = realRows.length === 0 ? '' : 'none';
+      }
+
+      function recalcTotal() {
+        let totalCents = 0;
+        const inputs = itemsTbody.querySelectorAll('[data-item-amount]');
+        inputs.forEach((inp) => {
+          const v = parseFloat(inp.value);
+          if (!isNaN(v) && v > 0) totalCents += Math.round(v * 100);
+        });
+        if (itemsTotalEl) itemsTotalEl.textContent = fmt(totalCents);
+        // Sincroniza con el total final si el usuario no lo escribió a mano.
+        if (totalInput && !totalInput.dataset.manual) {
+          totalInput.value = (totalCents / 100).toFixed(2);
+        }
+        ensureEmptyHidden();
+      }
+
+      function addItem(label, amountCents, source) {
+        const amountSoles = amountCents != null ? (amountCents / 100).toFixed(2) : '';
+        const row = makeRow({ label, amountSoles, source: source || 'manual' });
+        itemsTbody.appendChild(row);
+        recalcTotal();
+        return row;
+      }
+
+      function clearCalcRows() {
+        itemsTbody
+          .querySelectorAll('[data-item-row][data-source="calc"]')
+          .forEach((r) => r.remove());
+      }
+
+      // Pre-rellenar items desde la plantilla (si hay).
+      if (Array.isArray(PREFILLED_ITEMS) && PREFILLED_ITEMS.length > 0) {
+        PREFILLED_ITEMS.forEach((it) => addItem(it.label, it.amountCents, 'manual'));
+      }
+
+      // Botón "Agregar línea"
+      const addBtn = form.querySelector('[data-add-item]');
+      if (addBtn) {
+        addBtn.addEventListener('click', () => {
+          const row = addItem('', null, 'manual');
+          const labelInp = row.querySelector('input[name="item_label[]"]');
+          if (labelInp) labelInp.focus();
+        });
+      }
+
+      // Eliminar fila + recalcular cuando cambien montos.
+      itemsTbody.addEventListener('click', (e) => {
+        const btn = e.target && e.target.closest && e.target.closest('[data-remove-item]');
+        if (btn) {
+          const row = btn.closest('[data-item-row]');
+          if (row) row.remove();
+          recalcTotal();
+        }
+      });
+      itemsTbody.addEventListener('input', (e) => {
+        if (e.target && e.target.matches && e.target.matches('[data-item-amount]')) {
+          recalcTotal();
+        }
+      });
+
+      // ─────────────────────────────────────────────────────────────────
+      // CALCULADORA — produce líneas calc, respeta líneas manuales
+      // ─────────────────────────────────────────────────────────────────
+      function runCalculator() {
+        if (!useCalc || !useCalc.checked || !serviceSel) return;
+        const kind = serviceSel.value;
+        const rule = RULES[kind] || RULES.otro;
+        const surcharges = RULES.surcharges;
+        const lines = [];
+        let subtotal = rule.baseCents;
+        lines.push({ label: 'Tarifa base', c: rule.baseCents });
+
+        const km = num('distance_km');
+        if (km && rule.perKmCents) {
+          const c = Math.round(km * rule.perKmCents);
+          lines.push({ label: 'Distancia (' + km + ' km)', c });
+          subtotal += c;
+        }
+
+        const m3 = num('volume_m3');
+        if (m3 && rule.perM3Cents) {
+          const c = Math.round(m3 * rule.perM3Cents);
+          lines.push({ label: 'Volumen (' + m3 + ' m3)', c });
+          subtotal += c;
+        }
+
+        const crew = num('crew_size');
+        if (crew > 1 && rule.perCrewCents) {
+          const extras = crew - 1;
+          const c = extras * rule.perCrewCents;
+          lines.push({ label: 'Personal adicional (+' + extras + ')', c });
+          subtotal += c;
+        }
+
+        const hasEl = num('has_elevator');
+        if (!hasEl && rule.perFloorWithoutElevatorCents) {
+          const floors = num('floors_origin') + num('floors_dest');
+          if (floors > 0) {
+            const c = floors * rule.perFloorWithoutElevatorCents;
+            lines.push({ label: 'Pisos sin ascensor (' + floors + ')', c });
+            subtotal += c;
+          }
+        }
+
+        const date = str('tentative_date');
+        if (date) {
+          const d = new Date(date + 'T00:00:00');
+          const dow = d.getUTCDay();
+          if (dow === 0 || dow === 6) {
+            const c = Math.round((subtotal * surcharges.weekendPct) / 100);
+            lines.push({ label: 'Recargo fin de semana (' + surcharges.weekendPct + '%)', c });
+            subtotal += c;
+          }
+        }
+
+        const total = Math.max(subtotal, rule.minCents);
+        if (total > subtotal) {
+          lines.push({ label: 'Ajuste minimo', c: total - subtotal });
+        }
+
+        // Reemplaza solo las filas calc; preserva las manuales.
+        clearCalcRows();
+        // Inserta calc rows ANTES de las manuales para que aparezcan primero.
+        const manuals = Array.from(
+          itemsTbody.querySelectorAll('[data-item-row][data-source="manual"]'),
+        );
+        lines.forEach((l) => {
+          const row = makeRow({
+            label: l.label,
+            amountSoles: (l.c / 100).toFixed(2),
+            source: 'calc',
+          });
+          if (manuals.length > 0) {
+            itemsTbody.insertBefore(row, manuals[0]);
+          } else {
+            itemsTbody.appendChild(row);
+          }
+        });
+        recalcTotal();
+      }
+
+      // Listener global del form para inputs de la calculadora.
+      form.addEventListener('input', (e) => {
+        if (e.target && e.target.matches && e.target.matches('[data-total-input]')) {
+          e.target.dataset.manual = '1';
+        }
+        if (
+          e.target &&
+          e.target.matches &&
+          e.target.matches('[data-calc-input], [data-service-type]')
+        ) {
+          runCalculator();
+        }
+      });
+
+      if (useCalc) {
+        useCalc.addEventListener('change', () => {
+          if (useCalc.checked) {
+            delete totalInput.dataset.manual;
+            runCalculator();
+          } else {
+            // Al desactivar la calculadora, las filas calc se quedan como editables manuales.
+            itemsTbody.querySelectorAll('[data-item-row][data-source="calc"]').forEach((r) => {
+              r.dataset.source = 'manual';
+            });
+          }
+        });
+      }
+
+      // Primer cálculo inicial.
+      runCalculator();
+      recalcTotal();
+
+      // ─────────────────────────────────────────────────────────────────
+      // AUTO-GUARDADO DE BORRADOR (localStorage)
+      // Persistimos los campos cada 1.5s tras cualquier cambio. Al cargar
+      // la página, si hay un borrador previo y NO hay parámetro template,
+      // ofrecemos restaurarlo.
+      // ─────────────────────────────────────────────────────────────────
+      const STORAGE_KEY = 'cm_quote_draft_v1';
+      const indicator = document.createElement('span');
+      indicator.className =
+        'tabular-nums fixed bottom-4 right-4 z-40 rounded-full bg-gray-900/90 px-3 py-1.5 text-[10px] font-bold text-white shadow-lg opacity-0 transition-opacity';
+      indicator.setAttribute('aria-live', 'polite');
+      document.body.appendChild(indicator);
+      let indicatorTimer = null;
+      function flashIndicator(text) {
+        indicator.textContent = text;
+        indicator.classList.remove('opacity-0');
+        indicator.classList.add('opacity-100');
+        clearTimeout(indicatorTimer);
+        indicatorTimer = setTimeout(() => {
+          indicator.classList.add('opacity-0');
+          indicator.classList.remove('opacity-100');
+        }, 1400);
+      }
+
+      function snapshotForm() {
+        const data = {};
+        const fields = [
+          'customer_id',
+          'service_type',
+          'origin',
+          'destination',
+          'tentative_date',
+          'volume_m3',
+          'distance_km',
+          'crew_size',
+          'floors_origin',
+          'floors_dest',
+          'lead_source',
+          'total_soles',
+          'notes',
+        ];
+        fields.forEach((name) => {
+          const el = form.querySelector('[name="' + name + '"]');
+          if (el) data[name] = el.value;
+        });
+        const elev = form.querySelector('[name="has_elevator"]');
+        data.has_elevator = elev && elev.checked ? '1' : '';
+        const usec = form.querySelector('[name="use_calculator"]');
+        data.use_calculator = usec && usec.checked ? '1' : '';
+        const igvOn = form.querySelector('[name="includes_igv"][value="1"]');
+        const igvOff = form.querySelector('[name="includes_igv"][value="0"]');
+        data.includes_igv = igvOn && igvOn.checked ? '1' : igvOff && igvOff.checked ? '0' : '';
+        // Items: solo manuales (las calc se regeneran al cargar).
+        const manualRows = itemsTbody.querySelectorAll('[data-item-row][data-source="manual"]');
+        data.items = Array.from(manualRows).map((r) => ({
+          label: r.querySelector('input[name="item_label[]"]').value,
+          amount: r.querySelector('input[name="item_amount[]"]').value,
+        }));
+        return data;
+      }
+
+      function applyDraft(data) {
+        if (!data) return;
+        [
+          'customer_id',
+          'service_type',
+          'origin',
+          'destination',
+          'tentative_date',
+          'volume_m3',
+          'distance_km',
+          'crew_size',
+          'floors_origin',
+          'floors_dest',
+          'lead_source',
+          'total_soles',
+          'notes',
+        ].forEach((name) => {
+          const el = form.querySelector('[name="' + name + '"]');
+          if (el && data[name] !== undefined && data[name] !== '') el.value = data[name];
+        });
+        const elev = form.querySelector('[name="has_elevator"]');
+        if (elev) elev.checked = data.has_elevator === '1';
+        const usec = form.querySelector('[name="use_calculator"]');
+        if (usec) usec.checked = data.use_calculator === '1';
+        if (data.includes_igv === '0') {
+          const off = form.querySelector('[name="includes_igv"][value="0"]');
+          if (off) off.checked = true;
+        }
+        // Items manuales restaurados (las calc se generan luego)
+        if (Array.isArray(data.items) && data.items.length > 0) {
+          itemsTbody
+            .querySelectorAll('[data-item-row][data-source="manual"]')
+            .forEach((r) => r.remove());
+          data.items.forEach((it) => {
+            if (it.label) {
+              const cents = Math.round((parseFloat(it.amount) || 0) * 100);
+              if (cents > 0) addItem(it.label, cents, 'manual');
+            }
+          });
+        }
+        if (totalInput && data.total_soles) {
+          totalInput.value = data.total_soles;
+          totalInput.dataset.manual = '1';
+        }
+        runCalculator();
+        recalcTotal();
+        updateTagline();
+      }
+
+      let saveTimer = null;
+      function scheduleSave() {
+        clearTimeout(saveTimer);
+        saveTimer = setTimeout(() => {
+          try {
+            const snap = snapshotForm();
+            // Solo guardamos si hay al menos cliente o algún campo no vacío.
+            const hasContent = Object.entries(snap).some(
+              ([k, v]) => v && k !== 'items' && k !== 'use_calculator' && k !== 'includes_igv',
+            );
+            if (hasContent) {
+              localStorage.setItem(STORAGE_KEY, JSON.stringify({ ...snap, savedAt: Date.now() }));
+              flashIndicator(
+                'Borrador guardado · ' +
+                  new Date().toLocaleTimeString('es-PE', { hour: '2-digit', minute: '2-digit' }),
+              );
+            }
+          } catch {
+            /* localStorage lleno o deshabilitado, ignorar */
+          }
+        }, 1500);
+      }
+
+      form.addEventListener('input', scheduleSave);
+      form.addEventListener('change', scheduleSave);
+
+      // Limpiar borrador al enviar exitosamente.
+      form.addEventListener('submit', () => {
+        try {
+          localStorage.removeItem(STORAGE_KEY);
+        } catch {
+          /* ignorar */
+        }
+      });
+
+      // Al cargar: ¿hay borrador previo? (excluir si vinimos de plantilla, eso ya pre-llenó.)
+      const isPrefilledFromTemplate = !!form.querySelector('[name="template_id"]');
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw && !isPrefilledFromTemplate) {
+          const data = JSON.parse(raw);
+          const ageMin = (Date.now() - (data.savedAt || 0)) / 60000;
+          // Sólo ofrecer si se guardó hace menos de 24h.
+          if (ageMin < 24 * 60) {
+            const banner = document.createElement('div');
+            banner.className =
+              'mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border-l-4 border-primary-500 bg-primary-50 p-3 text-sm';
+            banner.innerHTML =
+              '<span class="text-gray-700">' +
+              '  Tienes un borrador no enviado de hace <strong>' +
+              Math.round(ageMin) +
+              ' min</strong>. ¿Continuar?' +
+              '</span>' +
+              '<div class="flex gap-2">' +
+              '  <button type="button" data-restore-draft class="rounded-full bg-primary-600 px-3 py-1 text-xs font-bold text-white">Restaurar</button>' +
+              '  <button type="button" data-discard-draft class="rounded-full border border-gray-300 bg-white px-3 py-1 text-xs font-bold text-gray-700">Descartar</button>' +
+              '</div>';
+            form.parentElement.insertBefore(banner, form);
+            banner.querySelector('[data-restore-draft]').addEventListener('click', () => {
+              applyDraft(data);
+              banner.remove();
+              flashIndicator('Borrador restaurado');
+            });
+            banner.querySelector('[data-discard-draft]').addEventListener('click', () => {
+              try {
+                localStorage.removeItem(STORAGE_KEY);
+              } catch {
+                /* ignorar */
+              }
+              banner.remove();
+            });
+          }
+        }
+      } catch {
+        /* parse fail, ignorar */
+      }
+    })();
+  </script>
+</CotizadorLayout>

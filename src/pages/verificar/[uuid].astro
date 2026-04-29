@@ -1,0 +1,139 @@
+---
+/*
+ * Verificador público de recibos (sin auth).
+ * Muestra: válido/anulado, fecha, número, nombre del cliente, total.
+ *
+ * Por seguridad no exponemos teléfono, dirección ni documentación del cliente.
+ */
+export const prerender = false;
+
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import { db } from '@db/client';
+import { receipts, customers, quotes } from '@db/schema';
+import { eq } from 'drizzle-orm';
+
+const { uuid } = Astro.params;
+
+const row = uuid
+  ? await db
+      .select({
+        number: receipts.number,
+        totalCents: receipts.totalCents,
+        issuedAt: receipts.issuedAt,
+        voidedAt: receipts.voidedAt,
+        voidReason: receipts.voidReason,
+        customerName: customers.name,
+        serviceType: quotes.serviceType,
+        origin: quotes.origin,
+        destination: quotes.destination,
+      })
+      .from(receipts)
+      .innerJoin(customers, eq(customers.id, receipts.customerId))
+      .leftJoin(quotes, eq(quotes.id, receipts.quoteId))
+      .where(eq(receipts.uuid, uuid))
+      .get()
+  : null;
+
+const fmt = (c: number) => `S/ ${(c / 100).toFixed(2)}`;
+---
+
+<BaseLayout
+  title={row ? `Verificación de recibo ${row.number}` : 'Recibo no encontrado'}
+  description="Verificación pública de recibos emitidos por Expresos Ñan — servicio de mudanzas en Cusco."
+  noindex={true}
+>
+  <Section spacing="lg">
+    <Container size="narrow">
+      <div class="mx-auto max-w-lg">
+        <header class="mb-6 text-center">
+          <p class="text-primary mb-2 text-xs font-bold tracking-wider uppercase">
+            Verificación de recibo
+          </p>
+          <h1 class="font-heading text-3xl font-bold">Expresos Ñan</h1>
+          <p class="mt-1 text-sm text-gray-600">cuscomudanzas.com · 925 671 052</p>
+        </header>
+
+        {
+          !row && (
+            <div
+              class="rounded-2xl border-l-4 border-red-500 bg-red-50 p-6 text-center"
+              role="alert"
+            >
+              <p class="font-heading text-xl font-bold text-red-800">Recibo no encontrado</p>
+              <p class="mt-2 text-sm text-red-700">
+                El código QR que escaneaste no corresponde a un recibo válido emitido por Expresos
+                Ñan. Si recibiste este documento por canal oficial, contáctanos al
+                <a href="tel:+51925671052" class="font-bold underline">
+                  925 671 052
+                </a>
+                .
+              </p>
+            </div>
+          )
+        }
+
+        {
+          row && (
+            <article class="rounded-2xl border border-gray-200 bg-white p-6 shadow-sm">
+              {row.voidedAt ? (
+                <div class="mb-4 rounded-lg border-l-4 border-red-500 bg-red-50 p-4">
+                  <p class="font-heading text-xl font-bold text-red-800">⚠ ANULADO</p>
+                  {row.voidReason && (
+                    <p class="mt-1 text-sm text-red-700">Motivo: {row.voidReason}</p>
+                  )}
+                </div>
+              ) : (
+                <div class="mb-4 rounded-lg border-l-4 border-green-500 bg-green-50 p-4">
+                  <p class="font-heading text-xl font-bold text-green-800">✓ Recibo válido</p>
+                </div>
+              )}
+
+              <dl class="space-y-3 text-sm">
+                <div class="flex justify-between border-b border-gray-100 pb-2">
+                  <dt class="text-gray-500">Número</dt>
+                  <dd class="font-mono font-bold">{row.number}</dd>
+                </div>
+                <div class="flex justify-between border-b border-gray-100 pb-2">
+                  <dt class="text-gray-500">Cliente</dt>
+                  <dd class="font-bold">{row.customerName}</dd>
+                </div>
+                <div class="flex justify-between border-b border-gray-100 pb-2">
+                  <dt class="text-gray-500">Servicio</dt>
+                  <dd>{row.serviceType ?? '—'}</dd>
+                </div>
+                {row.origin && row.destination && (
+                  <div class="flex justify-between border-b border-gray-100 pb-2">
+                    <dt class="text-gray-500">Ruta</dt>
+                    <dd>
+                      {row.origin} → {row.destination}
+                    </dd>
+                  </div>
+                )}
+                <div class="flex justify-between border-b border-gray-100 pb-2">
+                  <dt class="text-gray-500">Emitido</dt>
+                  <dd>{row.issuedAt.slice(0, 10)}</dd>
+                </div>
+                <div class="flex items-end justify-between pt-2">
+                  <dt class="text-gray-500">Total</dt>
+                  <dd class="text-primary text-2xl font-bold">{fmt(row.totalCents)}</dd>
+                </div>
+              </dl>
+
+              <p class="mt-6 border-t border-gray-100 pt-4 text-center text-xs text-gray-500">
+                Documento emitido electrónicamente por Expresos Ñan.
+                <br />
+                Si tienes dudas sobre este recibo, llámanos al
+                <a href="tel:+51925671052" class="text-primary ml-1 font-bold">
+                  925 671 052
+                </a>
+                .
+              </p>
+            </article>
+          )
+        }
+      </div>
+    </Container>
+  </Section>
+</BaseLayout>

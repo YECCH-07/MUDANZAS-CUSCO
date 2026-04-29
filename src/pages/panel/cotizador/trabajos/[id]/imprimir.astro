@@ -1,0 +1,283 @@
+---
+export const prerender = false;
+
+import { db } from '@db/client';
+import { jobs, quotes, customers, units, users, quoteItems } from '@db/schema';
+import { asc, eq } from 'drizzle-orm';
+import { SITE } from '@lib/site';
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect('/panel/cotizador/trabajos/');
+
+const row = await db
+  .select({ j: jobs, q: quotes, c: customers })
+  .from(jobs)
+  .innerJoin(quotes, eq(quotes.id, jobs.quoteId))
+  .innerJoin(customers, eq(customers.id, quotes.customerId))
+  .where(eq(jobs.id, id))
+  .get();
+
+if (!row) return Astro.redirect('/panel/cotizador/trabajos/');
+
+const unit = row.j.assignedUnitId
+  ? await db.select().from(units).where(eq(units.id, row.j.assignedUnitId)).get()
+  : null;
+const driver = row.j.assignedDriverId
+  ? await db.select().from(users).where(eq(users.id, row.j.assignedDriverId)).get()
+  : null;
+const items = await db
+  .select()
+  .from(quoteItems)
+  .where(eq(quoteItems.quoteId, row.q.id))
+  .orderBy(asc(quoteItems.orderIdx))
+  .all();
+
+const fmt = (c: number | null | undefined): string =>
+  `S/ ${((c ?? 0) / 100).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Hoja de ruta · {row.q.number}</title>
+    <style>
+      :root {
+        color-scheme: light;
+      }
+      body {
+        font-family: 'Times New Roman', Georgia, serif;
+        color: #0f0f0f;
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 32px;
+        background: white;
+      }
+      h1 {
+        font-size: 24px;
+        margin: 0 0 4px;
+        color: #d72638;
+      }
+      .meta {
+        font-size: 11px;
+        color: #666;
+      }
+      .section {
+        margin-top: 24px;
+        padding-top: 16px;
+        border-top: 1px solid #ddd;
+      }
+      .label {
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #666;
+      }
+      .value {
+        font-size: 14px;
+        font-weight: bold;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 8px;
+        font-size: 13px;
+      }
+      table th,
+      table td {
+        text-align: left;
+        padding: 6px 4px;
+        border-bottom: 1px solid #eee;
+      }
+      .total {
+        font-size: 18px;
+        font-weight: bold;
+        color: #d72638;
+        text-align: right;
+        padding-top: 8px;
+      }
+      .signatures {
+        margin-top: 64px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+      }
+      .sig-line {
+        border-top: 1px solid #333;
+        margin-top: 64px;
+        padding-top: 4px;
+        font-size: 11px;
+        text-align: center;
+      }
+      .print-action {
+        margin: 0 0 24px;
+        padding: 12px 16px;
+        background: #d72638;
+        color: white;
+        border: none;
+        border-radius: 999px;
+        font-weight: bold;
+        cursor: pointer;
+      }
+      @media print {
+        .print-action {
+          display: none;
+        }
+        body {
+          padding: 16px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <button class="print-action" onclick="window.print()">Imprimir</button>
+
+    <h1>Hoja de ruta — {row.q.number}</h1>
+    <p class="meta">{SITE.name} · {SITE.phoneDisplay} · {SITE.email}</p>
+
+    <div class="section">
+      <p class="label">Cliente</p>
+      <p class="value">{row.c.name}</p>
+      {
+        row.c.phone && (
+          <p>
+            Tel. <strong>{row.c.phone}</strong>
+          </p>
+        )
+      }
+      {
+        row.c.docType && row.c.docNumber && (
+          <p>
+            {row.c.docType} {row.c.docNumber}
+          </p>
+        )
+      }
+    </div>
+
+    <div class="section">
+      <p class="label">Servicio</p>
+      <div class="grid">
+        <div>
+          <p class="label">Tipo</p>
+          <p class="value">{row.q.serviceType}</p>
+        </div>
+        <div>
+          <p class="label">Fecha programada</p>
+          <p class="value">{row.j.scheduledDate ?? '—'}</p>
+        </div>
+        <div>
+          <p class="label">Origen</p>
+          <p class="value">{row.q.origin ?? '—'}</p>
+        </div>
+        <div>
+          <p class="label">Destino</p>
+          <p class="value">{row.q.destination ?? '—'}</p>
+        </div>
+        <div>
+          <p class="label">Volumen</p>
+          <p>{row.q.volumeM3 ?? '—'} m³</p>
+        </div>
+        <div>
+          <p class="label">Personal</p>
+          <p>{row.q.crewSize ?? '—'} personas</p>
+        </div>
+        <div>
+          <p class="label">Pisos origen / destino</p>
+          <p>
+            {row.q.floorsOrigin ?? 0} / {row.q.floorsDest ?? 0}
+            {row.q.hasElevator ? '(con ascensor)' : '(sin ascensor)'}
+          </p>
+        </div>
+        <div>
+          <p class="label">Distancia</p>
+          <p>{row.q.distanceKm ?? '—'} km</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <p class="label">Asignación</p>
+      <div class="grid">
+        <div>
+          <p class="label">Unidad</p>
+          <p class="value">
+            {
+              unit
+                ? `${unit.plate} (${unit.tonnage} t${unit.alias ? ' · ' + unit.alias : ''})`
+                : 'Por asignar'
+            }
+          </p>
+        </div>
+        <div>
+          <p class="label">Conductor</p>
+          <p class="value">{driver?.fullName ?? 'Por asignar'}</p>
+          {driver?.phone && <p>Tel. {driver.phone}</p>}
+        </div>
+      </div>
+    </div>
+
+    {
+      items.length > 0 && (
+        <div class="section">
+          <p class="label">Detalle del servicio</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Concepto</th>
+                <th style="text-align:right;">Monto</th>
+              </tr>
+            </thead>
+            <tbody>
+              {items.map((it) => (
+                <tr>
+                  <td>{it.label}</td>
+                  <td style="text-align:right;">{fmt(it.amountCents)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <p class="total">Total: {fmt(row.q.totalCents)}</p>
+        </div>
+      )
+    }
+
+    {
+      row.q.notes && (
+        <div class="section">
+          <p class="label">Notas</p>
+          <p>{row.q.notes}</p>
+        </div>
+      )
+    }
+
+    <div class="section">
+      <p class="label">Conformidad</p>
+      <div class="signatures">
+        <div>
+          <div class="sig-line">Firma del cliente</div>
+        </div>
+        <div>
+          <div class="sig-line">Firma del conductor</div>
+        </div>
+      </div>
+    </div>
+
+    <p style="margin-top: 48px; font-size: 10px; color: #999; text-align: center;">
+      Documento de uso interno · {SITE.name} · {row.q.number}
+    </p>
+
+    <script is:inline>
+      // Auto-disparar el diálogo de impresión si la URL trae ?auto=1
+      if (new URLSearchParams(window.location.search).get('auto') === '1') {
+        setTimeout(() => window.print(), 300);
+      }
+    </script>
+  </body>
+</html>

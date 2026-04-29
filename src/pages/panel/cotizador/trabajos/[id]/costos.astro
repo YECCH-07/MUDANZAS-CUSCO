@@ -1,0 +1,196 @@
+---
+export const prerender = false;
+
+import CotizadorLayout from '@layouts/CotizadorLayout.astro';
+import { db } from '@db/client';
+import { jobs, quotes, customers, jobCosts, expenseCategories, users, receipts } from '@db/schema';
+import { desc, eq } from 'drizzle-orm';
+
+const { id } = Astro.params;
+if (!id) return Astro.redirect('/panel/cotizador/trabajos/');
+
+const row = await db
+  .select({ j: jobs, q: quotes, c: customers })
+  .from(jobs)
+  .innerJoin(quotes, eq(quotes.id, jobs.quoteId))
+  .innerJoin(customers, eq(customers.id, quotes.customerId))
+  .where(eq(jobs.id, id))
+  .get();
+
+if (!row) return Astro.redirect('/panel/cotizador/trabajos/');
+
+const costs = await db
+  .select({
+    id: jobCosts.id,
+    amountCents: jobCosts.amountCents,
+    description: jobCosts.description,
+    createdAt: jobCosts.createdAt,
+    categoryLabel: expenseCategories.labelEs,
+    creatorName: users.fullName,
+  })
+  .from(jobCosts)
+  .leftJoin(expenseCategories, eq(expenseCategories.id, jobCosts.categoryId))
+  .leftJoin(users, eq(users.id, jobCosts.createdBy))
+  .where(eq(jobCosts.jobId, id))
+  .orderBy(desc(jobCosts.createdAt))
+  .all();
+
+const categories = await db
+  .select()
+  .from(expenseCategories)
+  .where(eq(expenseCategories.active, true))
+  .all();
+const receipt = await db.select().from(receipts).where(eq(receipts.jobId, id)).get();
+
+const incomeCents = receipt && !receipt.voidedAt ? receipt.totalCents : row.q.totalCents;
+const totalCosts = costs.reduce((s, c) => s + c.amountCents, 0);
+const margin = incomeCents - totalCosts;
+const marginPct = incomeCents > 0 ? (margin / incomeCents) * 100 : 0;
+
+const fmt = (c: number | null | undefined): string =>
+  `S/ ${((c ?? 0) / 100).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const created = Astro.url.searchParams.get('created');
+---
+
+<CotizadorLayout title={`P&L · ${row.q.number}`}>
+  <header class="mb-6">
+    <nav class="mb-2 text-sm">
+      <a href={`/panel/cotizador/trabajos/${id}/`} class="text-gray-500 hover:text-gray-700"
+        >← Trabajo {row.q.number}</a
+      >
+    </nav>
+    <h1 class="font-heading text-2xl font-bold">P&L del trabajo</h1>
+    <p class="mt-1 text-sm text-gray-600">
+      {row.c.name} · {row.q.origin ?? '—'} → {row.q.destination ?? '—'}
+    </p>
+  </header>
+
+  {
+    created && (
+      <div class="mb-4 rounded-lg border-l-4 border-green-500 bg-green-50 p-3 text-sm text-green-800">
+        Costo añadido.
+      </div>
+    )
+  }
+
+  <div class="mb-6 grid grid-cols-3 gap-3">
+    <div class="rounded-2xl border border-gray-200 bg-white p-4">
+      <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">Ingreso</p>
+      <p class="text-2xl font-bold text-green-700">{fmt(incomeCents)}</p>
+      {
+        receipt && receipt.voidedAt && (
+          <p class="mt-1 text-xs text-red-600">Recibo anulado · usando total cotización</p>
+        )
+      }
+    </div>
+    <div class="rounded-2xl border border-gray-200 bg-white p-4">
+      <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">Costos</p>
+      <p class="text-2xl font-bold text-red-700">{fmt(totalCosts)}</p>
+    </div>
+    <div class="rounded-2xl border border-gray-200 bg-white p-4">
+      <p class="text-xs font-bold tracking-wider text-gray-500 uppercase">Margen</p>
+      <p class:list={['text-2xl font-bold', margin >= 0 ? 'text-primary' : 'text-red-700']}>
+        {fmt(margin)}
+      </p>
+      <p
+        class:list={[
+          'mt-1 text-xs font-bold',
+          marginPct >= 30 ? 'text-green-700' : marginPct >= 10 ? 'text-amber-700' : 'text-red-700',
+        ]}
+      >
+        {marginPct.toFixed(1)}% del ingreso
+      </p>
+    </div>
+  </div>
+
+  <div class="grid gap-6 lg:grid-cols-3">
+    <form
+      method="POST"
+      action="/api/panel/job-costs/"
+      class="space-y-3 rounded-2xl border border-gray-200 bg-white p-5 lg:col-span-1"
+    >
+      <h2 class="font-heading text-sm font-bold tracking-wider text-gray-500 uppercase">
+        Añadir costo
+      </h2>
+      <input type="hidden" name="job_id" value={id} />
+
+      <label class="block">
+        <span class="mb-1 block text-xs font-bold">Categoría</span>
+        <select
+          name="category_id"
+          class="w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm"
+        >
+          <option value="">— sin categoría —</option>
+          {categories.map((c) => <option value={c.id}>{c.labelEs}</option>)}
+        </select>
+      </label>
+
+      <label class="block">
+        <span class="mb-1 block text-xs font-bold">Monto (S/) *</span>
+        <input
+          type="number"
+          name="amount_soles"
+          min="0.01"
+          step="0.01"
+          inputmode="decimal"
+          required
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+        />
+      </label>
+
+      <label class="block">
+        <span class="mb-1 block text-xs font-bold">Descripción *</span>
+        <input
+          type="text"
+          name="description"
+          required
+          minlength="3"
+          maxlength="200"
+          class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+        />
+      </label>
+
+      <button
+        class="bg-primary hover:bg-primary-dark w-full rounded-full py-2 text-sm font-bold text-white"
+      >
+        Añadir costo
+      </button>
+    </form>
+
+    <div class="space-y-2 lg:col-span-2">
+      <p class="text-xs text-gray-500">Costos del trabajo</p>
+      {
+        costs.length === 0 ? (
+          <div class="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-600">
+            Sin costos imputados a este trabajo.
+          </div>
+        ) : (
+          costs.map((c) => (
+            <div class="rounded-2xl border border-gray-200 bg-white p-3">
+              <div class="flex items-center justify-between">
+                <div>
+                  <p class="font-bold">{c.categoryLabel ?? 'Sin categoría'}</p>
+                  <p class="text-xs text-gray-600">{c.description}</p>
+                  <p class="mt-1 text-[10px] text-gray-400">
+                    {c.creatorName ?? '—'} · {c.createdAt.slice(0, 10)}
+                  </p>
+                </div>
+                <div class="flex items-center gap-3">
+                  <p class="font-bold text-red-700">{fmt(c.amountCents)}</p>
+                  <form method="POST" action={`/api/panel/job-costs/${c.id}/delete/`}>
+                    <button
+                      class="text-xs text-red-600 hover:underline"
+                      onclick="return confirm('¿Eliminar?');"
+                    >
+                      eliminar
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          ))
+        )
+      }
+    </div>
+  </div>
+</CotizadorLayout>

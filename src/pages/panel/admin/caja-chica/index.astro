@@ -1,0 +1,189 @@
+---
+export const prerender = false;
+
+import AdminLayout from '@layouts/AdminLayout.astro';
+import { db } from '@db/client';
+import { pettyCashAccounts, pettyCashEntries, users } from '@db/schema';
+import { and, desc, eq, sum } from 'drizzle-orm';
+
+const accounts = await db.select().from(pettyCashAccounts).orderBy(pettyCashAccounts.name).all();
+
+// Saldo calculado (suma firmada). El campo `balance_cents` queda como
+// snapshot pero usamos cálculo en vivo para evitar drift.
+const balances: Record<string, number> = {};
+for (const a of accounts) {
+  const inSum = await db
+    .select({ s: sum(pettyCashEntries.amountCents) })
+    .from(pettyCashEntries)
+    .where(and(eq(pettyCashEntries.accountId, a.id), eq(pettyCashEntries.direction, 'in')))
+    .get();
+  const outSum = await db
+    .select({ s: sum(pettyCashEntries.amountCents) })
+    .from(pettyCashEntries)
+    .where(and(eq(pettyCashEntries.accountId, a.id), eq(pettyCashEntries.direction, 'out')))
+    .get();
+  const inn = Number(inSum?.s ?? 0);
+  const out = Number(outSum?.s ?? 0);
+  balances[a.id] = inn - out;
+}
+
+const selectedAccountId = Astro.url.searchParams.get('account') || accounts[0]?.id;
+const entries = selectedAccountId
+  ? await db
+      .select({
+        id: pettyCashEntries.id,
+        direction: pettyCashEntries.direction,
+        amountCents: pettyCashEntries.amountCents,
+        reason: pettyCashEntries.reason,
+        createdAt: pettyCashEntries.createdAt,
+        creatorName: users.fullName,
+      })
+      .from(pettyCashEntries)
+      .leftJoin(users, eq(users.id, pettyCashEntries.createdBy))
+      .where(eq(pettyCashEntries.accountId, selectedAccountId))
+      .orderBy(desc(pettyCashEntries.createdAt))
+      .limit(100)
+      .all()
+  : [];
+
+const fmt = (c: number | null | undefined): string =>
+  `S/ ${((c ?? 0) / 100).toLocaleString('es-PE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const created = Astro.url.searchParams.get('created');
+---
+
+<AdminLayout title="Caja chica">
+  <header class="mb-6 flex items-start justify-between gap-4">
+    <div>
+      <h1 class="font-heading text-2xl font-bold md:text-3xl">Caja chica</h1>
+      <p class="mt-1 text-sm text-gray-600">Movimientos de efectivo del negocio.</p>
+    </div>
+    <a
+      href="/panel/admin/caja-chica/cuentas/nueva/"
+      class="rounded-full border border-gray-300 px-4 py-2 text-sm font-bold hover:bg-gray-100"
+    >
+      + Nueva cuenta
+    </a>
+  </header>
+
+  {
+    created && (
+      <div class="mb-4 rounded-lg border-l-4 border-green-500 bg-green-50 p-3 text-sm text-green-800">
+        Movimiento registrado.
+      </div>
+    )
+  }
+
+  {
+    accounts.length === 0 ? (
+      <div class="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-600">
+        Crea una cuenta de caja chica (ej. "Caja principal") para empezar a registrar movimientos.
+      </div>
+    ) : (
+      <>
+        <nav class="mb-4 flex flex-wrap gap-2">
+          {accounts.map((a) => (
+            <a
+              href={`?account=${a.id}`}
+              class:list={[
+                'rounded-full px-4 py-1.5 text-sm font-bold',
+                a.id === selectedAccountId
+                  ? 'bg-primary text-white'
+                  : 'border border-gray-300 bg-white hover:bg-gray-100',
+              ]}
+            >
+              {a.name} · {fmt(balances[a.id] ?? 0)}
+            </a>
+          ))}
+        </nav>
+
+        <div class="grid gap-6 lg:grid-cols-3">
+          <form
+            method="POST"
+            action="/api/panel/petty-cash/"
+            class="space-y-3 rounded-2xl border border-gray-200 bg-white p-5 lg:col-span-1"
+          >
+            <h2 class="font-heading text-sm font-bold tracking-wider text-gray-500 uppercase">
+              Nuevo movimiento
+            </h2>
+            <input type="hidden" name="account_id" value={selectedAccountId} />
+
+            <fieldset>
+              <legend class="mb-2 text-xs font-bold">Dirección *</legend>
+              <div class="grid grid-cols-2 gap-2 text-sm">
+                <label class="flex items-center gap-2 rounded-lg border border-gray-200 p-2">
+                  <input type="radio" name="direction" value="in" required class="h-4 w-4" />
+                  <span class="font-bold text-green-700">Entrada</span>
+                </label>
+                <label class="flex items-center gap-2 rounded-lg border border-gray-200 p-2">
+                  <input type="radio" name="direction" value="out" class="h-4 w-4" />
+                  <span class="font-bold text-red-700">Salida</span>
+                </label>
+              </div>
+            </fieldset>
+
+            <label class="block">
+              <span class="mb-1 block text-xs font-bold">Monto (S/) *</span>
+              <input
+                type="number"
+                name="amount_soles"
+                min="0.01"
+                step="0.01"
+                inputmode="decimal"
+                required
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              />
+            </label>
+
+            <label class="block">
+              <span class="mb-1 block text-xs font-bold">Motivo *</span>
+              <input
+                type="text"
+                name="reason"
+                required
+                minlength="3"
+                maxlength="200"
+                class="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
+              />
+            </label>
+
+            <button class="bg-primary hover:bg-primary-dark w-full rounded-full py-2 text-sm font-bold text-white">
+              Registrar
+            </button>
+          </form>
+
+          <div class="space-y-2 lg:col-span-2">
+            <p class="text-xs text-gray-500">Últimos 100 movimientos</p>
+            {entries.length === 0 ? (
+              <div class="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-600">
+                Sin movimientos.
+              </div>
+            ) : (
+              entries.map((e) => (
+                <div class="flex items-center justify-between rounded-2xl border border-gray-200 bg-white p-3">
+                  <div>
+                    <p class="font-bold">
+                      {e.direction === 'in' ? '+ ' : '- '}
+                      {e.reason}
+                    </p>
+                    <p class="text-[10px] text-gray-500">
+                      {e.creatorName ?? '—'} · {e.createdAt.slice(0, 16).replace('T', ' ')}
+                    </p>
+                  </div>
+                  <p
+                    class:list={[
+                      'font-bold',
+                      e.direction === 'in' ? 'text-green-700' : 'text-red-700',
+                    ]}
+                  >
+                    {e.direction === 'in' ? '+' : '-'}
+                    {fmt(e.amountCents)}
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </>
+    )
+  }
+</AdminLayout>

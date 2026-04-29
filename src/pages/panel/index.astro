@@ -1,0 +1,14 @@
+---
+export const prerender = false;
+
+import { dashboardPathFor } from '@lib/auth/rbac';
+
+// El middleware ya validó la sesión; si llegamos acá hay user.
+// Redirigimos al dashboard apropiado según rol.
+const user = Astro.locals.user;
+if (!user) {
+  // fallback defensivo, aunque el middleware no debería dejar pasar.
+  return Astro.redirect('/panel/login/');
+}
+return Astro.redirect(dashboardPathFor(user.role));
+---
