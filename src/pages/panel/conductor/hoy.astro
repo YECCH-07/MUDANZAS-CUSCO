@@ -137,6 +137,21 @@ function tripDuration(trip: (typeof allTrips)[number]): string {
   const mm = m % 60;
   return h > 0 ? `${h}h ${mm}m` : `${mm}m`;
 }
+
+// FAB contextual: el "próximo paso" según el estado del día.
+type FabAction = { label: string; href: string; icon: 'play' | 'check' | 'plus' | 'flag' };
+let fabAction: FabAction | null = null;
+if (entry.closedAt) {
+  fabAction = null;
+} else if (entry.odometerStartKm === null) {
+  fabAction = { label: 'Iniciar día', href: '#section-odometro', icon: 'play' };
+} else if (activeTrip) {
+  fabAction = { label: 'Finalizar viaje', href: '#section-viajes', icon: 'check' };
+} else if (allTrips.length === 0) {
+  fabAction = { label: 'Iniciar viaje', href: '#section-viajes', icon: 'plus' };
+} else {
+  fabAction = { label: 'Cerrar día', href: '#section-cerrar', icon: 'flag' };
+}
 ---
 
 <PanelLayout title="Registro de hoy" bodyClass="pb-24">
@@ -387,7 +402,10 @@ function tripDuration(trip: (typeof allTrips)[number]): string {
       </section>
 
       {/* Odómetro inicial */}
-      <section class="rounded-2xl border border-gray-200 bg-white p-4">
+      <section
+        id="section-odometro"
+        class="scroll-mt-24 rounded-2xl border border-gray-200 bg-white p-4"
+      >
         <h2 class="mb-2 text-xs font-bold tracking-wider text-gray-500 uppercase">Kilometraje</h2>
 
         {
@@ -437,7 +455,10 @@ function tripDuration(trip: (typeof allTrips)[number]): string {
       {/* Viajes */}
       {
         entry.odometerStartKm !== null && !entry.closedAt && (
-          <section class="rounded-2xl border border-gray-200 bg-white p-4">
+          <section
+            id="section-viajes"
+            class="scroll-mt-24 rounded-2xl border border-gray-200 bg-white p-4"
+          >
             <div class="mb-3 flex items-center justify-between">
               <h2 class="text-xs font-bold tracking-wider text-gray-500 uppercase">
                 Viajes del día
@@ -610,7 +631,8 @@ function tripDuration(trip: (typeof allTrips)[number]): string {
                             <button
                               type="submit"
                               class="text-[10px] text-red-600 hover:underline"
-                              onclick="return confirm('¿Eliminar este viaje?');"
+                              data-confirm="¿Eliminar este viaje?"
+                              data-loading-text="…"
                             >
                               eliminar
                             </button>
@@ -729,7 +751,8 @@ function tripDuration(trip: (typeof allTrips)[number]): string {
                             <button
                               type="submit"
                               class="text-[10px] text-red-600 hover:underline"
-                              onclick="return confirm('¿Eliminar este gasto?');"
+                              data-confirm="¿Eliminar este gasto?"
+                              data-loading-text="…"
                             >
                               eliminar
                             </button>
@@ -747,7 +770,10 @@ function tripDuration(trip: (typeof allTrips)[number]): string {
       {/* Cerrar día */}
       {
         !entry.closedAt && allTrips.length > 0 && !activeTrip && entry.odometerStartKm !== null && (
-          <section class="rounded-2xl border border-gray-200 bg-white p-4">
+          <section
+            id="section-cerrar"
+            class="scroll-mt-24 rounded-2xl border border-gray-200 bg-white p-4"
+          >
             <h2 class="mb-2 text-xs font-bold tracking-wider text-gray-500 uppercase">
               Cerrar el día
             </h2>
@@ -786,7 +812,8 @@ function tripDuration(trip: (typeof allTrips)[number]): string {
                 <button
                   type="submit"
                   class="w-full rounded-full bg-gray-900 py-2 text-sm font-bold text-white hover:bg-black"
-                  onclick="return confirm('¿Cerrar el día? No podrás modificar nada después.');"
+                  data-confirm="¿Cerrar el día? No podrás modificar nada después."
+                  data-loading-text="Cerrando día…"
                 >
                   Cerrar el día
                 </button>
@@ -806,4 +833,32 @@ function tripDuration(trip: (typeof allTrips)[number]): string {
       </footer>
     </div>
   </main>
+
+  {/* FAB contextual con el próximo paso (solo móvil, oculto si día cerrado) */}
+  {
+    fabAction && (
+      <a
+        href={fabAction.href}
+        class="bg-primary-600 hover:bg-primary-700 active:bg-primary-800 shadow-brand-lg fixed right-4 bottom-4 z-30 inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-bold text-white transition-all hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        data-fab-action
+      >
+        <svg
+          class="h-5 w-5"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          {fabAction.icon === 'play' && <path d="M5 3l14 9-14 9V3z" />}
+          {fabAction.icon === 'check' && <path d="M5 13l4 4L19 7" />}
+          {fabAction.icon === 'plus' && <path d="M12 5v14 M5 12h14" />}
+          {fabAction.icon === 'flag' && <path d="M4 22V4l8 4 8-4v18" />}
+        </svg>
+        {fabAction.label}
+      </a>
+    )
+  }
 </PanelLayout>

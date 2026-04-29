@@ -382,7 +382,8 @@ const canCancel = !['completed', 'canceled'].includes(q.q.status);
             <form method="POST" action={`/api/panel/quotes/${id}/cancel/`} class="block">
               <button
                 class="w-full rounded-full border border-gray-300 py-2 text-xs font-bold text-gray-700 hover:bg-gray-100"
-                onclick="return confirm('¿Cancelar esta cotización?');"
+                data-confirm="¿Cancelar esta cotización?"
+                data-loading-text="Cancelando…"
               >
                 Cancelar cotización
               </button>

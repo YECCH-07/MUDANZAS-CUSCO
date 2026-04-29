@@ -6,6 +6,7 @@
 import '@/styles/global.css';
 import { SITE } from '@lib/site';
 import CommandPalette from '@components/panel/CommandPalette.astro';
+import ConfirmDialog from '@components/panel/ConfirmDialog.astro';
 
 interface Props {
   title: string;
@@ -37,6 +38,8 @@ function isActive(href: string): boolean {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex, nofollow" />
+    {/* Cross-document view transitions nativas (Chrome 126+, Edge, Safari TP) */}
+    <meta name="view-transition" content="same-origin" />
     <link rel="icon" type="image/png" href={SITE.logo.icon} />
     <link rel="manifest" href="/panel/manifest.webmanifest" />
     <link rel="apple-touch-icon" href="/panel/icon-192.png" />
@@ -147,23 +150,28 @@ function isActive(href: string): boolean {
       >
         <ul class="grid grid-cols-4 text-[10px]">
           {
-            nav.slice(0, 4).map((item) => (
-              <li>
-                <a
-                  href={item.href}
-                  class:list={[
-                    'flex flex-col items-center gap-1 px-1 py-2 font-bold',
-                    isActive(item.href) ? 'text-primary' : 'text-gray-600',
-                  ]}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))
+            nav.slice(0, 4).map((item) => {
+              const active = isActive(item.href);
+              return (
+                <li>
+                  <a
+                    href={item.href}
+                    aria-current={active ? 'page' : undefined}
+                    class:list={[
+                      'flex flex-col items-center gap-1 px-1 py-2 font-bold transition-colors',
+                      active ? 'text-primary-700' : 'text-gray-600 hover:text-gray-900',
+                    ]}
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              );
+            })
           }
         </ul>
       </nav>
     </div>
     <CommandPalette />
+    <ConfirmDialog />
   </body>
 </html>

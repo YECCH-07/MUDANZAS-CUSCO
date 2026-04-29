@@ -7,6 +7,7 @@
 import '@/styles/global.css';
 import { SITE } from '@lib/site';
 import CommandPalette from '@components/panel/CommandPalette.astro';
+import ConfirmDialog from '@components/panel/ConfirmDialog.astro';
 
 interface NavItem {
   label: string;
@@ -60,6 +61,8 @@ function isActiveRoute(href: string): boolean {
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="robots" content="noindex, nofollow" />
+    {/* Cross-document view transitions nativas (Chrome 126+, Edge, Safari TP) */}
+    <meta name="view-transition" content="same-origin" />
     <link rel="icon" type="image/png" href={SITE.logo.icon} />
     <link rel="manifest" href="/panel/manifest.webmanifest" />
     <link rel="apple-touch-icon" href="/panel/icon-192.png" />
@@ -270,9 +273,10 @@ function isActiveRoute(href: string): boolean {
                 <li>
                   <a
                     href={item.href}
+                    aria-current={current ? 'page' : undefined}
                     class:list={[
-                      'flex flex-col items-center gap-1 px-2 py-2 text-[10px] font-bold',
-                      current ? 'text-primary' : 'text-gray-600',
+                      'flex flex-col items-center gap-1 px-2 py-2 text-[10px] font-bold transition-colors',
+                      current ? 'text-primary-700' : 'text-gray-600 hover:text-gray-900',
                     ]}
                   >
                     {item.label}
@@ -285,5 +289,6 @@ function isActiveRoute(href: string): boolean {
       </nav>
     </div>
     <CommandPalette />
+    <ConfirmDialog />
   </body>
 </html>

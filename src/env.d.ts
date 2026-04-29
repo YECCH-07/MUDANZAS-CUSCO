@@ -11,6 +11,11 @@ declare global {
       session: Session | null;
     }
   }
+
+  interface Window {
+    /** Bandera anti-doble-init del bundle de mejoras del panel. */
+    __panelEnhancementsInit?: boolean;
+  }
 }
 
 interface ImportMetaEnv {

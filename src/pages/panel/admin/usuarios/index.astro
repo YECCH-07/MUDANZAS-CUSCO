@@ -124,7 +124,8 @@ const roleLabel = (r: string): string =>
                 >
                   <button
                     class="text-xs text-amber-700 hover:underline"
-                    onclick="return confirm('¿Resetear contraseña? El usuario tendrá una nueva temporal de 24h y sus sesiones quedarán invalidadas.');"
+                    data-confirm="¿Resetear contraseña? El usuario tendrá una nueva temporal de 24h y sus sesiones quedarán invalidadas."
+                    data-loading-text="Reseteando…"
                   >
                     Reset pw
                   </button>

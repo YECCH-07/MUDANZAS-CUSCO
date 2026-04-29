@@ -6,6 +6,7 @@
  */
 import '@/styles/global.css';
 import { SITE } from '@lib/site';
+import ConfirmDialog from '@components/panel/ConfirmDialog.astro';
 
 interface Props {
   title: string;
@@ -22,6 +23,8 @@ const { title, bodyClass = '' } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <meta name="robots" content="noindex, nofollow" />
+    {/* Cross-document view transitions nativas (Chrome 126+, Edge, Safari TP) */}
+    <meta name="view-transition" content="same-origin" />
     <link rel="icon" type="image/png" href={SITE.logo.icon} />
     <link rel="manifest" href="/panel/manifest.webmanifest" />
     <link rel="apple-touch-icon" href="/panel/icon-192.png" />
@@ -42,5 +45,6 @@ const { title, bodyClass = '' } = Astro.props;
   </head>
   <body class:list={['text-dark min-h-screen bg-gray-50 font-sans antialiased', bodyClass]}>
     <slot />
+    <ConfirmDialog />
   </body>
 </html>

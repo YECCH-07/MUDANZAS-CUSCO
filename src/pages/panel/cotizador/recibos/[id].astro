@@ -175,7 +175,8 @@ if (row.r.pdfKey && isStorageConfigured()) {
             />
             <button
               class="w-full rounded-full border border-red-300 bg-red-50 py-2 text-sm font-bold text-red-700 hover:bg-red-100"
-              onclick="return confirm('¿Anular este recibo? El verificador público mostrará ANULADO de inmediato.');"
+              data-confirm="¿Anular este recibo? El verificador público mostrará ANULADO de inmediato."
+              data-loading-text="Anulando…"
             >
               Anular recibo
             </button>

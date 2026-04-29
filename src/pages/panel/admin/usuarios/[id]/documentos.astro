@@ -189,7 +189,8 @@ const deleted = Astro.url.searchParams.get('deleted');
                     <form method="POST" action={`/api/panel/driver-documents/${d.id}/delete/`}>
                       <button
                         class="text-xs text-red-600 hover:underline"
-                        onclick="return confirm('¿Eliminar?');"
+                        data-confirm="¿Eliminar este documento?"
+                        data-loading-text="…"
                       >
                         eliminar
                       </button>

@@ -226,7 +226,8 @@ const error = Astro.url.searchParams.get('error');
             <form method="POST" action={`/api/panel/jobs/${id}/cancel/`}>
               <button
                 class="w-full rounded-full border border-gray-300 py-2 text-xs font-bold text-gray-700 hover:bg-gray-100"
-                onclick="return confirm('¿Cancelar este trabajo?');"
+                data-confirm="¿Cancelar este trabajo?"
+                data-loading-text="Cancelando…"
               >
                 Cancelar trabajo
               </button>
