@@ -8,231 +8,326 @@ import { getLangFromUrl } from '@/i18n/config';
 const lang = getLangFromUrl(Astro.url);
 const items = NAV[lang];
 const homeHref = lang === 'es' ? '/' : '/en/';
+
+const socials = [
+  {
+    name: 'Facebook',
+    href: SITE.social.facebook,
+    label: 'Facebook de Expresos Ñan',
+    path: 'M9.198 21.5h4v-8.01h3.604l.396-3.98h-4V7.5a1 1 0 011-1h3v-4h-3a5 5 0 00-5 5v2.01h-2l-.396 3.98h2.396v8.01z',
+  },
+  {
+    name: 'Instagram',
+    href: SITE.social.instagram,
+    label: 'Instagram de Expresos Ñan',
+    path: 'M12 2.2c3.2 0 3.6 0 4.8.1 1.2 0 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.2.1 1.6.1 4.8s0 3.6-.1 4.8c0 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.2.1-1.6.1-4.8.1s-3.6 0-4.8-.1c-1.2 0-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2-.1-1.2-.1-1.6-.1-4.8s0-3.6.1-4.8c0-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4 1.2-.1 1.6-.1 4.8-.1zm0 2.2c-3.2 0-3.5 0-4.7.1-1.1 0-1.7.2-2 .4-.5.2-.9.4-1.2.8-.3.3-.6.7-.8 1.2-.2.3-.4.9-.4 2C2.8 9.9 2.8 10.2 2.8 12s0 2.1.1 3.3c0 1.1.2 1.7.4 2 .2.5.4.9.8 1.2.3.3.7.6 1.2.8.3.2.9.4 2 .4 1.2.1 1.5.1 4.7.1s3.5 0 4.7-.1c1.1 0 1.7-.2 2-.4.5-.2.9-.4 1.2-.8.3-.3.6-.7.8-1.2.2-.3.4-.9.4-2 .1-1.2.1-1.5.1-3.3s0-2.1-.1-3.3c0-1.1-.2-1.7-.4-2-.2-.5-.4-.9-.8-1.2-.3-.3-.7-.6-1.2-.8-.3-.2-.9-.4-2-.4C15.5 4.4 15.2 4.4 12 4.4zm0 3.7a3.9 3.9 0 110 7.8 3.9 3.9 0 010-7.8zm0 6.4a2.5 2.5 0 100-5 2.5 2.5 0 000 5zm5-6.8a.9.9 0 11-1.8 0 .9.9 0 011.8 0z',
+  },
+  {
+    name: 'TikTok',
+    href: SITE.social.tiktok,
+    label: 'TikTok de Expresos Ñan',
+    path: 'M19.6 6.3a5 5 0 01-3-.9v9.3a5.9 5.9 0 11-5.9-5.9v2.8a3.1 3.1 0 103.1 3.1V2h2.8a5 5 0 003 4.3z',
+  },
+];
 ---
 
 {
   /*
-  Header sticky minimalista premium.
-  - Fondo blanco con borde inferior ultrafino.
-  - Sombra sutil aparece al hacer scroll (vía JS, sin reflow).
-  - Color carmesí reservado como acento (puntito junto al logo + estado activo).
-  - WhatsApp es el único botón saturado a la derecha (jerarquía clara).
-  - Tipografía semibold (no bold) + tracking-tight para look editorial.
+  Header en dos filas:
+  1. Topbar carmesí: teléfono + email a la izquierda, redes + idioma a la derecha.
+  2. Header blanco: logo, nav y CTA WhatsApp.
+
+  Ambas filas son sticky juntas (presencia constante de marca, igual al patrón
+  WordPress anterior). La sombra sutil aparece al scrollear (>4px).
 */
 }
-<header
-  class="site-header sticky top-0 z-30 w-full bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80"
-  data-site-header
->
-  <Container as="nav" size="wide" class="flex items-center justify-between gap-6 py-4">
-    {/* Logo */}
-    <a
-      href={homeHref}
-      class="group/logo focus-visible:outline-primary-600 inline-flex shrink-0 items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4"
-      aria-label={SITE.name}
+<div class="site-header sticky top-0 z-30 w-full" data-site-header>
+  {/* ───────── TOPBAR CARMESÍ ───────── */}
+  <div class="bg-primary-700 text-white">
+    <Container
+      size="wide"
+      class="flex flex-wrap items-center justify-between gap-x-6 gap-y-1 py-2 text-[13px]"
     >
-      <img
-        src={SITE.logo.icon}
-        alt=""
-        width="36"
-        height="36"
-        class="h-8 w-8 shrink-0 object-contain"
-        aria-hidden="true"
-      />
-      <span class="font-heading text-dark text-base leading-none font-semibold tracking-tight">
-        Expresos Ñan
-        <span class="text-primary-600 ml-px" aria-hidden="true">.</span>
-      </span>
-    </a>
+      {/* Contacto */}
+      <ul class="flex flex-wrap items-center gap-x-5 gap-y-1">
+        <li>
+          <a
+            href={`tel:${SITE.phoneE164}`}
+            class="inline-flex items-center gap-1.5 transition-colors hover:text-white/80"
+          >
+            <svg
+              class="h-3.5 w-3.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path
+                d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6 19.79 19.79 0 01-3.07-8.67A2 2 0 014.11 2h3a2 2 0 012 1.72c.13.96.37 1.9.72 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0122 16.92z"
+              ></path>
+            </svg>
+            <span class="font-semibold tabular-nums">{SITE.phoneDisplay}</span>
+          </a>
+        </li>
+        <li class="hidden sm:block">
+          <a
+            href={`mailto:${SITE.email}`}
+            class="inline-flex items-center gap-1.5 transition-colors hover:text-white/80"
+          >
+            <svg
+              class="h-3.5 w-3.5"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+              ></path>
+              <path d="M22 6l-10 7L2 6"></path>
+            </svg>
+            <span class="truncate">{SITE.email}</span>
+          </a>
+        </li>
+      </ul>
 
-    {/* Nav desktop (lg+) */}
-    <ul class="hidden items-center gap-1 lg:flex">
-      {
-        items.map((item) => {
-          const isActive =
-            'href' in item &&
-            (Astro.url.pathname === item.href ||
-              (item.href !== homeHref && Astro.url.pathname.startsWith(item.href)));
-          return (
-            <li class="relative">
-              {'children' in item && item.children ? (
-                <details class="group/nav">
-                  <summary class="text-dark hover:text-primary-700 focus-visible:outline-primary-600 flex cursor-pointer list-none items-center gap-1 rounded-md px-3 py-2 text-sm font-semibold tracking-tight transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 [&::-webkit-details-marker]:hidden">
-                    {item.label}
-                    <svg
-                      class="h-3.5 w-3.5 text-gray-400 transition-transform group-open/nav:rotate-180"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                      aria-hidden="true"
-                    >
-                      <path
-                        fill-rule="evenodd"
-                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
-                        clip-rule="evenodd"
-                      />
-                    </svg>
-                  </summary>
-                  <ul class="absolute top-full left-0 z-20 mt-1 w-72 overflow-hidden rounded-xl border border-gray-100 bg-white py-2 shadow-xl ring-1 ring-black/5">
-                    <li>
-                      <a
-                        href={item.href}
-                        class="text-primary-700 hover:bg-primary-50 block px-4 py-2 text-sm font-semibold tracking-tight transition-colors"
+      {/* Redes + idioma */}
+      <ul class="flex items-center gap-1">
+        {
+          socials.map((s) => (
+            <li>
+              <a
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="inline-flex h-7 w-7 items-center justify-center rounded-full text-white transition-all hover:bg-white/15 focus-visible:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+                aria-label={s.label}
+                title={s.name}
+              >
+                <svg
+                  class="h-4 w-4"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  aria-hidden="true"
+                  set:html={`<path d="${s.path}"/>`}
+                />
+              </a>
+            </li>
+          ))
+        }
+        <li class="ml-1 border-l border-white/20 pl-1.5">
+          <LanguageSwitcher />
+        </li>
+      </ul>
+    </Container>
+  </div>
+
+  {/* ───────── HEADER BLANCO PRINCIPAL ───────── */}
+  <header
+    class="border-b border-gray-100 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/85"
+  >
+    <Container as="nav" size="wide" class="flex items-center justify-between gap-6 py-3">
+      {/* Logo */}
+      <a
+        href={homeHref}
+        class="group/logo focus-visible:outline-primary-600 inline-flex shrink-0 items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4"
+        aria-label={SITE.name}
+      >
+        <img
+          src={SITE.logo.icon}
+          alt=""
+          width="40"
+          height="40"
+          class="h-9 w-9 shrink-0 object-contain"
+          aria-hidden="true"
+        />
+        <span class="font-heading text-dark text-base leading-none font-semibold tracking-tight">
+          Expresos Ñan
+          <span class="text-primary-600 ml-px" aria-hidden="true">.</span>
+        </span>
+      </a>
+
+      {/* Nav desktop (lg+) */}
+      <ul class="hidden items-center gap-1 lg:flex">
+        {
+          items.map((item) => {
+            const isActive =
+              'href' in item &&
+              (Astro.url.pathname === item.href ||
+                (item.href !== homeHref && Astro.url.pathname.startsWith(item.href)));
+            return (
+              <li class="relative">
+                {'children' in item && item.children ? (
+                  <details class="group/nav">
+                    <summary class="text-dark hover:text-primary-700 focus-visible:outline-primary-600 flex cursor-pointer list-none items-center gap-1 rounded-md px-3 py-2 text-sm font-semibold tracking-tight transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 [&::-webkit-details-marker]:hidden">
+                      {item.label}
+                      <svg
+                        class="h-3.5 w-3.5 text-gray-400 transition-transform group-open/nav:rotate-180"
+                        viewBox="0 0 20 20"
+                        fill="currentColor"
+                        aria-hidden="true"
                       >
-                        Ver {item.label.toLowerCase()}
-                      </a>
-                    </li>
-                    {item.children.map((child) => (
+                        <path
+                          fill-rule="evenodd"
+                          d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                          clip-rule="evenodd"
+                        />
+                      </svg>
+                    </summary>
+                    <ul class="absolute top-full left-0 z-20 mt-1 w-72 overflow-hidden rounded-xl border border-gray-100 bg-white py-2 shadow-xl ring-1 ring-black/5">
                       <li>
                         <a
-                          href={child.href}
-                          class="text-dark hover:text-primary-700 block px-4 py-2 text-sm transition-colors hover:bg-gray-50"
+                          href={item.href}
+                          class="text-primary-700 hover:bg-primary-50 block px-4 py-2 text-sm font-semibold tracking-tight transition-colors"
                         >
-                          {child.label}
+                          Ver {item.label.toLowerCase()}
                         </a>
                       </li>
-                    ))}
-                  </ul>
-                </details>
-              ) : (
-                <a
-                  href={item.href}
-                  class:list={[
-                    'focus-visible:outline-primary-600 relative block rounded-md px-3 py-2 text-sm font-semibold tracking-tight transition-colors focus-visible:outline-2 focus-visible:outline-offset-2',
-                    isActive ? 'text-primary-700' : 'text-dark hover:text-primary-700',
-                  ]}
-                  aria-current={isActive ? 'page' : undefined}
-                >
-                  {item.label}
-                  {isActive && (
-                    <span
-                      class="bg-primary-600 absolute right-3 -bottom-px left-3 h-0.5 rounded-full"
-                      aria-hidden="true"
-                    />
-                  )}
-                </a>
-              )}
-            </li>
-          );
-        })
-      }
-    </ul>
-
-    {/* Acciones derecha */}
-    <div class="flex items-center gap-2">
-      <LanguageSwitcher />
-      <div class="hidden md:block">
-        <WhatsAppButton variant="inline" size="sm" />
-      </div>
-
-      {/* Menú hamburguesa (móvil y tablet) */}
-      <details class="group relative lg:hidden">
-        <summary
-          class="text-dark focus-visible:outline-primary-600 flex cursor-pointer list-none items-center justify-center rounded-md p-2 transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 [&::-webkit-details-marker]:hidden"
-          aria-label="Abrir menú"
-        >
-          <svg
-            class="h-6 w-6 group-open:hidden"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"></path>
-          </svg>
-          <svg
-            class="hidden h-6 w-6 group-open:block"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            aria-hidden="true"
-          >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </summary>
-        <div
-          class="fixed inset-x-0 top-[var(--header-h,72px)] z-20 max-h-[calc(100vh-var(--header-h,72px))] overflow-y-auto border-t border-gray-100 bg-white shadow-xl"
-          style="--header-h: 72px;"
-        >
-          <ul class="px-4 py-2">
-            {
-              items.map((item) => (
-                <li class="border-b border-gray-100 last:border-0">
-                  {'children' in item && item.children ? (
-                    <details class="group/sub">
-                      <summary class="text-dark hover:text-primary-700 flex cursor-pointer list-none items-center justify-between py-3.5 text-base font-semibold tracking-tight transition-colors [&::-webkit-details-marker]:hidden">
-                        {item.label}
-                        <svg
-                          class="h-4 w-4 text-gray-400 transition-transform group-open/sub:rotate-180"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                          aria-hidden="true"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
-                      </summary>
-                      <ul class="pb-3 pl-4">
+                      {item.children.map((child) => (
                         <li>
                           <a
-                            href={item.href}
-                            class="text-primary-700 block py-2 text-sm font-semibold tracking-tight"
+                            href={child.href}
+                            class="text-dark hover:text-primary-700 block px-4 py-2 text-sm transition-colors hover:bg-gray-50"
                           >
-                            Ver {item.label.toLowerCase()}
+                            {child.label}
                           </a>
                         </li>
-                        {item.children.map((child) => (
+                      ))}
+                    </ul>
+                  </details>
+                ) : (
+                  <a
+                    href={item.href}
+                    class:list={[
+                      'focus-visible:outline-primary-600 relative block rounded-md px-3 py-2 text-sm font-semibold tracking-tight transition-colors focus-visible:outline-2 focus-visible:outline-offset-2',
+                      isActive ? 'text-primary-700' : 'text-dark hover:text-primary-700',
+                    ]}
+                    aria-current={isActive ? 'page' : undefined}
+                  >
+                    {item.label}
+                    {isActive && (
+                      <span
+                        class="bg-primary-600 absolute right-3 -bottom-px left-3 h-0.5 rounded-full"
+                        aria-hidden="true"
+                      />
+                    )}
+                  </a>
+                )}
+              </li>
+            );
+          })
+        }
+      </ul>
+
+      {/* Acciones derecha: WhatsApp + hamburger móvil */}
+      <div class="flex items-center gap-2">
+        <div class="hidden md:block">
+          <WhatsAppButton variant="inline" size="sm" />
+        </div>
+
+        {/* Menú hamburguesa (móvil y tablet) */}
+        <details class="group relative lg:hidden">
+          <summary
+            class="text-dark focus-visible:outline-primary-600 flex cursor-pointer list-none items-center justify-center rounded-md p-2 transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 [&::-webkit-details-marker]:hidden"
+            aria-label="Abrir menú"
+          >
+            <svg
+              class="h-6 w-6 group-open:hidden"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"
+              ></path>
+            </svg>
+            <svg
+              class="hidden h-6 w-6 group-open:block"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              aria-hidden="true"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </summary>
+          <div
+            class="fixed inset-x-0 top-[var(--header-h,108px)] z-20 max-h-[calc(100vh-var(--header-h,108px))] overflow-y-auto border-t border-gray-100 bg-white shadow-xl"
+            style="--header-h: 108px;"
+          >
+            <ul class="px-4 py-2">
+              {
+                items.map((item) => (
+                  <li class="border-b border-gray-100 last:border-0">
+                    {'children' in item && item.children ? (
+                      <details class="group/sub">
+                        <summary class="text-dark hover:text-primary-700 flex cursor-pointer list-none items-center justify-between py-3.5 text-base font-semibold tracking-tight transition-colors [&::-webkit-details-marker]:hidden">
+                          {item.label}
+                          <svg
+                            class="h-4 w-4 text-gray-400 transition-transform group-open/sub:rotate-180"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            aria-hidden="true"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>
+                        </summary>
+                        <ul class="pb-3 pl-4">
                           <li>
                             <a
-                              href={child.href}
-                              class="text-dark hover:text-primary-700 block py-2 text-sm transition-colors"
+                              href={item.href}
+                              class="text-primary-700 block py-2 text-sm font-semibold tracking-tight"
                             >
-                              {child.label}
+                              Ver {item.label.toLowerCase()}
                             </a>
                           </li>
-                        ))}
-                      </ul>
-                    </details>
-                  ) : (
-                    <a
-                      href={item.href}
-                      class="text-dark hover:text-primary-700 block py-3.5 text-base font-semibold tracking-tight transition-colors"
-                    >
-                      {item.label}
-                    </a>
-                  )}
-                </li>
-              ))
-            }
-          </ul>
-          <div class="px-4 pt-2 pb-4">
-            <WhatsAppButton variant="inline" size="md" class="w-full" />
+                          {item.children.map((child) => (
+                            <li>
+                              <a
+                                href={child.href}
+                                class="text-dark hover:text-primary-700 block py-2 text-sm transition-colors"
+                              >
+                                {child.label}
+                              </a>
+                            </li>
+                          ))}
+                        </ul>
+                      </details>
+                    ) : (
+                      <a
+                        href={item.href}
+                        class="text-dark hover:text-primary-700 block py-3.5 text-base font-semibold tracking-tight transition-colors"
+                      >
+                        {item.label}
+                      </a>
+                    )}
+                  </li>
+                ))
+              }
+            </ul>
+            <div class="px-4 pt-2 pb-4">
+              <WhatsAppButton variant="inline" size="md" class="w-full" />
+            </div>
           </div>
-        </div>
-      </details>
-    </div>
-  </Container>
-
-  {/* Franja branded debajo del header — refuerza presencia de marca sin saturar */}
-  <div class="brand-strip h-1 w-full" aria-hidden="true"></div>
-</header>
+        </details>
+      </div>
+    </Container>
+  </header>
+</div>
 
 <style>
-  /* Franja carmesí debajo del header. Gradient suave para profundidad. */
-  .brand-strip {
-    background-image: linear-gradient(
-      90deg,
-      var(--color-primary-700) 0%,
-      var(--color-primary-600) 50%,
-      var(--color-primary-700) 100%
-    );
-  }
-
-  /* Sombra que aparece al hacer scroll: refuerza separación sin saturar. */
+  /* Sombra sutil aparece al hacer scroll: refuerza separación sin saturar. */
   .site-header[data-scrolled] {
     box-shadow:
       0 1px 3px 0 rgb(0 0 0 / 0.04),
@@ -247,7 +342,6 @@ const homeHref = lang === 'es' ? '/' : '/en/';
 
 <script>
   // Marca el header como "scrolled" (>4px) para activar sombra sutil.
-  // Único listener pasivo, sin reflow.
   (() => {
     const header = document.querySelector<HTMLElement>('[data-site-header]');
     if (!header) return;
