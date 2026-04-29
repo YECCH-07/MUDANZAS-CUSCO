@@ -55,7 +55,7 @@ const PAGE_W = 595.28;
 const PAGE_H = 841.89;
 const MARGIN = 48;
 
-const PRIMARY = rgb(0.843, 0.149, 0.22);
+const PRIMARY = rgb(0.894, 0.016, 0.078); // #E40414
 const DARK = rgb(0.06, 0.06, 0.06);
 const GRAY = rgb(0.42, 0.42, 0.42);
 const LIGHT_GRAY = rgb(0.88, 0.88, 0.88);

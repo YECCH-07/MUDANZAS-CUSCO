@@ -82,12 +82,12 @@ export const TEMPLATES = {
     subject: 'Acceso al Panel de Expresos Ñan',
     html: renderTemplate(
       `<div style="font-family:Arial,sans-serif;color:#0F0F0F;max-width:560px;margin:0 auto;padding:24px;">
-  <h2 style="color:#D72638;">Bienvenido, {{name}}</h2>
+  <h2 style="color:#E40414;">Bienvenido, {{name}}</h2>
   <p>Se creó tu cuenta en el Panel interno de Expresos Ñan.</p>
   <p><strong>Email:</strong> {{email}}<br>
   <strong>Contraseña temporal:</strong> <code style="background:#f4f4f4;padding:2px 6px;border-radius:4px;">{{tempPassword}}</code></p>
   <p>La contraseña expira en 24 horas. Inicia sesión y cámbiala en cuanto puedas.</p>
-  <p><a href="{{loginUrl}}" style="display:inline-block;background:#D72638;color:white;padding:12px 24px;border-radius:999px;text-decoration:none;font-weight:bold;">Abrir el panel</a></p>
+  <p><a href="{{loginUrl}}" style="display:inline-block;background:#E40414;color:white;padding:12px 24px;border-radius:999px;text-decoration:none;font-weight:bold;">Abrir el panel</a></p>
   <hr style="border:none;border-top:1px solid #eee;margin:24px 0;">
   <p style="font-size:12px;color:#777;">Si no esperabas este correo, ignóralo.</p>
 </div>`,
@@ -98,11 +98,11 @@ export const TEMPLATES = {
     subject: 'Reseteo de contraseña — Panel Expresos Ñan',
     html: renderTemplate(
       `<div style="font-family:Arial,sans-serif;color:#0F0F0F;max-width:560px;margin:0 auto;padding:24px;">
-  <h2 style="color:#D72638;">Hola {{name}}</h2>
+  <h2 style="color:#E40414;">Hola {{name}}</h2>
   <p>El administrador reseteó tu contraseña en el panel.</p>
   <p><strong>Nueva contraseña temporal:</strong> <code style="background:#f4f4f4;padding:2px 6px;border-radius:4px;">{{tempPassword}}</code></p>
   <p>Expira en 24h. Cámbiala en el primer login.</p>
-  <p><a href="{{loginUrl}}" style="display:inline-block;background:#D72638;color:white;padding:12px 24px;border-radius:999px;text-decoration:none;font-weight:bold;">Iniciar sesión</a></p>
+  <p><a href="{{loginUrl}}" style="display:inline-block;background:#E40414;color:white;padding:12px 24px;border-radius:999px;text-decoration:none;font-weight:bold;">Iniciar sesión</a></p>
 </div>`,
       vars,
     ),
@@ -117,7 +117,7 @@ export const TEMPLATES = {
     subject: `Recibo emitido ${vars.receiptNumber} (${vars.total})`,
     html: renderTemplate(
       `<div style="font-family:Arial,sans-serif;color:#0F0F0F;max-width:560px;margin:0 auto;padding:24px;">
-  <h2 style="color:#D72638;">Recibo emitido</h2>
+  <h2 style="color:#E40414;">Recibo emitido</h2>
   <p>Hola {{adminName}},</p>
   <p>Se emitió el recibo <strong>{{receiptNumber}}</strong> para <strong>{{customerName}}</strong> por <strong>{{total}}</strong>.</p>
   <p><a href="{{verifyUrl}}">Ver verificador público →</a></p>

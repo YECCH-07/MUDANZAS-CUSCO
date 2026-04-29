@@ -14,7 +14,7 @@ const rootDir = resolve(__dirname, '..');
 
 const SRC = resolve(rootDir, 'public/wp-content/uploads/2024/05/NAN-2.png');
 const OUT_DIR = resolve(rootDir, 'public/panel');
-const BG = '#D72638'; // primary carmesí de Expresos Ñan
+const BG = '#E40414'; // primary rojo bandera de Expresos Ñan
 
 if (!existsSync(SRC)) {
   console.error('[icons] logo fuente no encontrado en', SRC);

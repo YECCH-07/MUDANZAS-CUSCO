@@ -28,7 +28,7 @@
 ### 4.1 — Sistema de diseño
 
 - [ ] Definir paleta extendida en [src/styles/global.css](../src/styles/global.css):
-  - Primary scale: 50, 100, 200, 400, 500 (#D72638 actual = 600), 700, 800, 900
+  - Primary scale: 50, 100, 200, 400, 500 (#E40414 actual = 600), 700, 800, 900
   - Tonos de éxito (verde 50→900), error (rojo 50→900), aviso (ámbar 50→900),
     info (azul 50→900). Hoy se usan colores genéricos de Tailwind sin curva.
   - Gradientes corporativos: `bg-brand-gradient` (carmesí → carmesí oscuro),

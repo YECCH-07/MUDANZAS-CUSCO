@@ -7,8 +7,8 @@ import { resolve } from 'node:path';
 import { rgb } from 'pdf-lib';
 
 export const BRAND = {
-  primary: rgb(0.843, 0.149, 0.22), // #D72638
-  primaryDark: rgb(0.65, 0.114, 0.169), // #A61D2B
+  primary: rgb(0.894, 0.016, 0.078), // #E40414
+  primaryDark: rgb(0.745, 0.008, 0.063), // #BE0210
   dark: rgb(0.06, 0.06, 0.06),
   gray: rgb(0.42, 0.42, 0.42),
   lightGray: rgb(0.88, 0.88, 0.88),

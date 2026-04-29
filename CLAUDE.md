@@ -190,9 +190,9 @@ cuscomudanzas/
 
 ## Identidad Visual
 
-- Color primario: `#D72638` (carmesí confianza, actualizado 2026-04-24)
-- Color secundario: `#A61D2B` (carmesí oscuro, para hovers)
-- Color acento: `#FF6B7A` (carmesí claro, para badges y acentos sutiles)
+- Color primario: `#E40414` (rojo bandera, actualizado 2026-04-28)
+- Color secundario: `#BE0210` (rojo oscuro, para hovers — pasa AAA sobre blanco)
+- Color acento: `#F54C54` (rojo claro, para badges y acentos sutiles)
 - Color neutro oscuro: `#0F0F0F` (casi negro, combina con logo)
 - Tipografía: Montserrat (titulares) + Noto Sans (cuerpo) — preservar del actual
 - Logo: variantes en `/wp-content/uploads/2024/05/NAN-2.png`

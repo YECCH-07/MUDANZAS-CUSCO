@@ -85,7 +85,7 @@ const {
         <div style="
           width: 36px;
           height: 36px;
-          background: #d72638;
+          background: #e40414;
           border: 3px solid #ffffff;
           border-radius: 50%;
           box-shadow: 0 2px 8px rgba(0,0,0,0.35);
@@ -135,7 +135,7 @@ const {
       .bindPopup(`<strong>Destino</strong><br>${destName}`);
 
     // Polilínea origen-destino (punteada si coming-soon, continua si activa).
-    const lineColor = status === 'coming-soon' ? '#9ca3af' : '#d72638';
+    const lineColor = status === 'coming-soon' ? '#9ca3af' : '#e40414';
     const dashArray = status === 'coming-soon' ? '10, 8' : undefined;
     const polyline = L.polyline(
       [

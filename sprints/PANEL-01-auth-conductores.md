@@ -248,7 +248,7 @@ El cron se registra al arrancar el servidor (`dist/server/entry.mjs`) mediante
      manifest: {
        name: 'Expresos Ñan — Panel',
        short_name: 'Ñan Panel',
-       theme_color: '#D72638',
+       theme_color: '#E40414',
        background_color: '#0F0F0F',
        display: 'standalone',
        start_url: '/panel/',

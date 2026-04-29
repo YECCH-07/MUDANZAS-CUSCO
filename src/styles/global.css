@@ -17,28 +17,28 @@
 
 @theme {
   /* ──────────────────────────────────────────────────────────────────
-   * PALETA CORPORATIVA — "Carmesí confianza"
-   * Escala 50 (más claro) a 900 (más oscuro). Hex generados con criterio
-   * perceptual uniforme: cada paso 1.4× más oscuro/claro que el anterior.
-   * Contraste primary-600 AA (4.91:1), primary-700 AAA (7.0:1+).
+   * PALETA CORPORATIVA — "Rojo bandera"
+   * Escala 50 (más claro) a 950 (más oscuro). Base #E40414 en el 600.
+   * Hex generados con criterio perceptual uniforme.
+   * Contraste primary-600 AA (5.4:1 sobre blanco), primary-700 AAA (7.5:1+).
    * ──────────────────────────────────────────────────────────────────
    */
-  --color-primary-50: #fff1f3;
-  --color-primary-100: #ffe1e5;
-  --color-primary-200: #ffc7cf;
-  --color-primary-300: #ff9ba9;
-  --color-primary-400: #ff6478;
-  --color-primary-500: #ed3a52;
-  --color-primary-600: #d72638; /* alias del primary actual */
-  --color-primary-700: #b31a2c;
-  --color-primary-800: #931727;
-  --color-primary-900: #7a1726;
-  --color-primary-950: #43090f;
+  --color-primary-50: #fff0f1;
+  --color-primary-100: #ffe0e1;
+  --color-primary-200: #ffb8bc;
+  --color-primary-300: #fc8589;
+  --color-primary-400: #f54c54;
+  --color-primary-500: #ed1f2c;
+  --color-primary-600: #e40414; /* color base */
+  --color-primary-700: #be0210;
+  --color-primary-800: #8c050f;
+  --color-primary-900: #680a14;
+  --color-primary-950: #390309;
 
   /* Aliases legacy (retro-compat con clases ya escritas: bg-primary, etc.) */
-  --color-primary: #d72638;
-  --color-primary-dark: #a61d2b;
-  --color-primary-light: #ff6b7a;
+  --color-primary: #e40414;
+  --color-primary-dark: #be0210;
+  --color-primary-light: #f54c54;
 
   /* ÉXITO (verde) — para ingresos, estados completados */
   --color-success-50: #ecfdf5;
@@ -86,9 +86,9 @@
   --radius-pill: 999px;
 
   /* Shadows con tono corporativo (sutil tinte rojo en lugar de negro puro) */
-  --shadow-brand-sm: 0 1px 2px 0 rgb(215 38 56 / 0.05);
-  --shadow-brand: 0 4px 6px -1px rgb(215 38 56 / 0.08), 0 2px 4px -2px rgb(215 38 56 / 0.05);
-  --shadow-brand-lg: 0 10px 15px -3px rgb(215 38 56 / 0.1), 0 4px 6px -4px rgb(215 38 56 / 0.05);
+  --shadow-brand-sm: 0 1px 2px 0 rgb(228 4 20 / 0.05);
+  --shadow-brand: 0 4px 6px -1px rgb(228 4 20 / 0.08), 0 2px 4px -2px rgb(228 4 20 / 0.05);
+  --shadow-brand-lg: 0 10px 15px -3px rgb(228 4 20 / 0.1), 0 4px 6px -4px rgb(228 4 20 / 0.05);
 }
 
 /* ──────────────────────────────────────────────────────────────────
@@ -97,13 +97,13 @@
  * ──────────────────────────────────────────────────────────────────
  */
 .bg-brand-gradient {
-  background-image: linear-gradient(135deg, #d72638 0%, #a61d2b 50%, #931727 100%);
+  background-image: linear-gradient(135deg, #e40414 0%, #be0210 50%, #8c050f 100%);
 }
 .bg-brand-gradient-soft {
-  background-image: linear-gradient(135deg, #fff1f3 0%, #ffe1e5 100%);
+  background-image: linear-gradient(135deg, #fff0f1 0%, #ffe0e1 100%);
 }
 .bg-brand-gradient-radial {
-  background-image: radial-gradient(circle at top right, #ff6478 0%, #d72638 50%, #931727 100%);
+  background-image: radial-gradient(circle at top right, #f54c54 0%, #e40414 50%, #8c050f 100%);
 }
 .bg-success-gradient {
   background-image: linear-gradient(135deg, #10b981 0%, #047857 100%);
@@ -120,7 +120,7 @@
 
 /* Texto con fill gradiente — para titulares de impacto. */
 .text-brand-gradient {
-  background-image: linear-gradient(135deg, #d72638, #931727);
+  background-image: linear-gradient(135deg, #e40414, #8c050f);
   background-clip: text;
   -webkit-background-clip: text;
   color: transparent;
