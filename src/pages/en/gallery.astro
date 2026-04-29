@@ -1,0 +1,168 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+
+const gallery = [
+  {
+    src: '/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg',
+    alt: 'Apartment move in Cusco — load ready',
+    caption: 'Apartment move · Wanchaq',
+    tag: 'Apartments',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/ARMADO-Y-DESARMADO-DE-MUEBLES-CUSCO-MUDANZAS.jpg',
+    alt: 'Furniture assembly and disassembly in Cusco',
+    caption: 'Furniture assembly at destination',
+    tag: 'Assembly',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg',
+    alt: 'Professional packing service in Cusco',
+    caption: 'Professional packing of fragile items',
+    tag: 'Packing',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/SERVICIO-DE-DESARMADO-Y-ARMADO-DE-MUEBLES-CUSCO.jpg',
+    alt: 'Professional crew disassembling furniture in Cusco',
+    caption: 'Furniture disassembly before loading',
+    tag: 'Assembly',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg',
+    alt: '2-ton Expreso Ñan truck',
+    caption: '2-ton unit — room or studio',
+    tag: 'Fleet',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg',
+    alt: '4-ton unit for apartments in Cusco',
+    caption: '4-ton unit — inter-provincial Las Bambas',
+    tag: 'Fleet',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/EMBALAJE-CUSCO.png',
+    alt: 'Professional packing materials',
+    caption: 'Packing supplies in stock',
+    tag: 'Packing',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png',
+    alt: 'Custom moving service in Cusco',
+    caption: 'Custom move',
+    tag: 'Moving',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/SERVICIO-DE-MUDANZA-CUSCO.png',
+    alt: 'Moving service in Cusco',
+    caption: 'Full-service moving',
+    tag: 'Moving',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png',
+    alt: 'Moving in Cusco — Expresos Ñan',
+    caption: 'Metropolitan Cusco moves',
+    tag: 'Moving',
+  },
+];
+
+const stats = [
+  { label: 'Moves completed', value: '+2,500' },
+  { label: 'Years in business', value: '+10' },
+  { label: 'Active routes', value: '9' },
+  { label: 'Localities covered', value: '37' },
+];
+---
+
+<BaseLayout
+  title="Gallery of work | Moving in Cusco — Expresos Ñan"
+  description="Gallery of moves, packing, furniture assembly and freight jobs carried out by Expresos Ñan in Cusco and inter-provincial routes. Real team, real units, real operations."
+  ogImage="/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg"
+>
+  <Hero
+    eyebrow="Gallery"
+    title="Work done by Expreso Ñan"
+    subtitle="A selection of moves, packing jobs and real operations across Cusco and inter-provincial routes. Customer after customer, same philosophy: flat pricing, own crew, no surprises."
+    image="/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg"
+    imageAlt="Apartment move in Cusco with Expreso Ñan"
+    whatsappMessage="Hi, I saw the gallery and would like a quote for my move."
+    secondaryCta={{ label: 'See services', href: '/en/services/' }}
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs items={[{ label: 'Home', href: '/en/' }, { label: 'Gallery' }]} />
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <p class="text-base leading-relaxed text-gray-700 md:text-lg">
+        Every move is different. A 2-bedroom apartment in Wanchaq isn't the same as a relocation to
+        Challhuahuacho with overnight stops, or a careful packing job for inherited china. This
+        gallery shows <strong>real work</strong> with our team, our units (1, 2 and 4 tons) and our day-to-day
+        operations.
+      </p>
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="md">
+    <Container>
+      <div class="grid grid-cols-2 gap-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4">
+        {
+          gallery.map((img) => (
+            <figure class="group overflow-hidden rounded-2xl bg-white shadow-sm">
+              <div class="aspect-square overflow-hidden bg-gray-100">
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  loading="lazy"
+                  decoding="async"
+                  width="480"
+                  height="480"
+                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+              <figcaption class="p-4">
+                <span class="bg-primary/10 text-primary inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase">
+                  {img.tag}
+                </span>
+                <p class="mt-2 text-sm text-gray-700">{img.caption}</p>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container>
+      <SectionHeader
+        eyebrow="By the numbers"
+        title="A decade moving families and businesses in Cusco"
+        subtitle="Cumulative figures since the team started operating under the Expresos Ñan brand."
+      />
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+        {
+          stats.map((s) => (
+            <div class="rounded-2xl border border-gray-200 bg-gray-50 p-6 text-center">
+              <p class="text-primary text-3xl font-bold md:text-4xl">{s.value}</p>
+              <p class="mt-2 text-xs font-bold tracking-wider text-gray-600 uppercase">{s.label}</p>
+            </div>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  <CTASection
+    title="Ready to add your move to the gallery?"
+    subtitle="Closed-price quote via WhatsApp — no surprises, no hidden fees."
+    whatsappMessage="Hi, I saw the gallery and would like a quote for my move in Cusco."
+  />
+</BaseLayout>

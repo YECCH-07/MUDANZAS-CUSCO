@@ -9,6 +9,7 @@
  */
 import { SITE } from '@lib/site';
 import { getLangFromUrl } from '@/i18n/config';
+import { getWhatsAppUrl } from '@lib/whatsapp';
 
 interface Props {
   kind?: 'general' | 'business';
@@ -32,6 +33,17 @@ const labels =
         destination: 'Destino',
         date: 'Fecha tentativa',
         message: '¿Qué necesitas mover? Describe brevemente.',
+        photos: 'Fotos de lo que vas a mover (opcional)',
+        photosHelp:
+          'Adjunta fotos de muebles, del ambiente o del acceso. Máx. 5 imágenes, 5 MB cada una.',
+        photosSelected: 'archivos seleccionados',
+        photosTooLarge: 'Cada foto debe pesar menos de 5 MB.',
+        photosTooMany: 'Máximo 5 fotos por envío.',
+        choose: 'Elegir fotos',
+        photosAltLabel: '¿Prefieres mandarlas por WhatsApp?',
+        photosWaBtn: 'Enviar fotos por WhatsApp',
+        photosWaMsg:
+          'Hola, les envío fotos de lo que necesito mover en Cusco para que puedan cotizarme.',
         submit: 'Enviar solicitud',
         required: '(requerido)',
         privacy:
@@ -48,6 +60,15 @@ const labels =
         destination: 'Destination',
         date: 'Tentative date',
         message: 'What do you need to move? Briefly describe.',
+        photos: 'Photos of what you need to move (optional)',
+        photosHelp: 'Attach photos of furniture, the room or the access. Max. 5 images, 5 MB each.',
+        photosSelected: 'files selected',
+        photosTooLarge: 'Each photo must be under 5 MB.',
+        photosTooMany: 'Max. 5 photos per submission.',
+        choose: 'Choose photos',
+        photosAltLabel: 'Rather send them via WhatsApp?',
+        photosWaBtn: 'Send photos via WhatsApp',
+        photosWaMsg: 'Hi, I am sending photos of what I need to move in Cusco so you can quote it.',
         submit: 'Send request',
         required: '(required)',
         privacy:
@@ -62,8 +83,10 @@ const redirectUrl = new URL(successPath, SITE.url).toString();
 <form
   action="https://api.web3forms.com/submit"
   method="POST"
+  enctype="multipart/form-data"
   class:list={['space-y-4', className]}
   novalidate={false}
+  data-contact-form
 >
   <input type="hidden" name="access_key" value={accessKey} />
   <input type="hidden" name="subject" value={subject ?? `Nuevo contacto — ${SITE.name}`} />
@@ -180,6 +203,66 @@ const redirectUrl = new URL(successPath, SITE.url).toString();
     ></textarea>
   </label>
 
+  <div>
+    <span class="mb-1 block text-sm font-bold">{labels.photos}</span>
+    <label
+      class="hover:border-primary hover:bg-primary/5 focus-within:border-primary focus-within:ring-primary/20 flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-4 py-6 text-center transition-colors focus-within:ring-2"
+    >
+      <svg
+        class="text-primary h-8 w-8"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+        <circle cx="8.5" cy="10.5" r="1.5"></circle>
+        <path d="M21 15l-5-5L5 21"></path>
+      </svg>
+      <span class="text-sm font-bold">{labels.choose}</span>
+      {
+        /*
+        Web3Forms: el campo debe llamarse `attachment` (singular). Para múltiples
+        fotos se usa `multiple` en el input + el Advanced Uploader (data-advanced).
+        Nota: el reenvío por email de adjuntos requiere plan Pro de Web3Forms.
+        Si no hay Pro, el form seguirá funcionando pero las imágenes no se enviarán
+        por email; por eso ofrecemos el fallback de WhatsApp abajo.
+      */
+      }
+      <input
+        type="file"
+        name="attachment"
+        accept="image/*"
+        multiple
+        data-advanced="true"
+        class="sr-only"
+        data-photos-input
+      />
+      <span class="text-xs text-gray-600" data-photos-status>{labels.photosHelp}</span>
+    </label>
+    <p class="hidden text-xs text-red-600" data-photos-error></p>
+
+    <div class="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <p class="text-xs text-gray-600">{labels.photosAltLabel}</p>
+      <a
+        href={getWhatsAppUrl({ lang, message: labels.photosWaMsg })}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-[#1ebe57]"
+      >
+        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path
+            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.272-.099-.47-.148-.669.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.611-.916-2.206-.242-.579-.487-.5-.669-.51l-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"
+          ></path>
+        </svg>
+        {labels.photosWaBtn}
+      </a>
+    </div>
+  </div>
+
   {
     accessKey === '' && (
       <p class="rounded-lg bg-yellow-50 px-4 py-3 text-sm text-yellow-800">{labels.missingKey}</p>
@@ -196,3 +279,64 @@ const redirectUrl = new URL(successPath, SITE.url).toString();
 
   <p class="text-xs text-gray-600">{labels.privacy}</p>
 </form>
+
+<script
+  is:inline
+  define:vars={{
+    msgSelected: labels.photosSelected,
+    msgHelp: labels.photosHelp,
+    msgTooLarge: labels.photosTooLarge,
+    msgTooMany: labels.photosTooMany,
+  }}
+>
+  // Validación ligera del input de fotos: cuenta, tamaño y feedback visual.
+  // Web3Forms limita ~5 MB por archivo y total razonable por envío.
+  const MAX_FILES = 5;
+  const MAX_SIZE = 5 * 1024 * 1024;
+
+  document.querySelectorAll('[data-contact-form]').forEach((form) => {
+    const input = form.querySelector('[data-photos-input]');
+    const status = form.querySelector('[data-photos-status]');
+    const error = form.querySelector('[data-photos-error]');
+    if (!input || !status || !error) return;
+
+    input.addEventListener('change', () => {
+      error.classList.add('hidden');
+      error.textContent = '';
+      const files = Array.from(input.files || []);
+
+      if (files.length === 0) {
+        status.textContent = msgHelp;
+        return;
+      }
+
+      if (files.length > MAX_FILES) {
+        error.textContent = msgTooMany;
+        error.classList.remove('hidden');
+        input.value = '';
+        status.textContent = msgHelp;
+        return;
+      }
+
+      const tooLarge = files.find((f) => f.size > MAX_SIZE);
+      if (tooLarge) {
+        error.textContent = `${msgTooLarge} (${tooLarge.name})`;
+        error.classList.remove('hidden');
+        input.value = '';
+        status.textContent = msgHelp;
+        return;
+      }
+
+      status.textContent = `${files.length} ${msgSelected}`;
+    });
+  });
+</script>
+
+{
+  /*
+  Advanced Uploader de Web3Forms — solo se ejecuta si hay Pro plan activo.
+  Sin Pro plan el script no hace daño; los campos simplemente no se reenvían.
+  async + defer para no bloquear el render.
+*/
+}
+<script src="https://web3forms.com/client/script.js" async defer is:inline></script>

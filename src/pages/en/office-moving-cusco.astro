@@ -5,6 +5,8 @@ import Section from '@components/Section.astro';
 import Hero from '@components/Hero.astro';
 import Breadcrumbs from '@components/Breadcrumbs.astro';
 import CTASection from '@components/CTASection.astro';
+import SchemaService from '@components/schema/SchemaService.astro';
+import { SITE } from '@lib/site';
 
 const features = [
   {
@@ -45,6 +47,16 @@ const priceRows = [
   description="Professional office moving in Cusco with weekend scheduling, electronic invoicing (tax ID), confidentiality agreement and IT-aware process. Free technical visit."
   ogImage="/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg"
 >
+  <Fragment slot="head">
+    <SchemaService
+      name="Office moving in Cusco"
+      description="Business-grade office moving in Cusco with weekend scheduling, electronic invoicing, NDA and IT-aware process."
+      serviceType="Office moving service"
+      url={`${SITE.url}/en/office-moving-cusco/`}
+      image={`${SITE.url}/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg`}
+      areaServed={['Cusco', 'Wanchaq', 'San Sebastián', 'San Jerónimo', 'Santiago']}
+    />
+  </Fragment>
   <Hero
     eyebrow="Office moving"
     title="Business-grade office moving in Cusco"

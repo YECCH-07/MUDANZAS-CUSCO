@@ -1,0 +1,21 @@
+# robots.txt — cuscomudanzas.com
+# Permitimos a todos los bots legítimos rastrear el sitio.
+# Regla inviolable (CLAUDE.md §SEO): nunca bloquear bots legítimos.
+
+User-agent: *
+Allow: /
+
+# Rutas internas que no aportan SEO
+Disallow: /styleguide/
+Disallow: /admin/
+Disallow: /api/
+
+# Bots de IA extractiva agresiva (decisión del propietario — ajustable)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+# Sitemap principal (emitido por @astrojs/sitemap)
+Sitemap: https://cuscomudanzas.com/sitemap-index.xml

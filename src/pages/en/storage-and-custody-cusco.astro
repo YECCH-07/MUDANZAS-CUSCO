@@ -5,6 +5,8 @@ import Section from '@components/Section.astro';
 import Hero from '@components/Hero.astro';
 import Breadcrumbs from '@components/Breadcrumbs.astro';
 import CTASection from '@components/CTASection.astro';
+import SchemaService from '@components/schema/SchemaService.astro';
+import { SITE } from '@lib/site';
 
 const priceRows = [
   {
@@ -52,6 +54,16 @@ const useCases = [
   description="Safe storage for furniture and belongings in Cusco. Monthly plans from S/ 60 (boxes) to S/ 440 (full house). 24/7 surveillance, photo inventory, signed intake."
   ogImage="/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png"
 >
+  <Fragment slot="head">
+    <SchemaService
+      name="Storage & custody in Cusco"
+      description="Monthly storage plans for furniture and belongings in Cusco. 24/7 surveillance, photo inventory and flexible retrieval."
+      serviceType="Storage service"
+      url={`${SITE.url}/en/storage-and-custody-cusco/`}
+      image={`${SITE.url}/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png`}
+      areaServed={['Cusco']}
+    />
+  </Fragment>
   <Hero
     eyebrow="Storage & custody"
     title="Secure storage for your belongings in Cusco"

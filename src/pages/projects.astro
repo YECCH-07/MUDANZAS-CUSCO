@@ -1,0 +1,168 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+import SectionHeader from '@components/SectionHeader.astro';
+
+const gallery = [
+  {
+    src: '/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg',
+    alt: 'Mudanza de departamento en Cusco — carga lista',
+    caption: 'Mudanza de departamento · Wanchaq',
+    tag: 'Departamentos',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/ARMADO-Y-DESARMADO-DE-MUEBLES-CUSCO-MUDANZAS.jpg',
+    alt: 'Armado y desarmado de muebles en Cusco',
+    caption: 'Armado de muebles en destino',
+    tag: 'Armado/desarmado',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/SERVICIO-DE-EMBALAJE-Y-MUDANZAS-CUSCO.jpg',
+    alt: 'Servicio de embalaje profesional en Cusco',
+    caption: 'Embalaje profesional de frágiles',
+    tag: 'Embalaje',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/SERVICIO-DE-DESARMADO-Y-ARMADO-DE-MUEBLES-CUSCO.jpg',
+    alt: 'Equipo profesional desarmando muebles en Cusco',
+    caption: 'Desarmado previo a la carga',
+    tag: 'Armado/desarmado',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/CAMION-DE-DOS-TONELADAS-MUDANZAS-CUSCO.jpg',
+    alt: 'Camión de 2 toneladas Expreso Ñan',
+    caption: 'Unidad 2 t — habitación o mini-depa',
+    tag: 'Flota',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg',
+    alt: 'Unidad de 4 toneladas para departamentos en Cusco',
+    caption: 'Unidad 4 t — inter-provincial Las Bambas',
+    tag: 'Flota',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/EMBALAJE-CUSCO.png',
+    alt: 'Materiales de embalaje profesional',
+    caption: 'Materiales de embalaje en stock',
+    tag: 'Embalaje',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/MUDANZA-PERSONALIZADA-CUSCO.png',
+    alt: 'Mudanza personalizada en Cusco',
+    caption: 'Mudanza personalizada',
+    tag: 'Mudanzas',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/SERVICIO-DE-MUDANZA-CUSCO.png',
+    alt: 'Servicio de mudanza en Cusco',
+    caption: 'Servicio integral de mudanza',
+    tag: 'Mudanzas',
+  },
+  {
+    src: '/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png',
+    alt: 'Mudanzas Cusco Expreso Ñan',
+    caption: 'Mudanzas en Cusco metropolitano',
+    tag: 'Mudanzas',
+  },
+];
+
+const stats = [
+  { label: 'Mudanzas realizadas', value: '+2,500' },
+  { label: 'Años operando', value: '+10' },
+  { label: 'Rutas activas', value: '9' },
+  { label: 'Localidades cubiertas', value: '37' },
+];
+---
+
+<BaseLayout
+  title="Galería de trabajos | Mudanzas Cusco — Expresos Ñan"
+  description="Galería de mudanzas, embalajes, armado de muebles y flete realizados por Expresos Ñan en Cusco y rutas inter-provinciales. Equipo, unidades y operativa real."
+  ogImage="/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg"
+>
+  <Hero
+    eyebrow="Galería"
+    title="Trabajos realizados por Expreso Ñan"
+    subtitle="Una selección de mudanzas, embalajes y operativa real en Cusco y rutas inter-provinciales. Cliente tras cliente, la misma filosofía: precio cerrado, equipo propio, sin sorpresas."
+    image="/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg"
+    imageAlt="Mudanza de departamento en Cusco con Expreso Ñan"
+    whatsappMessage="Hola, vi la galería de trabajos y quisiera cotizar mi mudanza."
+    secondaryCta={{ label: 'Ver servicios', href: '/servicio-de-caraga-flete-y-mudanza-cusco/' }}
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: 'Galería' }]} />
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container size="narrow">
+      <p class="text-base leading-relaxed text-gray-700 md:text-lg">
+        Cada mudanza es distinta. Un departamento de dos habitaciones en Wanchaq no es lo mismo que
+        un traslado a Challhuahuacho con pernocte en ruta, ni que un embalaje delicado de vajilla
+        heredada. Esta galería muestra <strong>trabajos reales</strong> con nuestro equipo, nuestras unidades
+        (1, 2 y 4 toneladas) y nuestra operativa cotidiana.
+      </p>
+    </Container>
+  </Section>
+
+  <Section background="gray" spacing="md">
+    <Container>
+      <div class="grid grid-cols-2 gap-4 gap-y-8 md:grid-cols-3 lg:grid-cols-4">
+        {
+          gallery.map((img) => (
+            <figure class="group overflow-hidden rounded-2xl bg-white shadow-sm">
+              <div class="aspect-square overflow-hidden bg-gray-100">
+                <img
+                  src={img.src}
+                  alt={img.alt}
+                  loading="lazy"
+                  decoding="async"
+                  width="480"
+                  height="480"
+                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+              </div>
+              <figcaption class="p-4">
+                <span class="bg-primary/10 text-primary inline-block rounded-full px-2.5 py-0.5 text-[10px] font-bold tracking-wider uppercase">
+                  {img.tag}
+                </span>
+                <p class="mt-2 text-sm text-gray-700">{img.caption}</p>
+              </figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  <Section background="white" spacing="md">
+    <Container>
+      <SectionHeader
+        eyebrow="Números"
+        title="Una década moviendo familias y empresas en Cusco"
+        subtitle="Cifras acumuladas desde que el equipo comenzó a operar bajo la marca Expresos Ñan."
+      />
+      <div class="grid grid-cols-2 gap-4 md:grid-cols-4">
+        {
+          stats.map((s) => (
+            <div class="rounded-2xl border border-gray-200 bg-gray-50 p-6 text-center">
+              <p class="text-primary text-3xl font-bold md:text-4xl">{s.value}</p>
+              <p class="mt-2 text-xs font-bold tracking-wider text-gray-600 uppercase">{s.label}</p>
+            </div>
+          ))
+        }
+      </div>
+    </Container>
+  </Section>
+
+  <CTASection
+    title="¿Listo para sumar tu mudanza a la galería?"
+    subtitle="Cotización cerrada por WhatsApp — sin sorpresas, sin cargos ocultos."
+    whatsappMessage="Hola, vi la galería y quisiera cotizar mi mudanza en Cusco."
+  />
+</BaseLayout>

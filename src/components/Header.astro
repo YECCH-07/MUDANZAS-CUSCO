@@ -9,35 +9,51 @@ const lang = getLangFromUrl(Astro.url);
 const items = NAV[lang];
 ---
 
-<header
-  class="sticky top-0 z-30 w-full border-b border-gray-100 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80"
->
+{
+  /*
+  Header sticky con identidad corporativa carmesí.
+  - Fondo gradient rojo + sombra branded.
+  - Logo sobre tarjeta blanca redondeada para máximo contraste.
+  - Nav items en blanco con hover translúcido + underline animado.
+  - Mobile menu con fondo blanco para legibilidad.
+*/
+}
+<header class="bg-brand-gradient shadow-brand-lg site-header sticky top-0 z-30 w-full">
   <Container as="nav" size="wide" class="flex items-center justify-between gap-4 py-3">
     <a
       href={lang === 'es' ? '/' : '/en/'}
-      class="focus-visible:outline-primary flex shrink-0 items-center focus-visible:outline-2 focus-visible:outline-offset-2"
+      class="group/logo inline-flex shrink-0 items-center gap-3 rounded-xl bg-white px-3 py-1.5 shadow-md transition-all hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
       aria-label={SITE.name}
     >
       <img
-        src={SITE.logo.primary}
-        alt={`${SITE.name} — Mudanzas Cusco`}
-        width="180"
-        height="48"
-        class="h-10 w-auto md:h-12"
+        src={SITE.logo.icon}
+        alt=""
+        width="40"
+        height="40"
+        class="h-9 w-9 shrink-0 object-contain transition-transform group-hover/logo:scale-110"
+        aria-hidden="true"
       />
+      <span class="hidden sm:flex sm:flex-col sm:items-start sm:leading-none">
+        <span class="text-primary-700 font-heading text-base font-bold tracking-tight"
+          >Expresos Ñan</span
+        >
+        <span class="text-primary-600 mt-0.5 text-[9px] font-bold tracking-widest uppercase"
+          >Mudanzas Cusco</span
+        >
+      </span>
     </a>
 
     {/* Nav desktop (lg+) */}
-    <ul class="hidden items-center gap-1 lg:flex">
+    <ul class="hidden items-center gap-0.5 lg:flex">
       {
         items.map((item) => (
           <li class="relative">
             {'children' in item && item.children ? (
-              <details class="group">
-                <summary class="text-dark hover:text-primary focus-visible:outline-primary flex cursor-pointer list-none items-center gap-1 rounded-md px-3 py-2 text-sm font-bold transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 [&::-webkit-details-marker]:hidden">
+              <details class="group/nav">
+                <summary class="nav-link group/sum flex cursor-pointer list-none items-center gap-1 rounded-lg px-3 py-2 text-sm font-bold text-white/95 transition-all hover:bg-white/15 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white [&::-webkit-details-marker]:hidden">
                   {item.label}
                   <svg
-                    class="h-4 w-4 transition-transform group-open:rotate-180"
+                    class="h-4 w-4 transition-transform group-open/nav:rotate-180"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     aria-hidden="true"
@@ -49,11 +65,11 @@ const items = NAV[lang];
                     />
                   </svg>
                 </summary>
-                <ul class="absolute top-full left-0 z-20 mt-1 w-64 rounded-lg border border-gray-100 bg-white py-2 shadow-lg">
+                <ul class="absolute top-full left-0 z-20 mt-2 w-72 overflow-hidden rounded-xl border border-gray-100 bg-white py-2 shadow-2xl ring-1 ring-black/5">
                   <li>
                     <a
                       href={item.href}
-                      class="text-primary block px-4 py-2 text-sm font-bold hover:bg-gray-50"
+                      class="text-primary-700 hover:bg-primary-50 block px-4 py-2 text-sm font-bold transition-colors"
                     >
                       {`→ ${item.label}`}
                     </a>
@@ -62,7 +78,7 @@ const items = NAV[lang];
                     <li>
                       <a
                         href={child.href}
-                        class="text-dark hover:text-primary block px-4 py-2 text-sm hover:bg-gray-50"
+                        class="text-dark hover:bg-primary-50 hover:text-primary-700 hover:border-primary-500 block border-l-2 border-transparent px-4 py-2 text-sm transition-all hover:pl-5"
                       >
                         {child.label}
                       </a>
@@ -73,7 +89,7 @@ const items = NAV[lang];
             ) : (
               <a
                 href={item.href}
-                class="text-dark hover:text-primary focus-visible:outline-primary block rounded-md px-3 py-2 text-sm font-bold transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2"
+                class="nav-link relative block rounded-lg px-3 py-2 text-sm font-bold text-white/95 transition-all hover:bg-white/15 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
               >
                 {item.label}
               </a>
@@ -92,7 +108,7 @@ const items = NAV[lang];
       {/* Menú hamburguesa (móvil y tablet) */}
       <details class="group relative lg:hidden">
         <summary
-          class="text-dark focus-visible:outline-primary flex cursor-pointer list-none items-center justify-center rounded-md p-2 transition-colors hover:bg-gray-50 focus-visible:outline-2 focus-visible:outline-offset-2 [&::-webkit-details-marker]:hidden"
+          class="flex cursor-pointer list-none items-center justify-center rounded-lg p-2 text-white transition-all hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white [&::-webkit-details-marker]:hidden"
           aria-label="Abrir menú"
         >
           <svg
@@ -100,7 +116,7 @@ const items = NAV[lang];
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             aria-hidden="true"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
@@ -110,15 +126,15 @@ const items = NAV[lang];
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2"
+            stroke-width="2.5"
             aria-hidden="true"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </summary>
         <div
-          class="fixed inset-x-0 top-[var(--header-h,64px)] z-20 max-h-[calc(100vh-var(--header-h,64px))] overflow-y-auto bg-white shadow-xl"
-          style="--header-h: 64px;"
+          class="fixed inset-x-0 top-[var(--header-h,72px)] z-20 max-h-[calc(100vh-var(--header-h,72px))] overflow-y-auto bg-white shadow-2xl"
+          style="--header-h: 72px;"
         >
           <ul class="px-4 py-4">
             {
@@ -126,7 +142,7 @@ const items = NAV[lang];
                 <li class="border-b border-gray-100 last:border-0">
                   {'children' in item && item.children ? (
                     <details class="group/sub">
-                      <summary class="text-dark flex cursor-pointer list-none items-center justify-between py-3 text-base font-bold [&::-webkit-details-marker]:hidden">
+                      <summary class="text-dark hover:text-primary-700 flex cursor-pointer list-none items-center justify-between py-3 text-base font-bold transition-colors [&::-webkit-details-marker]:hidden">
                         {item.label}
                         <svg
                           class="h-5 w-5 transition-transform group-open/sub:rotate-180"
@@ -143,7 +159,10 @@ const items = NAV[lang];
                       </summary>
                       <ul class="pb-2 pl-4">
                         <li>
-                          <a href={item.href} class="text-primary block py-2 text-sm font-bold">
+                          <a
+                            href={item.href}
+                            class="text-primary-700 block py-2 text-sm font-bold transition-colors hover:underline"
+                          >
                             {`→ ${item.label}`}
                           </a>
                         </li>
@@ -151,7 +170,7 @@ const items = NAV[lang];
                           <li>
                             <a
                               href={child.href}
-                              class="text-dark hover:text-primary block py-2 text-sm"
+                              class="text-dark hover:text-primary-700 hover:border-primary-500 block border-l-2 border-transparent py-2 pl-3 text-sm transition-all hover:pl-4"
                             >
                               {child.label}
                             </a>
@@ -162,7 +181,7 @@ const items = NAV[lang];
                   ) : (
                     <a
                       href={item.href}
-                      class="text-dark hover:text-primary block py-3 text-base font-bold"
+                      class="text-dark hover:text-primary-700 block py-3 text-base font-bold transition-colors"
                     >
                       {item.label}
                     </a>
@@ -179,3 +198,31 @@ const items = NAV[lang];
     </div>
   </Container>
 </header>
+
+<style>
+  /* Underline animado de izquierda a derecha en hover sobre nav-link.
+     Solo aplica a links de primer nivel (no a los del dropdown). */
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.35rem;
+    height: 2px;
+    background: rgb(255 255 255);
+    border-radius: 999px;
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.25s ease;
+  }
+  .nav-link:hover::after {
+    transform: scaleX(1);
+  }
+
+  /* Sombra sutil al hacer scroll para reforzar separación */
+  @media (prefers-reduced-motion: no-preference) {
+    .site-header {
+      transition: padding 0.2s ease;
+    }
+  }
+</style>

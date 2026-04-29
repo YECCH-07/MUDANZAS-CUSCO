@@ -5,6 +5,9 @@ import Section from '@components/Section.astro';
 import Hero from '@components/Hero.astro';
 import Breadcrumbs from '@components/Breadcrumbs.astro';
 import CTASection from '@components/CTASection.astro';
+import SchemaService from '@components/schema/SchemaService.astro';
+import SchemaFAQ from '@components/schema/SchemaFAQ.astro';
+import { SITE } from '@lib/site';
 
 const priceRows = [
   { label: 'Taxi cargo / mini move', price: 'S/ 150 – 300', notes: '1 t unit, 2-4 hours' },
@@ -52,6 +55,25 @@ const faqs = [
   description="Professional local moving service in Cusco metropolitan area. Homes, apartments and small offices. Packing, transport and furniture assembly included. WhatsApp 925 671 052."
   ogImage="/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg"
 >
+  <Fragment slot="head">
+    <SchemaService
+      name="Local Moving in Cusco"
+      description="Professional local moving service in Cusco metropolitan area. Homes, apartments and small offices."
+      serviceType="Local moving service"
+      url={`${SITE.url}/en/local-moving-cusco/`}
+      image={`${SITE.url}/wp-content/uploads/2024/05/MUDANZAS-DE-DEPARTAMENTO-OFICINAS-HABITACIONES-CUSCO.jpg`}
+      areaServed={[
+        'Cusco',
+        'Wanchaq',
+        'San Sebastián',
+        'San Jerónimo',
+        'Santiago',
+        'Saylla',
+        'Poroy',
+      ]}
+    />
+    <SchemaFAQ faqs={faqs} />
+  </Fragment>
   <Hero
     eyebrow="Local moving"
     title="Local moving in Cusco — full-service"

@@ -35,7 +35,7 @@ const badgeClass = badge ? badgeTones[badge.tone ?? 'primary'] : '';
 ---
 
 <article
-  class="group hover:border-primary/30 hover:shadow-primary/10 relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 hover:shadow-lg motion-safe:hover:-translate-y-1 motion-reduce:transition-none"
+  class="group hover:border-primary-300 hover:shadow-primary-600/15 before:from-primary-500 before:to-primary-700 relative flex h-full flex-col overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm transition-all duration-300 before:absolute before:inset-x-0 before:top-0 before:h-1 before:origin-left before:scale-x-0 before:bg-gradient-to-r before:transition-transform before:duration-500 hover:shadow-2xl hover:before:scale-x-100 motion-safe:hover:-translate-y-1.5 motion-reduce:transition-none"
 >
   {
     badge && (
@@ -78,17 +78,22 @@ const badgeClass = badge ? badgeTones[badge.tone ?? 'primary'] : '';
       )
     }
     <h3 class="font-heading text-xl font-bold">
-      <a href={href} class="hover:text-primary">
+      <a href={href} class="hover:text-primary-700 transition-colors">
         {title}
       </a>
     </h3>
     <p class="flex-1 text-sm text-gray-700">{description}</p>
     <a
       href={href}
-      class="text-primary hover:text-primary-dark mt-2 inline-flex items-center gap-1 text-sm font-bold"
+      class="text-primary-700 hover:text-primary-800 group/cta mt-2 inline-flex items-center gap-1 text-sm font-bold"
     >
       {cta}
-      <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+      <svg
+        class="h-4 w-4 transition-transform group-hover/cta:translate-x-1"
+        viewBox="0 0 20 20"
+        fill="currentColor"
+        aria-hidden="true"
+      >
         <path
           fill-rule="evenodd"
           d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z"

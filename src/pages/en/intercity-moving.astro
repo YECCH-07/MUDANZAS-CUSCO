@@ -5,6 +5,8 @@ import Section from '@components/Section.astro';
 import Hero from '@components/Hero.astro';
 import Breadcrumbs from '@components/Breadcrumbs.astro';
 import CTASection from '@components/CTASection.astro';
+import SchemaService from '@components/schema/SchemaService.astro';
+import { SITE } from '@lib/site';
 
 const activeRoutes = [
   {
@@ -85,6 +87,26 @@ const comingSoon = [
   description="Moving service from Cusco to Apurímac, Canchis and Chumbivilcas. 9 active routes including Sicuani, Abancay and the Las Bambas mining corridor. Fixed pricing, own fleet."
   ogImage="/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg"
 >
+  <Fragment slot="head">
+    <SchemaService
+      name="Inter-provincial moving from Cusco"
+      description="Inter-provincial moving routes from Cusco to Apurímac, Canchis and Chumbivilcas — 9 active routes including Sicuani, Abancay and the Las Bambas mining corridor."
+      serviceType="Long-distance moving service"
+      url={`${SITE.url}/en/intercity-moving/`}
+      image={`${SITE.url}/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-DE-5-TONELADAS-CUSCO.jpg`}
+      areaServed={[
+        'Sicuani',
+        'Abancay',
+        'Challhuahuacho',
+        'Tambobamba',
+        'Haquira',
+        'Mara',
+        'Coyllurqui',
+        'Colquemarca',
+        'Capacmarca',
+      ]}
+    />
+  </Fragment>
   <Hero
     eyebrow="Inter-provincial moving"
     title="Long routes from Cusco to Apurímac and Chumbivilcas"

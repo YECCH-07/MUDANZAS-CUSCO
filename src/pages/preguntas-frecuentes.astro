@@ -1,0 +1,176 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Container from '@components/Container.astro';
+import Section from '@components/Section.astro';
+import Hero from '@components/Hero.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import CTASection from '@components/CTASection.astro';
+import SchemaFAQ from '@components/schema/SchemaFAQ.astro';
+
+const faqGroups = [
+  {
+    category: 'Precios y cotizaciones',
+    faqs: [
+      {
+        q: '¿Cuánto cuesta una mudanza local en Cusco?',
+        a: 'Rango referencial 2026: desde S/ 150 para una taxi carga o mini mudanza, S/ 250-450 para un cuarto o mono-ambiente, S/ 400-1,000 para un departamento de 1-3 habitaciones, y desde S/ 900 para una casa completa familiar. El precio final depende del volumen real, la distancia y el acceso.',
+      },
+      {
+        q: '¿Cotizan en dólares?',
+        a: 'Todos nuestros precios son en Soles peruanos (S/). Referencia actual: USD 1 ≈ S/ 3.75 (variable). Para clientes empresariales podemos emitir factura en Soles con RUC.',
+      },
+      {
+        q: '¿Cobran por hora o precio cerrado?',
+        a: 'Precio cerrado. Cotizamos el total antes de la mudanza — sin sorpresas por horas aunque el acceso tome más de lo previsto.',
+      },
+      {
+        q: '¿Qué incluye el precio base?',
+        a: 'Chofer, 1 a 2 ayudantes, unidad propia, mantas y correas, cajas de cartón básicas (si hiciera falta), desarmado y armado de muebles estándar, y transporte directo. El embalaje profesional de frágiles se cobra aparte.',
+      },
+    ],
+  },
+  {
+    category: 'Cobertura del servicio',
+    faqs: [
+      {
+        q: '¿Atienden al Valle Sagrado (Pisac, Urubamba, Ollantaytambo)?',
+        a: 'Sí. Cubrimos 22 localidades del Valle Sagrado y provincias vecinas (1-4 horas desde Cusco). La lista completa está en la página de cobertura.',
+      },
+      {
+        q: '¿Trabajan con personal de Las Bambas?',
+        a: 'Sí, atendemos regularmente a trabajadores y contratistas del corredor minero de Las Bambas (Challhuahuacho, Tambobamba, Haquira, Mara, Coyllurqui). Coordinamos pases de seguridad, NDA si se requiere y convenios marco corporativos.',
+      },
+      {
+        q: '¿Hacen Cusco a Lima?',
+        a: 'No. No operamos la ruta Cusco-Lima. Para ese corredor recomendamos contactar operadores especializados en larga distancia.',
+      },
+      {
+        q: '¿Cubren Arequipa, Juliaca o Puno?',
+        a: 'Aún no como rutas activas. Están marcadas como "próximamente" con pre-registro abierto. Deja tus datos y te avisamos cuando la ruta esté disponible.',
+      },
+    ],
+  },
+  {
+    category: 'Logística y proceso',
+    faqs: [
+      {
+        q: '¿Con cuánta anticipación debo reservar?',
+        a: 'Para Cusco metropolitano: 2-4 días ideal. Para rutas inter-provinciales (Sicuani, Abancay, corredor Las Bambas): mínimo 3-5 días para coordinar condiciones de ruta y logística de pernocte en trayectos largos.',
+      },
+      {
+        q: '¿Ustedes empacan o empaco yo?',
+        a: 'A tu elección. El servicio estándar incluye protección básica (mantas, correas, desarmado de muebles estándar). El embalaje profesional (frágiles, objetos de valor) es un servicio adicional que podemos incluir o coordinar por separado.',
+      },
+      {
+        q: '¿Puedo viajar en el camión con mis cosas?',
+        a: 'En rutas inter-provinciales permitimos 1 acompañante en la cabina con el chofer sin costo (con SOAT y cinturón). La mayoría de clientes viaja por separado (bus o auto particular) y se encuentra en destino.',
+      },
+      {
+        q: '¿Qué pasa si el día de la mudanza hay mal tiempo?',
+        a: 'Para rutas inter-provinciales por abra de montaña consultamos Provías (autoridad de carreteras) antes de salir. Si hay alto riesgo de cierre de vía, reprogramamos sin costo.',
+      },
+    ],
+  },
+  {
+    category: 'Pago y facturación',
+    faqs: [
+      {
+        q: '¿Cómo puedo pagar?',
+        a: 'Efectivo, transferencia bancaria, Yape o Plin. Para empresas con requisitos de facturación ofrecemos factura electrónica con RUC y aceptamos transferencia con condiciones de pago.',
+      },
+      {
+        q: '¿Emiten factura?',
+        a: 'Sí, factura electrónica con RUC para empresas o boleta electrónica para personas naturales. Sin recargo por facturar.',
+      },
+      {
+        q: '¿Se paga adelanto antes de la mudanza?',
+        a: 'Para mudanzas locales menores a S/ 500, no hace falta adelanto — el pago es al terminar el servicio. Para mudanzas mayores o inter-provinciales acordamos un pago parcial al inicio y el saldo al finalizar.',
+      },
+    ],
+  },
+  {
+    category: 'Estudiantes y casos especiales',
+    faqs: [
+      {
+        q: '¿Tienen precio especial para estudiantes UNSAAC?',
+        a: 'Sí. Ofrecemos mini mudanzas desde S/ 150 para estudiantes: cuarto amoblado o loose items (cama, escritorio, cajas). Mostrar carnet universitario vigente.',
+      },
+      {
+        q: '¿Ofrecen almacenaje si mi nuevo lugar no está listo?',
+        a: 'Sí. Tenemos planes mensuales de almacenaje desde S/ 60 (cajas) hasta S/ 440 (casa completa). Sin estadía mínima, inventario fotográfico y cámaras 24/7.',
+      },
+      {
+        q: '¿Pueden ayudar si mi calle es estrecha o sin estacionamiento?',
+        a: 'Sí. Para zonas complicadas (Centro Histórico, por ejemplo) cargamos en tramos cortos con carretillas o usamos la unidad de 1 tonelada. Avísanos en la cotización si tu dirección tiene limitaciones de acceso.',
+      },
+    ],
+  },
+];
+
+const allFaqs = faqGroups.flatMap((g) => g.faqs);
+---
+
+<BaseLayout
+  title="Preguntas Frecuentes | Mudanzas en Cusco — Expresos Ñan"
+  description="Resolvemos dudas sobre nuestros servicios de mudanza, flete y almacenaje en Cusco: precios, cobertura, proceso, formas de pago y casos especiales (estudiantes, expats, empresas)."
+  whatsappMessage="Hola, leí las preguntas frecuentes pero tengo una duda adicional sobre mi mudanza."
+>
+  <Fragment slot="head">
+    <SchemaFAQ faqs={allFaqs} />
+  </Fragment>
+
+  <Hero
+    eyebrow="Preguntas frecuentes"
+    title="Preguntas frecuentes sobre mudanzas en Cusco"
+    subtitle="Aclaramos las dudas más comunes sobre precios, cobertura, proceso y facturación. Si tu duda no está aquí, escríbenos por WhatsApp."
+    image="/wp-content/uploads/2024/05/MUDANZAS-CUSCO.png"
+    imageAlt="Preguntas frecuentes del servicio de mudanzas en Cusco"
+    whatsappMessage="Hola, tengo una pregunta no contemplada en las FAQ sobre mi mudanza."
+  />
+
+  <Section spacing="sm">
+    <Container>
+      <Breadcrumbs items={[{ label: 'Inicio', href: '/' }, { label: 'Preguntas frecuentes' }]} />
+    </Container>
+  </Section>
+
+  {
+    faqGroups.map((group) => (
+      <Section background="white" spacing="md">
+        <Container size="narrow">
+          <h2 class="font-heading mb-6 text-2xl font-bold md:text-3xl">{group.category}</h2>
+          <div class="space-y-3">
+            {group.faqs.map((faq) => (
+              <details class="group rounded-xl border border-gray-200 bg-white">
+                <summary class="hover:text-primary flex cursor-pointer list-none items-center justify-between p-5 font-bold [&::-webkit-details-marker]:hidden">
+                  <span>{faq.q}</span>
+                  <svg
+                    class="h-5 w-5 shrink-0 transition-transform group-open:rotate-180"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    aria-hidden="true"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                </summary>
+                <div class="border-t border-gray-100 px-5 py-4 text-sm leading-relaxed text-gray-700">
+                  <p>{faq.a}</p>
+                </div>
+              </details>
+            ))}
+          </div>
+        </Container>
+      </Section>
+    ))
+  }
+
+  <CTASection
+    title="¿Tu pregunta no está aquí?"
+    subtitle="Escríbenos por WhatsApp y te respondemos en minutos."
+    whatsappMessage="Hola, tengo una pregunta específica sobre mi mudanza en Cusco."
+  />
+</BaseLayout>

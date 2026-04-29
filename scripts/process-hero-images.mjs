@@ -17,7 +17,6 @@ import { dirname, resolve } from 'node:path';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
 const IMG_ROOT = resolve(ROOT, 'imagenes');
-const PORTADA_DIR = resolve(IMG_ROOT, 'FOTOGRAFIAS DE PORTADA');
 const OUT = resolve(ROOT, 'public', 'hero');
 
 /*
