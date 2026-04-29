@@ -7,98 +7,117 @@ import { getLangFromUrl } from '@/i18n/config';
 
 const lang = getLangFromUrl(Astro.url);
 const items = NAV[lang];
+const homeHref = lang === 'es' ? '/' : '/en/';
 ---
 
 {
   /*
-  Header sticky con identidad corporativa carmesí.
-  - Fondo gradient rojo + sombra branded.
-  - Logo sobre tarjeta blanca redondeada para máximo contraste.
-  - Nav items en blanco con hover translúcido + underline animado.
-  - Mobile menu con fondo blanco para legibilidad.
+  Header sticky minimalista premium.
+  - Fondo blanco con borde inferior ultrafino.
+  - Sombra sutil aparece al hacer scroll (vía JS, sin reflow).
+  - Color carmesí reservado como acento (puntito junto al logo + estado activo).
+  - WhatsApp es el único botón saturado a la derecha (jerarquía clara).
+  - Tipografía semibold (no bold) + tracking-tight para look editorial.
 */
 }
-<header class="bg-brand-gradient shadow-brand-lg site-header sticky top-0 z-30 w-full">
-  <Container as="nav" size="wide" class="flex items-center justify-between gap-4 py-3">
+<header
+  class="site-header sticky top-0 z-30 w-full border-b border-gray-100 bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80"
+  data-site-header
+>
+  <Container as="nav" size="wide" class="flex items-center justify-between gap-6 py-4">
+    {/* Logo */}
     <a
-      href={lang === 'es' ? '/' : '/en/'}
-      class="group/logo inline-flex shrink-0 items-center gap-3 rounded-xl bg-white px-3 py-1.5 shadow-md transition-all hover:shadow-xl focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+      href={homeHref}
+      class="group/logo focus-visible:outline-primary-600 inline-flex shrink-0 items-center gap-2.5 rounded-md focus-visible:outline-2 focus-visible:outline-offset-4"
       aria-label={SITE.name}
     >
       <img
         src={SITE.logo.icon}
         alt=""
-        width="40"
-        height="40"
-        class="h-9 w-9 shrink-0 object-contain transition-transform group-hover/logo:scale-110"
+        width="36"
+        height="36"
+        class="h-8 w-8 shrink-0 object-contain"
         aria-hidden="true"
       />
-      <span class="hidden sm:flex sm:flex-col sm:items-start sm:leading-none">
-        <span class="text-primary-700 font-heading text-base font-bold tracking-tight"
-          >Expresos Ñan</span
-        >
-        <span class="text-primary-600 mt-0.5 text-[9px] font-bold tracking-widest uppercase"
-          >Mudanzas Cusco</span
-        >
+      <span class="font-heading text-dark text-base leading-none font-semibold tracking-tight">
+        Expresos Ñan
+        <span class="text-primary-600 ml-px" aria-hidden="true">.</span>
       </span>
     </a>
 
     {/* Nav desktop (lg+) */}
-    <ul class="hidden items-center gap-0.5 lg:flex">
+    <ul class="hidden items-center gap-1 lg:flex">
       {
-        items.map((item) => (
-          <li class="relative">
-            {'children' in item && item.children ? (
-              <details class="group/nav">
-                <summary class="nav-link group/sum flex cursor-pointer list-none items-center gap-1 rounded-lg px-3 py-2 text-sm font-bold text-white/95 transition-all hover:bg-white/15 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white [&::-webkit-details-marker]:hidden">
-                  {item.label}
-                  <svg
-                    class="h-4 w-4 transition-transform group-open/nav:rotate-180"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    aria-hidden="true"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </summary>
-                <ul class="absolute top-full left-0 z-20 mt-2 w-72 overflow-hidden rounded-xl border border-gray-100 bg-white py-2 shadow-2xl ring-1 ring-black/5">
-                  <li>
-                    <a
-                      href={item.href}
-                      class="text-primary-700 hover:bg-primary-50 block px-4 py-2 text-sm font-bold transition-colors"
+        items.map((item) => {
+          const isActive =
+            'href' in item &&
+            (Astro.url.pathname === item.href ||
+              (item.href !== homeHref && Astro.url.pathname.startsWith(item.href)));
+          return (
+            <li class="relative">
+              {'children' in item && item.children ? (
+                <details class="group/nav">
+                  <summary class="text-dark hover:text-primary-700 focus-visible:outline-primary-600 flex cursor-pointer list-none items-center gap-1 rounded-md px-3 py-2 text-sm font-semibold tracking-tight transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 [&::-webkit-details-marker]:hidden">
+                    {item.label}
+                    <svg
+                      class="h-3.5 w-3.5 text-gray-400 transition-transform group-open/nav:rotate-180"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
                     >
-                      {`→ ${item.label}`}
-                    </a>
-                  </li>
-                  {item.children.map((child) => (
+                      <path
+                        fill-rule="evenodd"
+                        d="M5.23 7.21a.75.75 0 011.06.02L10 11.06l3.71-3.83a.75.75 0 111.08 1.04l-4.25 4.39a.75.75 0 01-1.08 0L5.21 8.27a.75.75 0 01.02-1.06z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                  </summary>
+                  <ul class="absolute top-full left-0 z-20 mt-1 w-72 overflow-hidden rounded-xl border border-gray-100 bg-white py-2 shadow-xl ring-1 ring-black/5">
                     <li>
                       <a
-                        href={child.href}
-                        class="text-dark hover:bg-primary-50 hover:text-primary-700 hover:border-primary-500 block border-l-2 border-transparent px-4 py-2 text-sm transition-all hover:pl-5"
+                        href={item.href}
+                        class="text-primary-700 hover:bg-primary-50 block px-4 py-2 text-sm font-semibold tracking-tight transition-colors"
                       >
-                        {child.label}
+                        Ver {item.label.toLowerCase()}
                       </a>
                     </li>
-                  ))}
-                </ul>
-              </details>
-            ) : (
-              <a
-                href={item.href}
-                class="nav-link relative block rounded-lg px-3 py-2 text-sm font-bold text-white/95 transition-all hover:bg-white/15 hover:text-white focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-              >
-                {item.label}
-              </a>
-            )}
-          </li>
-        ))
+                    {item.children.map((child) => (
+                      <li>
+                        <a
+                          href={child.href}
+                          class="text-dark hover:text-primary-700 block px-4 py-2 text-sm transition-colors hover:bg-gray-50"
+                        >
+                          {child.label}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </details>
+              ) : (
+                <a
+                  href={item.href}
+                  class:list={[
+                    'focus-visible:outline-primary-600 relative block rounded-md px-3 py-2 text-sm font-semibold tracking-tight transition-colors focus-visible:outline-2 focus-visible:outline-offset-2',
+                    isActive ? 'text-primary-700' : 'text-dark hover:text-primary-700',
+                  ]}
+                  aria-current={isActive ? 'page' : undefined}
+                >
+                  {item.label}
+                  {isActive && (
+                    <span
+                      class="bg-primary-600 absolute right-3 -bottom-px left-3 h-0.5 rounded-full"
+                      aria-hidden="true"
+                    />
+                  )}
+                </a>
+              )}
+            </li>
+          );
+        })
       }
     </ul>
 
+    {/* Acciones derecha */}
     <div class="flex items-center gap-2">
       <LanguageSwitcher />
       <div class="hidden md:block">
@@ -108,7 +127,7 @@ const items = NAV[lang];
       {/* Menú hamburguesa (móvil y tablet) */}
       <details class="group relative lg:hidden">
         <summary
-          class="flex cursor-pointer list-none items-center justify-center rounded-lg p-2 text-white transition-all hover:bg-white/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white [&::-webkit-details-marker]:hidden"
+          class="text-dark focus-visible:outline-primary-600 flex cursor-pointer list-none items-center justify-center rounded-md p-2 transition-colors hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-offset-2 [&::-webkit-details-marker]:hidden"
           aria-label="Abrir menú"
         >
           <svg
@@ -116,36 +135,36 @@ const items = NAV[lang];
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2.5"
+            stroke-width="2"
             aria-hidden="true"
           >
-            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 7h16M4 12h16M4 17h16"></path>
           </svg>
           <svg
             class="hidden h-6 w-6 group-open:block"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
-            stroke-width="2.5"
+            stroke-width="2"
             aria-hidden="true"
           >
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </summary>
         <div
-          class="fixed inset-x-0 top-[var(--header-h,72px)] z-20 max-h-[calc(100vh-var(--header-h,72px))] overflow-y-auto bg-white shadow-2xl"
+          class="fixed inset-x-0 top-[var(--header-h,72px)] z-20 max-h-[calc(100vh-var(--header-h,72px))] overflow-y-auto border-t border-gray-100 bg-white shadow-xl"
           style="--header-h: 72px;"
         >
-          <ul class="px-4 py-4">
+          <ul class="px-4 py-2">
             {
               items.map((item) => (
                 <li class="border-b border-gray-100 last:border-0">
                   {'children' in item && item.children ? (
                     <details class="group/sub">
-                      <summary class="text-dark hover:text-primary-700 flex cursor-pointer list-none items-center justify-between py-3 text-base font-bold transition-colors [&::-webkit-details-marker]:hidden">
+                      <summary class="text-dark hover:text-primary-700 flex cursor-pointer list-none items-center justify-between py-3.5 text-base font-semibold tracking-tight transition-colors [&::-webkit-details-marker]:hidden">
                         {item.label}
                         <svg
-                          class="h-5 w-5 transition-transform group-open/sub:rotate-180"
+                          class="h-4 w-4 text-gray-400 transition-transform group-open/sub:rotate-180"
                           viewBox="0 0 20 20"
                           fill="currentColor"
                           aria-hidden="true"
@@ -157,20 +176,20 @@ const items = NAV[lang];
                           />
                         </svg>
                       </summary>
-                      <ul class="pb-2 pl-4">
+                      <ul class="pb-3 pl-4">
                         <li>
                           <a
                             href={item.href}
-                            class="text-primary-700 block py-2 text-sm font-bold transition-colors hover:underline"
+                            class="text-primary-700 block py-2 text-sm font-semibold tracking-tight"
                           >
-                            {`→ ${item.label}`}
+                            Ver {item.label.toLowerCase()}
                           </a>
                         </li>
                         {item.children.map((child) => (
                           <li>
                             <a
                               href={child.href}
-                              class="text-dark hover:text-primary-700 hover:border-primary-500 block border-l-2 border-transparent py-2 pl-3 text-sm transition-all hover:pl-4"
+                              class="text-dark hover:text-primary-700 block py-2 text-sm transition-colors"
                             >
                               {child.label}
                             </a>
@@ -181,7 +200,7 @@ const items = NAV[lang];
                   ) : (
                     <a
                       href={item.href}
-                      class="text-dark hover:text-primary-700 block py-3 text-base font-bold transition-colors"
+                      class="text-dark hover:text-primary-700 block py-3.5 text-base font-semibold tracking-tight transition-colors"
                     >
                       {item.label}
                     </a>
@@ -190,7 +209,7 @@ const items = NAV[lang];
               ))
             }
           </ul>
-          <div class="px-4 pb-4">
+          <div class="px-4 pt-2 pb-4">
             <WhatsAppButton variant="inline" size="md" class="w-full" />
           </div>
         </div>
@@ -200,29 +219,30 @@ const items = NAV[lang];
 </header>
 
 <style>
-  /* Underline animado de izquierda a derecha en hover sobre nav-link.
-     Solo aplica a links de primer nivel (no a los del dropdown). */
-  .nav-link::after {
-    content: '';
-    position: absolute;
-    left: 0.75rem;
-    right: 0.75rem;
-    bottom: 0.35rem;
-    height: 2px;
-    background: rgb(255 255 255);
-    border-radius: 999px;
-    transform: scaleX(0);
-    transform-origin: left center;
-    transition: transform 0.25s ease;
+  /* Sombra que aparece al hacer scroll: refuerza separación sin saturar. */
+  .site-header[data-scrolled] {
+    box-shadow:
+      0 1px 3px 0 rgb(0 0 0 / 0.04),
+      0 4px 12px -2px rgb(0 0 0 / 0.05);
   }
-  .nav-link:hover::after {
-    transform: scaleX(1);
-  }
-
-  /* Sombra sutil al hacer scroll para reforzar separación */
   @media (prefers-reduced-motion: no-preference) {
     .site-header {
-      transition: padding 0.2s ease;
+      transition: box-shadow 0.18s ease;
     }
   }
 </style>
+
+<script>
+  // Marca el header como "scrolled" (>4px) para activar sombra sutil.
+  // Único listener pasivo, sin reflow.
+  (() => {
+    const header = document.querySelector<HTMLElement>('[data-site-header]');
+    if (!header) return;
+    const onScroll = () => {
+      if (window.scrollY > 4) header.setAttribute('data-scrolled', '');
+      else header.removeAttribute('data-scrolled');
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
+</script>
