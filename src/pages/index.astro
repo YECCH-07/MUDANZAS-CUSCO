@@ -61,44 +61,52 @@ const services = [
 // Datos de cobertura provienen de lib/coverage.ts (fuente única de verdad)
 
 /*
- * Sectores con icono SVG inline (stroke=currentColor para heredar color del wrapper).
- * Evitamos emojis — se renderizan distinto por OS y rompen consistencia visual.
+ * Sectores con foto real del equipo (en lugar de iconos genéricos).
+ * Cada imagen es del propio equipo de Expreso Ñan trabajando, lo que
+ * comunica autenticidad mucho mejor que un pictograma.
  */
 const sectores = [
   {
     title: 'Familias y residencial',
     description:
       'Mudanzas completas familiares — casas, departamentos y cuartos. El grueso de nuestro trabajo.',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 3l9 7.5"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>`,
+    image: '/wp-content/uploads/2024/05/MUDANZA-DE-MUEBLES-CUSCO.jpg',
+    imageAlt: 'Mudanza de mueble familiar en Cusco con personal de Expreso Ñan',
   },
   {
     title: 'Minería y corredor Las Bambas',
     description:
       'Personal rotativo y contratistas hacia Challhuahuacho, Tambobamba, Haquira, Mara, Coyllurqui.',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 20h18"/><path d="M5 20l5-10 4 7 2-3 3 6"/></svg>`,
+    image: '/wp-content/uploads/2024/05/SERVICIO-DE-CARGA-PESADA-CUSCO.jpg',
+    imageAlt: 'Servicio de carga pesada de Expreso Ñan rumbo al corredor minero',
   },
   {
     title: 'Sector público y docentes',
     description:
       'Funcionarios UGEL, Red de Salud, Municipalidades. Factura electrónica y orden de servicio.',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 21h18"/><path d="M3 10l9-6 9 6"/><path d="M5 10v11"/><path d="M19 10v11"/><path d="M9 14v4"/><path d="M12 14v4"/><path d="M15 14v4"/></svg>`,
+    image: '/wp-content/uploads/2024/05/PERSONAL-EFICIENTE-PARA-CARGAS-Y-MUDANZAS-CUSCO.jpg',
+    imageAlt: 'Personal eficiente de Expreso Ñan para mudanzas institucionales',
   },
   {
     title: 'Estudiantes UNSAAC',
     description: 'Cambio de pensión, traslado a provincia al terminar ciclo. Tarifas económicas.',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 9l10-5 10 5-10 5L2 9z"/><path d="M6 11v5c0 1.5 2.5 3 6 3s6-1.5 6-3v-5"/><path d="M22 9v6"/></svg>`,
+    image:
+      '/wp-content/uploads/2024/05/VEHICULOS-DE-DOS-TONELADAS-PARA-MUDANZAS--MUDANZAS-PEQUEÑAS-CUSCO.jpg',
+    imageAlt: 'Vehículo de dos toneladas Expreso Ñan, ideal para mudanzas pequeñas de estudiantes',
   },
   {
     title: 'Oficinas y empresas',
     description:
       'Mudanzas de oficina en fin de semana, factura con RUC, NDA si hay documentación sensible.',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 012-2h4a2 2 0 012 2v2"/><path d="M3 13h18"/></svg>`,
+    image: '/wp-content/uploads/2024/05/COSAS-DE-LOS-CLIENTES-CUSCO-MUDANZAS.jpg',
+    imageAlt: 'Pertenencias y equipos embalados por Expreso Ñan listos para mudanza de oficina',
   },
   {
     title: 'Comerciantes y fletes recurrentes',
     description:
       'Mercadería entre Cusco y Sicuani/Abancay/Las Bambas. Tarifa mensual con descuento.',
-    icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 7l9-4 9 4v10l-9 4-9-4V7z"/><path d="M3 7l9 4 9-4"/><path d="M12 11v10"/></svg>`,
+    image: '/wp-content/uploads/2024/05/CAMION-DE-MUDANZAS-Y-CARGA-CUSCO.jpg',
+    imageAlt: 'Camión de mudanzas y carga de Expreso Ñan en ruta inter-provincial',
   },
 ];
 
@@ -189,13 +197,26 @@ const advantages = [
       <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {
           sectores.map((s) => (
-            <article class="hover:border-primary/50 group rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur transition-all motion-safe:hover:-translate-y-1">
-              <div
-                class="bg-primary/20 text-primary-light mb-4 inline-flex h-12 w-12 items-center justify-center rounded-full [&_svg]:h-6 [&_svg]:w-6"
-                set:html={s.icon}
-              />
-              <h3 class="font-heading mb-2 text-lg font-bold text-white">{s.title}</h3>
-              <p class="text-sm text-white/80">{s.description}</p>
+            <article class="hover:border-primary/50 group overflow-hidden rounded-2xl border border-white/10 bg-white/5 backdrop-blur transition-all motion-safe:hover:-translate-y-1">
+              <div class="relative aspect-[4/3] overflow-hidden bg-black/40">
+                <img
+                  src={s.image}
+                  alt={s.imageAlt}
+                  width="600"
+                  height="450"
+                  loading="lazy"
+                  decoding="async"
+                  class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+                <div
+                  class="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent"
+                  aria-hidden="true"
+                />
+              </div>
+              <div class="p-6">
+                <h3 class="font-heading mb-2 text-lg font-bold text-white">{s.title}</h3>
+                <p class="text-sm text-white/80">{s.description}</p>
+              </div>
             </article>
           ))
         }
