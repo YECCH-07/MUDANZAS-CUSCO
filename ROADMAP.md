@@ -1,41 +1,50 @@
-# ROADMAP — Plan de 13 Sprints
+# ROADMAP — Plan de 13 Sprints + Panel Interno
 
-> Este es el plan maestro de ejecución. Cada sprint dura 1 semana (5 días hábiles) y produce entregables concretos verificables. Los sprints se ejecutan en orden: cada uno depende del anterior.
+> Este es el plan maestro de ejecución. Cada sprint dura 1-2 semanas y produce entregables concretos verificables. Los sprints se ejecutan en orden: cada uno depende del anterior.
+>
+> **Actualización 2026-04-24:** Se insertaron 3 sprints nuevos (PANEL-01/02/03)
+> entre SPRINT-09 y SPRINT-10 por decisión del propietario (Opción B:
+> panel interno antes del lanzamiento público). Ver
+> [docs/PANEL-INTERNO.md](docs/PANEL-INTERNO.md).
 
 ## Visión General
 
 **Inicio:** Semana 1 (después de aprobación del DRU)
-**Fin:** Semana 13 (lanzamiento en producción)
-**Post-lanzamiento:** Semanas 14-26 (monitoreo intensivo, no incluido como sprints)
+**Fin:** Semana 19 (lanzamiento en producción — sitio + panel juntos)
+**Post-lanzamiento:** Semanas 20-32 (monitoreo intensivo)
 
-```
-Semana  1   2   3   4   5   6   7   8   9  10  11  12  13
-        ─── ─── ─── ─── ─── ─── ─── ─── ─── ─── ─── ─── ───
-       [S0][S1][   S2  ][S3][S4][S5][S6][S7][S8][S9][S10][S11][S12]
+```text
+Semana   1    2    3-4   5    6    7    8    9   10   11   12-13 14-15 16-17 18    18-19 19
+         ──  ──   ──    ──   ──   ──   ──   ──   ──   ──   ───── ───── ───── ──    ───── ──
+        [S0][S1][ S2 ][S3][S4][S5][S6][S7][S8][S9][ P1 ][ P2 ][ P3 ][S10][ S11 ][S12]
+                                                   └── módulo panel ──┘
 ```
 
 ## Cronograma Detallado
 
-| Sprint                                          | Semana | Nombre                                  | Estado        |
-| ----------------------------------------------- | ------ | --------------------------------------- | ------------- |
-| [SPRINT-00](sprints/SPRINT-00-setup.md)         | 1      | Setup inicial y arquitectura            | ✅ Completado |
-| [SPRINT-01](sprints/SPRINT-01-design-system.md) | 2      | Sistema de diseño y componentes base    | ✅ Completado |
-| [SPRINT-02](sprints/SPRINT-02-core-pages.md)    | 3-4    | Páginas core (Home, Nosotros, Contacto) | ✅ Completado |
-| [SPRINT-03](sprints/SPRINT-03-services.md)      | 5      | Páginas de servicios                    | ✅ Completado |
-| [SPRINT-04](sprints/SPRINT-04-storage-fleet.md) | 6      | Almacenaje, Custodia y Flota            | ✅ Completado |
-| [SPRINT-05](sprints/SPRINT-05-districts.md)     | 7      | Landings de distritos                   | ✅ Completado |
-| [SPRINT-06](sprints/SPRINT-06-routes.md)        | 8      | Landings de rutas inter-provinciales    | ✅ Completado |
-| SPRINT-06.5 (intermedio)                        | 8      | Refinamiento visual + fotos de portada  | ✅ Completado |
-| [SPRINT-07](sprints/SPRINT-07-blog.md)          | 9      | Blog SEO y contenido inicial            | ✅ Completado |
-| [SPRINT-08](sprints/SPRINT-08-i18n-english.md)  | 10     | Internacionalización al inglés          | ✅ Completado |
-| [SPRINT-09](sprints/SPRINT-09-seo-technical.md) | 11     | SEO técnico completo                    | ⬜ Pendiente  |
-| [SPRINT-10](sprints/SPRINT-10-vps-deploy.md)    | 12     | VPS, Nginx, SSL y CI/CD                 | ⬜ Pendiente  |
-| [SPRINT-11](sprints/SPRINT-11-qa-prelaunch.md)  | 12-13  | QA exhaustivo y pre-lanzamiento         | ⬜ Pendiente  |
-| [SPRINT-12](sprints/SPRINT-12-launch.md)        | 13     | Lanzamiento y monitoreo intensivo       | ⬜ Pendiente  |
+| Sprint                                               | Semana | Nombre                                            | Estado        |
+| ---------------------------------------------------- | ------ | ------------------------------------------------- | ------------- |
+| [SPRINT-00](sprints/SPRINT-00-setup.md)              | 1      | Setup inicial y arquitectura                      | ✅ Completado |
+| [SPRINT-01](sprints/SPRINT-01-design-system.md)      | 2      | Sistema de diseño y componentes base              | ✅ Completado |
+| [SPRINT-02](sprints/SPRINT-02-core-pages.md)         | 3-4    | Páginas core (Home, Nosotros, Contacto)           | ✅ Completado |
+| [SPRINT-03](sprints/SPRINT-03-services.md)           | 5      | Páginas de servicios                              | ✅ Completado |
+| [SPRINT-04](sprints/SPRINT-04-storage-fleet.md)      | 6      | Almacenaje, Custodia y Flota                      | ✅ Completado |
+| [SPRINT-05](sprints/SPRINT-05-districts.md)          | 7      | Landings de distritos                             | ✅ Completado |
+| [SPRINT-06](sprints/SPRINT-06-routes.md)             | 8      | Landings de rutas inter-provinciales              | ✅ Completado |
+| SPRINT-06.5 (intermedio)                             | 8      | Refinamiento visual + fotos de portada            | ✅ Completado |
+| [SPRINT-07](sprints/SPRINT-07-blog.md)               | 9      | Blog SEO y contenido inicial                      | ✅ Completado |
+| [SPRINT-08](sprints/SPRINT-08-i18n-english.md)       | 10     | Internacionalización al inglés                    | ✅ Completado |
+| [SPRINT-09](sprints/SPRINT-09-seo-technical.md)      | 11     | SEO técnico completo                              | ✅ Completado |
+| [PANEL-01](sprints/PANEL-01-auth-conductores.md)     | 12-13  | Panel interno: auth + registro diario conductores | ✅ Completado |
+| [PANEL-02](sprints/PANEL-02-cotizaciones-recibos.md) | 14-15  | Panel interno: cotizaciones + recibos PDF         | ✅ Completado |
+| [PANEL-03](sprints/PANEL-03-admin-reportes.md)       | 16-17  | Panel interno: superadmin + reportes + balances   | ✅ Completado |
+| [SPRINT-10](sprints/SPRINT-10-vps-deploy.md)         | 18     | VPS, Nginx, SSL, systemd Node y CI/CD             | ⬜ Pendiente  |
+| [SPRINT-11](sprints/SPRINT-11-qa-prelaunch.md)       | 18-19  | QA exhaustivo (sitio + panel)                     | ⬜ Pendiente  |
+| [SPRINT-12](sprints/SPRINT-12-launch.md)             | 19     | Lanzamiento y monitoreo intensivo                 | ⬜ Pendiente  |
 
 ## Dependencias Entre Sprints
 
-```
+```text
 SPRINT-00 (setup)
     │
     ├──> SPRINT-01 (design system)
@@ -58,7 +67,16 @@ SPRINT-00 (setup)
     │                              SPRINT-09 (seo technical)
     │                                         │
     │                                         v
-    │                              SPRINT-10 (vps deploy)
+    │                              PANEL-01 (auth + conductores)
+    │                                         │
+    │                                         v
+    │                              PANEL-02 (cotizaciones + recibos)
+    │                                         │
+    │                                         v
+    │                              PANEL-03 (admin + reportes)
+    │                                         │
+    │                                         v
+    │                              SPRINT-10 (vps deploy — sitio + panel)
     │                                         │
     │                                         v
     │                              SPRINT-11 (QA)
@@ -69,15 +87,16 @@ SPRINT-00 (setup)
 
 ## Hitos Clave
 
-| Hito                          | Cuándo        | Qué se entrega                         |
-| ----------------------------- | ------------- | -------------------------------------- |
-| **H1 — Setup completo**       | Fin Sprint 0  | Repo, Astro corriendo, CI básico       |
-| **H2 — Diseño aprobado**      | Fin Sprint 1  | Componentes base + mockups Figma       |
-| **H3 — Sitio core funcional** | Fin Sprint 4  | 15+ páginas en staging                 |
-| **H4 — Cobertura completa**   | Fin Sprint 6  | 30+ páginas, todas las rutas/distritos |
-| **H5 — Bilingüe + SEO**       | Fin Sprint 9  | Inglés + Schema + sitemap              |
-| **H6 — Producción lista**     | Fin Sprint 11 | QA aprobado, listo para Día D          |
-| **H7 — Lanzamiento**          | Fin Sprint 12 | Sitio en producción                    |
+| Hito                          | Cuándo        | Qué se entrega                                      |
+| ----------------------------- | ------------- | --------------------------------------------------- |
+| **H1 — Setup completo**       | Fin Sprint 0  | Repo, Astro corriendo, CI básico                    |
+| **H2 — Diseño aprobado**      | Fin Sprint 1  | Componentes base + mockups Figma                    |
+| **H3 — Sitio core funcional** | Fin Sprint 4  | 15+ páginas en staging                              |
+| **H4 — Cobertura completa**   | Fin Sprint 6  | 30+ páginas, todas las rutas/distritos              |
+| **H5 — Bilingüe + SEO**       | Fin Sprint 9  | Inglés + Schema + sitemap                           |
+| **H6 — Panel interno**        | Fin PANEL-03  | Módulo interno completo (auth, cotizaciones, admin) |
+| **H7 — Producción lista**     | Fin Sprint 11 | QA aprobado sitio + panel                           |
+| **H8 — Lanzamiento**          | Fin Sprint 12 | Sitio publico + panel interno en produccion         |
 
 ## Métricas de Avance
 
@@ -109,9 +128,10 @@ Al final de cada sprint, actualizar la tabla anterior:
 - **Sprints 0-1:** Configuración. Una persona técnica, dedicación 5h/día.
 - **Sprints 2-7:** Desarrollo. Una persona técnica + apoyo de redactor SEO.
 - **Sprints 8-9:** Especialización. Traductor + SEO técnico.
-- **Sprints 10-12:** Crítico. Una persona técnica con experiencia de servidor + un SEO en stand-by.
+- **PANEL-01 a PANEL-03:** Full-stack (Astro SSR + SQLite + Lucia + B2). Una persona técnica con experiencia en auth y bases de datos.
+- **Sprints 10-12:** Crítico. Persona técnica con experiencia de servidor (ahora también Node+systemd) + un SEO en stand-by.
 
-Total estimado de horas: ~325 horas (65 días × 5h promedio).
+Total estimado de horas: ~475 horas (95 días × 5h promedio) — sitio público + panel interno.
 
 ## Próximamente (post-lanzamiento)
 

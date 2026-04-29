@@ -6,9 +6,16 @@
 
 **Empresa:** Expresos Ñan
 **Sitio:** https://cuscomudanzas.com
-**Estado:** Migración desde WordPress + Astra + Elementor a stack moderno (Astro 4)
+**Estado:** Migración desde WordPress + Astra + Elementor a stack moderno (Astro 6)
 **Propietario:** YEISON
 **Hosting:** VPS AlmaLinux 9.7 con Webuzo Premium en `vps1.cuscomudanzas.com` (IP `50.31.190.36`)
+
+**Alcance ampliado (2026-04-24):** El proyecto incluye ahora un **panel
+interno** bajo `/panel/` (gestión operativa y financiera: registro diario de
+conductores, cotizaciones, recibos PDF, admin). Documentado en
+[docs/PANEL-INTERNO.md](docs/PANEL-INTERNO.md) y ejecutado en los sprints
+PANEL-01/02/03 **antes** del lanzamiento público (Opción B). El sitio de
+marketing y el panel coexisten en el mismo deploy Astro con `output: 'hybrid'`.
 
 ## Reglas de Negocio Críticas
 
