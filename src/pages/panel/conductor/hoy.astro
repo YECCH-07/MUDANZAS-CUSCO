@@ -31,7 +31,8 @@ const preTrip = await getPreTripCheck(selected.unitId, entryDate);
 if (!preTrip) {
   return Astro.redirect(`/panel/conductor/pre-trip/?unit=${selected.unitId}`);
 }
-if (preTrip.blocker) {
+// Solo bloquear si el blocker sigue sin aprobar por el admin.
+if (preTrip.blocker && !preTrip.blockerClearedBy) {
   return Astro.redirect(`/panel/conductor/pre-trip/?unit=${selected.unitId}`);
 }
 

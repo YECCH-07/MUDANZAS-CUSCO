@@ -86,7 +86,8 @@ export const POST: APIRoute = async (ctx) => {
       headers: { 'Content-Type': 'application/json' },
     });
   }
-  if (check.blocker) {
+  // Solo rechazar si el blocker sigue activo (no aprobado por admin todavía).
+  if (check.blocker && !check.blockerClearedBy) {
     return new Response(JSON.stringify({ ok: false, error: 'pretrip-blocker' }), {
       status: 400,
       headers: { 'Content-Type': 'application/json' },

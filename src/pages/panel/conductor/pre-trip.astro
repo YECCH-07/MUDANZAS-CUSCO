@@ -32,8 +32,12 @@ const errorMessage =
       ? 'Si marcas un ítem como "Falla", debes escribir la nota explicando qué pasa.'
       : null;
 
-// Si ya existe y no hay blocker activo, redirigir a /hoy/
-if (existing && !existing.blocker) {
+// Un blocker activo es: blocker=true Y aún sin aprobar por admin
+// (blockerClearedBy IS NULL). Si admin ya aprobó, el conductor puede operar.
+const hasActiveBlocker = !!(existing && existing.blocker && !existing.blockerClearedBy);
+
+// Si ya existe pre-trip y no hay blocker activo, ir directo al día
+if (existing && !hasActiveBlocker) {
   return Astro.redirect(`/panel/conductor/hoy/?unit=${selectedAssignment!.unitId}`);
 }
 ---
@@ -62,7 +66,7 @@ if (existing && !existing.blocker) {
     }
 
     {
-      selectedAssignment && existing && existing.blocker && (
+      selectedAssignment && hasActiveBlocker && (
         <div
           class="mb-4 rounded-2xl border-l-4 border-red-500 bg-red-50 p-4 text-sm text-red-900"
           role="alert"
