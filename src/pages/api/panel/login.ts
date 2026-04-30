@@ -52,11 +52,14 @@ function fail(
       headers: { 'Content-Type': 'application/json' },
     });
   }
-  const loc = new URL('/panel/login/', url.origin);
-  loc.searchParams.set('error', code);
+  // Redirect relativo: el navegador lo resuelve contra la URL actual. Evita que
+  // detrás de un reverse proxy (LiteSpeed/Nginx) Astro construya un Location
+  // absoluto con el origin interno (http://localhost:3000) en vez del público.
+  const params = new URLSearchParams();
+  params.set('error', code);
   const next = url.searchParams.get('next');
-  if (next) loc.searchParams.set('next', next);
-  return redirectTo(loc.toString());
+  if (next) params.set('next', next);
+  return redirectTo(`/panel/login/?${params.toString()}`);
 }
 
 async function parseBody(request: Request): Promise<Record<string, unknown>> {
@@ -146,5 +149,8 @@ export const POST: APIRoute = async ({ request, cookies, clientAddress, url }) =
       headers: { 'Content-Type': 'application/json' },
     });
   }
-  return redirectTo(new URL(dest, url.origin).toString());
+  // dest es siempre un path absoluto interno ("/panel/..."); usar relativo
+  // para que el browser lo resuelva contra el host público en lugar de que
+  // Astro lo combine con el origin interno del proxy.
+  return redirectTo(dest);
 };
