@@ -1,0 +1,226 @@
+---
+/*
+ * /panel/admin/pre-trips/
+ * Inbox del superadmin con los pre-trips que reportaron problemas críticos
+ * y la unidad quedó bloqueada. Pendientes (sin blockerClearedBy) arriba;
+ * historial de aprobados abajo (últimos 30).
+ */
+export const prerender = false;
+
+import AdminLayout from '@layouts/AdminLayout.astro';
+import { db } from '@db/client';
+import { preTripChecks, units, users } from '@db/schema';
+import { and, desc, eq, isNull, isNotNull } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/sqlite-core';
+
+const user = Astro.locals.user!;
+if (user.role !== 'superadmin') {
+  return Astro.redirect('/panel/');
+}
+
+interface ItemAnswer {
+  key: string;
+  label: string;
+  status: 'ok' | 'fail' | 'na';
+  note: string;
+  critical: boolean;
+}
+
+function parseItems(raw: string): ItemAnswer[] {
+  try {
+    const arr = JSON.parse(raw) as unknown;
+    if (!Array.isArray(arr)) return [];
+    return arr as ItemAnswer[];
+  } catch {
+    return [];
+  }
+}
+
+const driverUsers = alias(users, 'driver_users');
+const adminUsers = alias(users, 'admin_users');
+
+const pending = await db
+  .select({
+    id: preTripChecks.id,
+    entryDate: preTripChecks.entryDate,
+    signedAt: preTripChecks.signedAt,
+    itemsJson: preTripChecks.itemsJson,
+    plate: units.plate,
+    alias: units.alias,
+    driverName: driverUsers.fullName,
+  })
+  .from(preTripChecks)
+  .innerJoin(units, eq(units.id, preTripChecks.unitId))
+  .innerJoin(driverUsers, eq(driverUsers.id, preTripChecks.driverId))
+  .where(and(eq(preTripChecks.blocker, true), isNull(preTripChecks.blockerClearedBy)))
+  .orderBy(desc(preTripChecks.signedAt))
+  .all();
+
+const recent = await db
+  .select({
+    id: preTripChecks.id,
+    entryDate: preTripChecks.entryDate,
+    signedAt: preTripChecks.signedAt,
+    plate: units.plate,
+    driverName: driverUsers.fullName,
+    clearedByName: adminUsers.fullName,
+    clearNote: preTripChecks.blockerClearNote,
+  })
+  .from(preTripChecks)
+  .innerJoin(units, eq(units.id, preTripChecks.unitId))
+  .innerJoin(driverUsers, eq(driverUsers.id, preTripChecks.driverId))
+  .leftJoin(adminUsers, eq(adminUsers.id, preTripChecks.blockerClearedBy))
+  .where(and(eq(preTripChecks.blocker, true), isNotNull(preTripChecks.blockerClearedBy)))
+  .orderBy(desc(preTripChecks.signedAt))
+  .limit(30)
+  .all();
+
+const cleared = Astro.url.searchParams.get('cleared');
+---
+
+<AdminLayout title="Pre-trips bloqueados">
+  <header class="mb-6">
+    <h1 class="font-heading text-2xl font-bold md:text-3xl">Pre-trips bloqueados</h1>
+    <p class="mt-1 text-sm text-gray-600">
+      Unidades que el conductor reportó con falla crítica. Hasta que apruebes la revisión, la unidad
+      no puede registrar viajes.
+    </p>
+  </header>
+
+  {
+    cleared && (
+      <div
+        class="mb-4 rounded-lg border-l-4 border-green-500 bg-green-50 p-3 text-sm text-green-800"
+        role="status"
+      >
+        Pre-trip <strong>{cleared}</strong> aprobado. La unidad puede operar nuevamente.
+      </div>
+    )
+  }
+
+  <section class="mb-10">
+    <h2 class="font-heading mb-3 text-lg font-bold">
+      Pendientes de revisión
+      {
+        pending.length > 0 && (
+          <span class="ml-2 inline-block rounded-full bg-red-100 px-2 py-0.5 align-middle text-xs font-bold text-red-800">
+            {pending.length}
+          </span>
+        )
+      }
+    </h2>
+
+    {
+      pending.length === 0 ? (
+        <div class="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-sm text-gray-600">
+          Sin bloqueos pendientes. Toda la flota está operativa.
+        </div>
+      ) : (
+        <div class="overflow-x-auto rounded-2xl border border-red-200 bg-white">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-red-50 text-xs font-bold tracking-wider text-red-900 uppercase">
+              <tr>
+                <th class="px-4 py-3">Placa</th>
+                <th class="px-4 py-3">Conductor</th>
+                <th class="px-4 py-3">Fecha</th>
+                <th class="px-4 py-3">Hora</th>
+                <th class="px-4 py-3">Fallos críticos</th>
+                <th class="px-4 py-3" />
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              {pending.map((p) => {
+                const items = parseItems(p.itemsJson);
+                const critFails = items.filter((it) => it.critical && it.status === 'fail');
+                const hour = new Date(p.signedAt).toLocaleTimeString('es-PE', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false,
+                  timeZone: 'America/Lima',
+                });
+                return (
+                  <tr>
+                    <td class="px-4 py-3 font-bold">{p.plate}</td>
+                    <td class="px-4 py-3">{p.driverName}</td>
+                    <td class="px-4 py-3 text-xs">{p.entryDate}</td>
+                    <td class="px-4 py-3 text-xs">{hour}</td>
+                    <td class="px-4 py-3">
+                      <ul class="space-y-0.5 text-xs">
+                        {critFails.slice(0, 3).map((it) => (
+                          <li class="flex items-start gap-1">
+                            <span class="text-red-600">•</span>
+                            <span>{it.label}</span>
+                          </li>
+                        ))}
+                        {critFails.length > 3 && (
+                          <li class="text-xs text-gray-500">+{critFails.length - 3} más</li>
+                        )}
+                      </ul>
+                    </td>
+                    <td class="px-4 py-3 text-right">
+                      <a
+                        href={`/panel/admin/pre-trips/${p.id}/`}
+                        class="bg-primary hover:bg-primary-dark inline-block rounded-full px-3 py-1.5 text-xs font-bold text-white"
+                      >
+                        Revisar
+                      </a>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )
+    }
+  </section>
+
+  <section>
+    <h2 class="font-heading mb-3 text-lg font-bold text-gray-700">
+      Aprobados recientemente <span class="text-sm font-normal text-gray-500">(últimos 30)</span>
+    </h2>
+    {
+      recent.length === 0 ? (
+        <div class="rounded-2xl border border-dashed border-gray-300 bg-white p-6 text-center text-sm text-gray-500">
+          Aún no se ha aprobado ningún pre-trip.
+        </div>
+      ) : (
+        <div class="overflow-x-auto rounded-2xl border border-gray-200 bg-white">
+          <table class="w-full text-left text-sm">
+            <thead class="bg-gray-50 text-xs font-bold tracking-wider uppercase">
+              <tr>
+                <th class="px-4 py-3">Placa</th>
+                <th class="px-4 py-3">Conductor</th>
+                <th class="px-4 py-3">Fecha</th>
+                <th class="px-4 py-3">Aprobado por</th>
+                <th class="px-4 py-3">Nota</th>
+                <th class="px-4 py-3" />
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              {recent.map((r) => (
+                <tr>
+                  <td class="px-4 py-3 font-bold">{r.plate}</td>
+                  <td class="px-4 py-3">{r.driverName}</td>
+                  <td class="px-4 py-3 text-xs">{r.entryDate}</td>
+                  <td class="px-4 py-3 text-xs">{r.clearedByName ?? '—'}</td>
+                  <td class="max-w-xs truncate px-4 py-3 text-xs text-gray-600">
+                    {r.clearNote ?? '—'}
+                  </td>
+                  <td class="px-4 py-3 text-right">
+                    <a
+                      href={`/panel/admin/pre-trips/${r.id}/`}
+                      class="text-primary text-xs font-bold hover:underline"
+                    >
+                      Ver →
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )
+    }
+  </section>
+</AdminLayout>

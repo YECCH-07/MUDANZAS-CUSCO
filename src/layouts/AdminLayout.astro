@@ -8,6 +8,9 @@ import '@/styles/global.css';
 import { SITE } from '@lib/site';
 import CommandPalette from '@components/panel/CommandPalette.astro';
 import ConfirmDialog from '@components/panel/ConfirmDialog.astro';
+import { db } from '@db/client';
+import { preTripChecks } from '@db/schema';
+import { and, eq, isNull, sql } from 'drizzle-orm';
 
 interface NavItem {
   label: string;
@@ -23,7 +26,9 @@ interface NavItem {
     | 'settings'
     | 'doc'
     | 'cash'
-    | 'file';
+    | 'file'
+    | 'alert';
+  badge?: number;
 }
 
 interface Props {
@@ -34,10 +39,27 @@ const { title } = Astro.props;
 const user = Astro.locals.user;
 if (!user) throw new Error('AdminLayout requires authenticated user');
 
+// Contador de pre-trips bloqueados pendientes (solo superadmin lo ve).
+let pendingPreTrips = 0;
+if (user.role === 'superadmin') {
+  const result = await db
+    .select({ n: sql<number>`count(*)` })
+    .from(preTripChecks)
+    .where(and(eq(preTripChecks.blocker, true), isNull(preTripChecks.blockerClearedBy)))
+    .get();
+  pendingPreTrips = Number(result?.n ?? 0);
+}
+
 const nav: NavItem[] = [
   { label: 'Dashboard', href: '/panel/admin/', icon: 'home' },
   { label: 'Usuarios', href: '/panel/admin/usuarios/', icon: 'users' },
   { label: 'Unidades', href: '/panel/admin/unidades/', icon: 'truck' },
+  {
+    label: 'Pre-trips',
+    href: '/panel/admin/pre-trips/',
+    icon: 'alert',
+    ...(pendingPreTrips > 0 ? { badge: pendingPreTrips } : {}),
+  },
   { label: 'Asignaciones', href: '/panel/admin/asignaciones/', icon: 'tag' },
   { label: 'Balances', href: '/panel/admin/balances/', icon: 'chart' },
   { label: 'Funnel', href: '/panel/admin/funnel/', icon: 'chart' },
@@ -209,8 +231,27 @@ function isActiveRoute(href: string): boolean {
                         <line x1="12" y1="12" x2="15" y2="15" />
                       </svg>
                     )}
+                    {item.icon === 'alert' && (
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                      </svg>
+                    )}
                   </span>
-                  {item.label}
+                  <span class="flex-1">{item.label}</span>
+                  {item.badge !== undefined && item.badge > 0 && (
+                    <span class="ml-auto inline-block rounded-full bg-red-600 px-2 py-0.5 text-[10px] leading-none font-bold text-white">
+                      {item.badge}
+                    </span>
+                  )}
                 </a>
               );
             })

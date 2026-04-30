@@ -3,7 +3,7 @@ export const prerender = false;
 
 import AdminLayout from '@layouts/AdminLayout.astro';
 import { db } from '@db/client';
-import { units, driverAssignments, users } from '@db/schema';
+import { units, driverAssignments, users, preTripChecks } from '@db/schema';
 import { desc, eq, isNull, and } from 'drizzle-orm';
 
 // Traer unidades + conductor asignado vigente (si existe).
@@ -28,6 +28,26 @@ const rows = await db
   .leftJoin(users, eq(users.id, driverAssignments.userId))
   .orderBy(desc(units.active), units.plate)
   .all();
+
+// Pre-trips bloqueados pendientes de aprobación, indexados por unitId.
+const blockedRows = await db
+  .select({
+    id: preTripChecks.id,
+    unitId: preTripChecks.unitId,
+    entryDate: preTripChecks.entryDate,
+  })
+  .from(preTripChecks)
+  .where(and(eq(preTripChecks.blocker, true), isNull(preTripChecks.blockerClearedBy)))
+  .orderBy(desc(preTripChecks.signedAt))
+  .all();
+
+const blockedByUnit = new Map<string, { id: string; entryDate: string }>();
+for (const b of blockedRows) {
+  // El primero que veamos por unidad gana (orderBy desc → más reciente).
+  if (!blockedByUnit.has(b.unitId)) {
+    blockedByUnit.set(b.unitId, { id: b.id, entryDate: b.entryDate });
+  }
+}
 
 const successParam = Astro.url.searchParams.get('created');
 ---
@@ -87,35 +107,46 @@ const successParam = Astro.url.searchParams.get('created');
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-100">
-            {rows.map((u) => (
-              <tr class:list={[!u.active && 'bg-gray-50 text-gray-400']}>
-                <td class="px-4 py-3 font-bold">{u.plate}</td>
-                <td class="px-4 py-3">{u.tonnage} t</td>
-                <td class="px-4 py-3">{u.alias ?? '—'}</td>
-                <td class="px-4 py-3">{u.assignedDriverName ?? '—'}</td>
-                <td class="px-4 py-3 text-xs">{u.soatExpires ?? '—'}</td>
-                <td class="px-4 py-3 text-xs">{u.rtvExpires ?? '—'}</td>
-                <td class="px-4 py-3">
-                  {u.active ? (
-                    <span class="inline-block rounded-full bg-green-100 px-2 py-0.5 text-xs font-bold text-green-800">
-                      Activa
-                    </span>
-                  ) : (
-                    <span class="inline-block rounded-full bg-gray-200 px-2 py-0.5 text-xs font-bold text-gray-600">
-                      Inactiva
-                    </span>
-                  )}
-                </td>
-                <td class="px-4 py-3 text-right">
-                  <a
-                    href={`/panel/admin/unidades/${u.id}/`}
-                    class="text-primary text-xs font-bold hover:underline"
-                  >
-                    Editar →
-                  </a>
-                </td>
-              </tr>
-            ))}
+            {rows.map((u) => {
+              const blocked = blockedByUnit.get(u.id);
+              return (
+                <tr class:list={[!u.active && 'bg-gray-50 text-gray-400']}>
+                  <td class="px-4 py-3 font-bold">{u.plate}</td>
+                  <td class="px-4 py-3">{u.tonnage} t</td>
+                  <td class="px-4 py-3">{u.alias ?? '—'}</td>
+                  <td class="px-4 py-3">{u.assignedDriverName ?? '—'}</td>
+                  <td class="px-4 py-3 text-xs">{u.soatExpires ?? '—'}</td>
+                  <td class="px-4 py-3 text-xs">{u.rtvExpires ?? '—'}</td>
+                  <td class="px-4 py-3">
+                    {blocked ? (
+                      <a
+                        href={`/panel/admin/pre-trips/${blocked.id}/`}
+                        class="inline-block rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold text-white hover:bg-red-700"
+                        title={`Pre-trip ${blocked.entryDate} bloqueado — click para revisar`}
+                      >
+                        BLOQUEADA
+                      </a>
+                    ) : u.active ? (
+                      <span class="inline-block rounded-full bg-green-100 px-2 py-0.5 text-xs font-bold text-green-800">
+                        Activa
+                      </span>
+                    ) : (
+                      <span class="inline-block rounded-full bg-gray-200 px-2 py-0.5 text-xs font-bold text-gray-600">
+                        Inactiva
+                      </span>
+                    )}
+                  </td>
+                  <td class="px-4 py-3 text-right">
+                    <a
+                      href={`/panel/admin/unidades/${u.id}/`}
+                      class="text-primary text-xs font-bold hover:underline"
+                    >
+                      Editar →
+                    </a>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

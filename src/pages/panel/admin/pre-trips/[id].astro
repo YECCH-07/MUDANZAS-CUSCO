@@ -1,0 +1,276 @@
+---
+/*
+ * /panel/admin/pre-trips/[id]/
+ * Detalle de un pre-trip. Si está bloqueado y no aprobado, muestra form para
+ * que el superadmin escriba una nota y desbloquee la unidad.
+ *
+ * También sirve como vista histórica para pre-trips ya aprobados o sin blocker.
+ */
+export const prerender = false;
+
+import AdminLayout from '@layouts/AdminLayout.astro';
+import { db } from '@db/client';
+import { preTripChecks, units, users } from '@db/schema';
+import { eq } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/sqlite-core';
+
+const user = Astro.locals.user!;
+if (user.role !== 'superadmin') {
+  return Astro.redirect('/panel/');
+}
+
+const id = Astro.params.id;
+if (!id) return Astro.redirect('/panel/admin/pre-trips/');
+
+interface ItemAnswer {
+  key: string;
+  label: string;
+  status: 'ok' | 'fail' | 'na';
+  note: string;
+  critical: boolean;
+}
+
+const driverUsers = alias(users, 'driver_users');
+const adminUsers = alias(users, 'admin_users');
+
+const row = await db
+  .select({
+    id: preTripChecks.id,
+    entryDate: preTripChecks.entryDate,
+    signedAt: preTripChecks.signedAt,
+    itemsJson: preTripChecks.itemsJson,
+    blocker: preTripChecks.blocker,
+    clearedBy: preTripChecks.blockerClearedBy,
+    clearNote: preTripChecks.blockerClearNote,
+    plate: units.plate,
+    alias: units.alias,
+    tonnage: units.tonnage,
+    unitId: units.id,
+    driverName: driverUsers.fullName,
+    driverEmail: driverUsers.email,
+  })
+  .from(preTripChecks)
+  .innerJoin(units, eq(units.id, preTripChecks.unitId))
+  .innerJoin(driverUsers, eq(driverUsers.id, preTripChecks.driverId))
+  .where(eq(preTripChecks.id, id))
+  .get();
+
+if (!row) {
+  return new Response('Pre-trip no encontrado', { status: 404 });
+}
+
+const clearedByRow = row.clearedBy
+  ? await db
+      .select({ fullName: adminUsers.fullName, email: adminUsers.email })
+      .from(adminUsers)
+      .where(eq(adminUsers.id, row.clearedBy))
+      .get()
+  : null;
+
+let items: ItemAnswer[] = [];
+try {
+  const arr = JSON.parse(row.itemsJson);
+  if (Array.isArray(arr)) items = arr as ItemAnswer[];
+} catch {
+  /* itemsJson corrupto — mostrar lista vacía */
+}
+
+const isPending = row.blocker && !row.clearedBy;
+const isApproved = row.blocker && !!row.clearedBy;
+const errorParam = Astro.url.searchParams.get('error');
+
+const errorMsg: Record<string, string> = {
+  note: 'La nota es obligatoria (3-500 caracteres).',
+  'not-blocked': 'Este pre-trip no estaba bloqueado.',
+  'already-cleared': 'Este pre-trip ya fue aprobado.',
+};
+
+const hour = new Date(row.signedAt).toLocaleTimeString('es-PE', {
+  hour: '2-digit',
+  minute: '2-digit',
+  hour12: false,
+  timeZone: 'America/Lima',
+});
+
+const statusBadge = (s: 'ok' | 'fail' | 'na') => {
+  if (s === 'ok') return { label: 'OK', cls: 'bg-green-100 text-green-800' };
+  if (s === 'fail') return { label: 'FALLA', cls: 'bg-red-100 text-red-800' };
+  return { label: 'N/A', cls: 'bg-gray-100 text-gray-700' };
+};
+---
+
+<AdminLayout title={`Pre-trip ${row.plate}`}>
+  <nav class="mb-4 text-xs">
+    <a href="/panel/admin/pre-trips/" class="text-primary hover:underline"> ← Volver al inbox </a>
+  </nav>
+
+  <header class="mb-6 flex flex-wrap items-start justify-between gap-4">
+    <div>
+      <h1 class="font-heading text-2xl font-bold md:text-3xl">
+        Pre-trip {row.plate}
+      </h1>
+      <p class="mt-1 text-sm text-gray-600">
+        {row.alias ?? `Camión ${row.tonnage}t`} · {row.entryDate} · {hour} hrs
+      </p>
+    </div>
+    {
+      isPending && (
+        <span class="inline-block rounded-full bg-red-600 px-3 py-1 text-xs font-bold text-white">
+          UNIDAD BLOQUEADA
+        </span>
+      )
+    }
+    {
+      isApproved && (
+        <span class="inline-block rounded-full bg-green-100 px-3 py-1 text-xs font-bold text-green-800">
+          APROBADO
+        </span>
+      )
+    }
+    {
+      !row.blocker && (
+        <span class="inline-block rounded-full bg-gray-100 px-3 py-1 text-xs font-bold text-gray-700">
+          Sin observaciones críticas
+        </span>
+      )
+    }
+  </header>
+
+  {
+    errorParam && errorMsg[errorParam] && (
+      <div
+        class="mb-4 rounded-lg border-l-4 border-red-500 bg-red-50 p-3 text-sm text-red-800"
+        role="alert"
+      >
+        {errorMsg[errorParam]}
+      </div>
+    )
+  }
+
+  <div class="grid gap-6 lg:grid-cols-3">
+    <section class="lg:col-span-2">
+      <div class="overflow-hidden rounded-2xl border border-gray-200 bg-white">
+        <header class="border-b border-gray-100 px-5 py-4">
+          <h2 class="font-heading font-bold">Checklist firmado por el conductor</h2>
+          <p class="mt-1 text-xs text-gray-500">
+            Reportado por {row.driverName} ({row.driverEmail})
+          </p>
+        </header>
+        <ul class="divide-y divide-gray-100">
+          {
+            items.map((it) => {
+              const b = statusBadge(it.status);
+              return (
+                <li class="px-5 py-3">
+                  <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div class="min-w-0 flex-1">
+                      <p class="text-sm font-bold">
+                        {it.label}
+                        {it.critical && (
+                          <span class="ml-2 inline-block rounded bg-red-50 px-1.5 py-0.5 text-[10px] font-bold tracking-wider text-red-700 uppercase">
+                            crítico
+                          </span>
+                        )}
+                      </p>
+                      {it.note && (
+                        <p class="mt-1 text-xs text-gray-600">
+                          <strong>Observación:</strong> {it.note}
+                        </p>
+                      )}
+                    </div>
+                    <span
+                      class:list={[
+                        'inline-block rounded-full px-2 py-0.5 text-xs font-bold',
+                        b.cls,
+                      ]}
+                    >
+                      {b.label}
+                    </span>
+                  </div>
+                </li>
+              );
+            })
+          }
+        </ul>
+      </div>
+    </section>
+
+    <aside class="space-y-4">
+      {
+        isPending && (
+          <div class="rounded-2xl border border-red-200 bg-red-50 p-5">
+            <h3 class="font-heading mb-2 text-sm font-bold text-red-900">
+              Aprobar y desbloquear unidad
+            </h3>
+            <p class="mb-3 text-xs text-red-800">
+              Escribe una nota explicando qué se revisó o se reparó. Quedará registrado en el audit
+              log y visible para el conductor.
+            </p>
+            <form method="POST" action={`/api/panel/pre-trip/${row.id}/clear-blocker/`}>
+              <label class="block">
+                <span class="mb-1 block text-xs font-bold text-gray-700">
+                  Nota de revisión <span class="text-red-600">*</span>
+                </span>
+                <textarea
+                  name="note"
+                  required
+                  minlength="3"
+                  maxlength="500"
+                  rows="4"
+                  placeholder="Ej: Llantas reemplazadas por las del camión 3. Se autoriza salida."
+                  class="focus:border-primary focus:ring-primary w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:ring-1"
+                />
+              </label>
+              <button
+                type="submit"
+                class="bg-primary hover:bg-primary-dark mt-3 w-full rounded-full px-4 py-2 text-sm font-bold text-white"
+              >
+                Aprobar y liberar unidad
+              </button>
+            </form>
+          </div>
+        )
+      }
+
+      {
+        isApproved && (
+          <div class="rounded-2xl border border-green-200 bg-green-50 p-5">
+            <h3 class="font-heading mb-2 text-sm font-bold text-green-900">Aprobado</h3>
+            <p class="mb-2 text-xs text-green-800">
+              Por <strong>{clearedByRow?.fullName ?? '—'}</strong>
+            </p>
+            {row.clearNote && (
+              <blockquote class="border-l-2 border-green-300 pl-3 text-xs text-green-900">
+                {row.clearNote}
+              </blockquote>
+            )}
+          </div>
+        )
+      }
+
+      <div class="rounded-2xl border border-gray-200 bg-white p-5">
+        <h3 class="font-heading mb-2 text-sm font-bold">Unidad</h3>
+        <dl class="space-y-1 text-xs">
+          <div class="flex justify-between">
+            <dt class="text-gray-500">Placa</dt>
+            <dd class="font-bold">{row.plate}</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-gray-500">Tonelaje</dt>
+            <dd>{row.tonnage} t</dd>
+          </div>
+          <div class="flex justify-between">
+            <dt class="text-gray-500">Alias</dt>
+            <dd>{row.alias ?? '—'}</dd>
+          </div>
+        </dl>
+        <a
+          href={`/panel/admin/unidades/${row.unitId}/`}
+          class="text-primary mt-3 inline-block text-xs font-bold hover:underline"
+        >
+          Ver ficha completa →
+        </a>
+      </div>
+    </aside>
+  </div>
+</AdminLayout>
