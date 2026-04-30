@@ -10,6 +10,7 @@ import { users, sessions } from '@db/schema';
 import { hashPassword, generateTempPassword } from '@lib/auth/password';
 import { logAudit } from '@lib/panel/audit';
 import { sendMail, TEMPLATES } from '@lib/panel/email';
+import { SITE } from '@lib/site';
 
 export const prerender = false;
 
@@ -45,12 +46,17 @@ export const POST: APIRoute = async (ctx) => {
   const tpl = TEMPLATES.passwordReset({
     name: target.fullName,
     tempPassword: tempPw,
-    loginUrl: `${ctx.url.origin}/panel/login/`,
+    loginUrl: `${SITE.url}/panel/login/`,
   });
   void sendMail({ to: target.email, subject: tpl.subject, html: tpl.html });
 
-  const url = new URL(`/panel/admin/usuarios/`, ctx.url.origin);
-  url.searchParams.set('reset', target.email);
-  url.searchParams.set('pw', tempPw);
-  return new Response(null, { status: 303, headers: { Location: url.toString() } });
+  // Redirect relativo (browser lo resuelve contra el host público — evita
+  // que detrás del reverse proxy emita Location http://localhost:3000).
+  const params = new URLSearchParams();
+  params.set('reset', target.email);
+  params.set('pw', tempPw);
+  return new Response(null, {
+    status: 303,
+    headers: { Location: `/panel/admin/usuarios/?${params.toString()}` },
+  });
 };

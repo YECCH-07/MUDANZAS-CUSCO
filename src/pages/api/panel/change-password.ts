@@ -23,10 +23,15 @@ const Schema = z
   .refine((v) => v.next === v.confirm, { message: 'mismatch', path: ['confirm'] })
   .refine((v) => v.current !== v.next, { message: 'same', path: ['next'] });
 
-function redirectToForm(origin: string, error: string): Response {
-  const url = new URL('/panel/mi-cuenta/cambiar-password/', origin);
-  url.searchParams.set('error', error);
-  return new Response(null, { status: 303, headers: { Location: url.toString() } });
+function redirectToForm(error: string): Response {
+  // Path relativo: el browser lo resuelve contra el host público (evita que
+  // detrás del reverse proxy emita Location http://localhost:3000).
+  const params = new URLSearchParams();
+  params.set('error', error);
+  return new Response(null, {
+    status: 303,
+    headers: { Location: `/panel/mi-cuenta/cambiar-password/?${params.toString()}` },
+  });
 }
 
 async function parseBody(request: Request): Promise<Record<string, unknown>> {
@@ -38,7 +43,7 @@ async function parseBody(request: Request): Promise<Record<string, unknown>> {
   return Object.fromEntries(fd.entries());
 }
 
-export const POST: APIRoute = async ({ request, locals, url, clientAddress }) => {
+export const POST: APIRoute = async ({ request, locals, clientAddress }) => {
   const user = locals.user;
   const session = locals.session;
   if (!user || !session) {
@@ -50,7 +55,7 @@ export const POST: APIRoute = async ({ request, locals, url, clientAddress }) =>
   if (!parsed.success) {
     const firstIssue = parsed.error.issues[0];
     const msg = firstIssue?.message ?? 'weak';
-    return redirectToForm(url.origin, msg === 'mismatch' || msg === 'same' ? msg : 'weak');
+    return redirectToForm(msg === 'mismatch' || msg === 'same' ? msg : 'weak');
   }
 
   // Verificar contraseña actual contra el hash guardado.
@@ -59,7 +64,7 @@ export const POST: APIRoute = async ({ request, locals, url, clientAddress }) =>
     return new Response('user missing', { status: 500 });
   }
   if (!(await verifyPassword(userRow.passwordHash, parsed.data.current))) {
-    return redirectToForm(url.origin, 'current');
+    return redirectToForm('current');
   }
 
   const newHash = await hashPassword(parsed.data.next);
@@ -85,10 +90,10 @@ export const POST: APIRoute = async ({ request, locals, url, clientAddress }) =>
     at: new Date().toISOString(),
   });
 
-  // Redirigir al dashboard.
+  // Redirigir al dashboard. Path relativo para que funcione detrás del proxy.
   const { dashboardPathFor } = await import('@lib/auth/rbac');
   return new Response(null, {
     status: 303,
-    headers: { Location: new URL(dashboardPathFor(user.role), url.origin).toString() },
+    headers: { Location: dashboardPathFor(user.role) },
   });
 };

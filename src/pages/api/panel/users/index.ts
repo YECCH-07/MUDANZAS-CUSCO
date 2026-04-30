@@ -12,6 +12,7 @@ import { hashPassword, generateTempPassword } from '@lib/auth/password';
 import { ulid } from '@lib/auth/ulid';
 import { logAudit } from '@lib/panel/audit';
 import { sendMail, TEMPLATES } from '@lib/panel/email';
+import { SITE } from '@lib/site';
 
 export const prerender = false;
 
@@ -79,7 +80,7 @@ export const POST: APIRoute = async (ctx) => {
     name: data.full_name,
     email: data.email,
     tempPassword: tempPw,
-    loginUrl: `${ctx.url.origin}/panel/login/`,
+    loginUrl: `${SITE.url}/panel/login/`,
   });
   void sendMail({ to: data.email, subject: tpl.subject, html: tpl.html });
 
@@ -91,9 +92,10 @@ export const POST: APIRoute = async (ctx) => {
     });
   }
   // Pasamos la password UNA vez por la URL. Se muestra en el listado con
-  // advertencia clara de que desaparece al recargar.
-  const url = new URL('/panel/admin/usuarios/', ctx.url.origin);
-  url.searchParams.set('created', data.email);
-  url.searchParams.set('pw', tempPw);
-  return redirect(url.toString());
+  // advertencia clara de que desaparece al recargar. Path relativo para que
+  // el browser lo resuelva contra el host público.
+  const params = new URLSearchParams();
+  params.set('created', data.email);
+  params.set('pw', tempPw);
+  return redirect(`/panel/admin/usuarios/?${params.toString()}`);
 };

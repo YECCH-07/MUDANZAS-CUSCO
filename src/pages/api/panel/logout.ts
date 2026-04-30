@@ -10,7 +10,7 @@ import { ulid } from '@lib/auth/ulid';
 
 export const prerender = false;
 
-async function handle(request: Request, cookies: import('astro').AstroCookies, url: URL) {
+async function handle(request: Request, cookies: import('astro').AstroCookies) {
   const sid = readSessionCookie(cookies);
   if (sid) {
     await destroySession(sid);
@@ -31,11 +31,12 @@ async function handle(request: Request, cookies: import('astro').AstroCookies, u
       headers: { 'Content-Type': 'application/json' },
     });
   }
+  // Location relativo (browser lo resuelve contra el host público).
   return new Response(null, {
     status: 303,
-    headers: { Location: new URL('/panel/login/', url.origin).toString() },
+    headers: { Location: '/panel/login/' },
   });
 }
 
-export const POST: APIRoute = ({ request, cookies, url }) => handle(request, cookies, url);
-export const GET: APIRoute = ({ request, cookies, url }) => handle(request, cookies, url);
+export const POST: APIRoute = ({ request, cookies }) => handle(request, cookies);
+export const GET: APIRoute = ({ request, cookies }) => handle(request, cookies);
