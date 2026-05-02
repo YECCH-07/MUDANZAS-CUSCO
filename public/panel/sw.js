@@ -13,7 +13,7 @@
  * Versionar SW_VERSION al actualizar para invalidar caches antiguos.
  */
 /* eslint-disable no-restricted-globals */
-const SW_VERSION = 'v1-2026-04-24';
+const SW_VERSION = 'v2-2026-04-30';
 const CACHE_SHELL = `nan-panel-shell-${SW_VERSION}`;
 const CACHE_ASSETS = `nan-panel-assets-${SW_VERSION}`;
 const CACHE_PAGES = `nan-panel-pages-${SW_VERSION}`;
@@ -69,13 +69,21 @@ function isStaticAsset(url) {
 }
 
 async function networkFirstPage(request) {
+  const url = new URL(request.url);
+  // Páginas con query string (?unit=X, ?error=Y, ?created=Z) son resultado de
+  // POST/redirect → no cachear, porque la caché stale confunde al usuario tras
+  // añadir/eliminar items (el contenido cambió en DB pero la caché tiene la
+  // versión vieja). Solo cacheamos pages "limpias" para offline shell.
+  const isDynamic = url.search.length > 0;
   const cache = await caches.open(CACHE_PAGES);
   try {
+    // Timeout 8 s para tolerar 3G real en Cusco rural sin servir caché stale
+    // a la primera lentitud.
     const response = await Promise.race([
       fetch(request),
-      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 1500)),
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 8000)),
     ]);
-    if (response && response.ok) cache.put(request, response.clone());
+    if (response && response.ok && !isDynamic) cache.put(request, response.clone());
     return response;
   } catch {
     const cached = await cache.match(request);
